@@ -1,0 +1,39 @@
+.nav-underline .nav-link.active {
+    color: var(--bs-primary);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(14, 96, 192);
+    transition-duration: 0.2s;
+    cursor: default;
+}
+
+.nav-link-action {
+    transition: transform 0.1s;
+}
+
+.nav-link-action:hover {
+    transform: scale(1.05);
+    color: var(--bs-primary);
+}
+
+.logo:hover {
+    color: rgb(16, 115, 231);
+}
+
+.btn-sign-up {
+    font-size: 14px;
+    font-weight: bold;
+    padding: .8em 2em;
+    border-radius: 1.9em;
+}
+
+.card {
+    transition-duration: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
