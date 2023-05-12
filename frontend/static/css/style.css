@@ -1,13 +1,29 @@
+body {
+    --main-color: rgb(14, 96, 192);
+    --main-color-light: rgb(16, 115, 231);
+}
+
 .nav-underline .nav-link.active {
     color: var(--bs-primary);
+}
+
+.text-main {
+    color: var(--main-color);
+}
+
+.text-main-light {
+    color: var(--main-color-light);
 }
 
 .logo {
     font-size: 18px;
     font-weight: bold;
-    color: rgb(14, 96, 192);
     transition-duration: 0.2s;
     cursor: default;
+}
+
+.logo:hover {
+    color: var(--main-color-light);
 }
 
 .nav-link-action {
@@ -19,10 +35,6 @@
     color: var(--bs-primary);
 }
 
-.logo:hover {
-    color: rgb(16, 115, 231);
-}
-
 .btn-sign-up {
     font-size: 14px;
     font-weight: bold;
@@ -30,10 +42,33 @@
     border-radius: 1.9em;
 }
 
+.project-ref {
+    text-decoration: none;
+}
+
+.project-ref:hover {
+    text-decoration: underline;
+}
+
+.text-important {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .card {
     transition-duration: 0.3s;
 }
 
-.card:hover {
+.card-img-scale-wrp {
+    border-top-left-radius: var(--bs-card-inner-border-radius);
+    border-top-right-radius: var(--bs-card-inner-border-radius);
+    overflow: hidden;
+}
+
+.card-img-top {
+    transition: 0.4s;
+}
+
+.card:hover .card-img-top {
     transform: scale(1.05);
 }
