@@ -30,7 +30,8 @@ body {
     transition: transform 0.1s;
 }
 
-.nav-link-action:hover {
+.nav-link-action:hover,
+.nav-link-action:focus {
     transform: scale(1.05);
     color: var(--bs-primary);
 }
@@ -46,7 +47,8 @@ body {
     text-decoration: none;
 }
 
-.project-ref:hover {
+.project-ref:hover,
+.project-ref:focus {
     text-decoration: underline;
 }
 

@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.views.generic.list import ListView
 
-# Create your views here.
+from products.models import ProductType
+from utils.common.views import TitleMixin
+
+
+class IndexListView(TitleMixin, ListView):
+    model = ProductType
+    title = 'StoreTracker'
+    template_name = 'index.html'
