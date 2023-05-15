@@ -25,7 +25,9 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="nav nav-underline me-auto">
         <li class="nav-item">
-          <a class="nav-link nav-link-action link-dark active" aria-current="page" href="#">Home</a>
+          <a class="nav-link nav-link-action link-dark active" aria-current="page" href="{% url 'products:index' %}">
+            Home
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link nav-link-action link-dark" href="#">My comparisons</a>
@@ -115,10 +117,10 @@
       {% else %}
         <ul class="nav nav-underline align-items-center">
           <li class="nav-item">
-            <a href="#" class="nav-link nav-link-action">Log In</a>
+            <a href="{% url 'users:login' %}" class="nav-link nav-link-action">Log In</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="btn btn-primary btn-sign-up">Sign Up</a>
+            <a href="{% url 'users:registration' %}" class="btn btn-primary btn-sign-up">Sign Up</a>
           </li>
         </ul>
       {% endif %}
@@ -126,7 +128,7 @@
   </div>
 </nav>
 
-<div class="container pt-4 bg-light">
+<div class="container min-vh-100 pt-4 bg-light">
   {% block content %} {% endblock %}
 </div>
 

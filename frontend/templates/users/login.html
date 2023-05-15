@@ -1,123 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-  <link href="/frontend/static/css/style.css" rel="stylesheet">
+{% extends 'base.html' %}
 
-  <title>Title</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-md sticky-top shadow-sm bg-white p-3">
-  <div class="container-fluid mx-2">
-    <a class="navbar-brand" href="#">ShopTracker</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="nav nav-underline me-auto">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">My basket</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#footer">About</a>
-        </li>
-      </ul>
-      <ul class="nav nav-underline align-items-center">
-        <li class="nav-item">
-          <a href="#" class="nav-link">Log In</a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="btn btn-primary btn-sign-up">Sign Up</a>
-        </li>
-      </ul>
-      <div class="dropdown">
-        <a class="dropdown-toggle link-dark text-decoration-none" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false">
-          <span>F_C_T_L</span>
-          <img class="rounded-circle object-fit-cover mb-1 ms-1" src="/frontend/static/images/default_user_image.png"
-               alt="profile" width="32" height="32">
-        </a>
-        <ul class="dropdown-menu dropdown-menu-md-end dropdown-menu-sm-start">
-          <li>
-            <p class="text-center m-0">Menubar</p>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li>
-            <a href="/accounts/user/f_c_t_l/" class="dropdown-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                   class="bi bi-house-fill mb-1" viewBox="0 0 16 16">
-                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0
-                  .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"></path>
-                <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"></path>
-              </svg>
-              Profile
-            </a>
-          </li>
-          <li>
-            <a href="/interactions/bookmarks/" class="dropdown-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                   class="bi bi-basket3-fill mb-1" viewBox="0 0 16 16">
-                <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1
-                .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1
-                .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM2.468 15.426.943 9h14.114l-1.525 6.426a.75.75 0 0
-                1-.729.574H3.197a.75.75 0 0 1-.73-.574z"></path>
-              </svg>
-              Basket
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
 
-          <li>
-            <a href="/admin/" class="dropdown-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                   class="bi bi-gear-fill mb-1" viewBox="0 0 16 16">
-                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464
-                    0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987
-                    1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0
-                    1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1
-                    2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698
-                    2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397
-                    0-2.81l-.34-.1a1.464 1.464 0 0
-                    1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0
-                    1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
-              </svg>
-              Administration
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-
-          <li>
-            <a href="/accounts/logout/" class="dropdown-item text-danger">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                   class="bi bi-door-open-fill mb-1" viewBox="0 0 16 16">
-                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0
-                0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5
-                8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"></path>
-              </svg>
-              Logout
-            </a>
-          </li>
-        </ul>
-
-      </div>
-    </div>
-  </div>
-</nav>
-
-<div class="container-fluid pt-5 bg-light min-vh-100">
-  <div class="container rounded-4 col-lg-3 col-md-6 col-sm-8 shadow-lg">
+{% block content %}
+  <div class="container rounded-4 col-lg-4 col-md-7 col-sm-8 shadow-lg">
     <form class="py-2 px-1" action="#" method="post">
       <div class="mb-4">
         <h2 class="text-center mt-2">Log In</h2>
@@ -125,16 +10,16 @@
       <hr>
       <div class="mb-4">
         <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-        <input class="form-control" placeholder="Enter username" type="text">
+        {{ form.username }}
       </div>
       <div class="mb-4">
-        <label for="{{ form.username.id_for_label }}" class="form-label">Password</label>
-        <input class="form-control" placeholder="Enter password" type="password">
+        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+        {{ form.password }}
       </div>
       <div class="d-flex">
         <div class="form-check me-auto">
-          <input id="remember" class="form-check-input" type="checkbox">
-          <label class="form-check-label" for="remember">Remember me</label>
+          {{ form.remember_me }}
+          <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">Remember me</label>
         </div>
         <div>
           <a href="#" class="link-secondary text-decoration-none">Forgot password ?</a>
@@ -147,28 +32,9 @@
       <div class="text-center mb-3">
         <div>
           <p class="my-0">or</p>
-          <a class="link-secondary text-decoration-none" href="#">Sign Up</a>
+          <a class="link-secondary text-decoration-none" href="{% url 'users:registration' %}">Sign Up</a>
         </div>
       </div>
     </form>
   </div>
-</div>
-
-<footer id="footer" class="bg-white shadow-lg">
-  <div class="container text-center py-4">
-    <h3>About</h3>
-    <p>
-      This site was created for educational purposes and was not designed for real use.
-    </p>
-    <hr class="divider border-2">
-    <small>
-      Copyright &copy; 2023 <a href="https://github.com/FCTL3314/ShopTracker" class="text-dark">ShopTracker</a>
-    </small>
-  </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}

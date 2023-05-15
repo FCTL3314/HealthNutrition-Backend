@@ -6,21 +6,13 @@
   <div class="w-75 text-center mx-auto mb-3">
     <h1 class="text-main">StoreTracker</h1>
     <p class="fs-4">Compare and find the best prices among all the largest stores in the world using our website!</p>
-    <form role="search">
+    <form role="search" method="get">
       <div class="row mb-3">
-        <div class="col-lg-9 col-md-9 mb-sm-2">
-          <div class="input-group">
-            <input class="form-control" type="search"
-                   placeholder="Enter the name of the product or category you are looking for..." aria-label="Search">
-          </div>
+        <div class="col-lg-9 col-md-9">
+          <div class="input-group">{{ form.search_query }}</div>
         </div>
         <div class="col-lg-3 col-md-3">
-          <div class="input-group">
-            <select class="form-select" aria-label="Default select example">
-              <option value="1" selected>Product</option>
-              <option value="2">Category</option>
-            </select>
-          </div>
+          <div class="input-group">{{ form.search_type }}</div>
         </div>
       </div>
       <div class="row justify-content-center p-2">
