@@ -3,10 +3,26 @@
 
 {% block content %}
   <div class="container rounded-4 col-lg-5 col-md-8 shadow-lg">
-    <form class="py-2 px-1" action="#" method="post">
+    <form class="py-2 px-1" action="" method="post">
+
+      {% csrf_token %}
+
       <div class="mb-4">
         <h2 class="text-center mt-2">Sign Up</h2>
       </div>
+      {% if form.errors %}
+        <div class="alert alert-warning" role="alert">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+              <ul class="m-0">
+                <li>
+                  {{ error }}
+                </li>
+              </ul>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      {% endif %}
       <hr>
       <div class="mb-4">
         <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>

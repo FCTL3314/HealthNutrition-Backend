@@ -15,8 +15,8 @@
 <nav class="navbar navbar-expand-md sticky-top shadow-sm bg-white p-3">
   <div class="container-fluid px-4">
     <span class="navbar-brand logo text-main d-flex align-items-center">
-    <img class="img-fluid" src="{% static 'images/icon.png' %}" alt="icon" height="40" width="40">
-      StoreTracker
+      <img class="img-fluid" src="{% static 'images/icon.png' %}" alt="icon" height="45" width="45">
+      <span class="fs-4">StoreTracker</span>
     </span>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,9 +45,9 @@
         <div class="dropdown">
           <a class="dropdown-toggle link-dark text-decoration-none" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
-            <span>F_C_T_L</span>
-            <img class="rounded-circle object-fit-cover mb-1 ms-1" src="{% static 'images/default_user_image.png' %}"
-                 alt="profile" width="32" height="32">
+            <span>{{ request.user.username }}</span>
+            <img class="rounded-circle object-fit-cover mb-1 ms-1" src="{{ request.user.image.url }}" alt="profile"
+                 width="32" height="32">
           </a>
           <ul class="dropdown-menu dropdown-menu-md-end dropdown-menu-sm-start">
             <li>
@@ -79,9 +79,8 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
-              <a href="/admin/" class="dropdown-item">
+              <a href="{% url 'admin:index' %}" class="dropdown-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-gear-fill mb-1" viewBox="0 0 16 16">
                   <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464
@@ -102,7 +101,7 @@
             </li>
 
             <li>
-              <a href="/accounts/logout/" class="dropdown-item text-danger">
+              <a href="{% url 'users:logout' %}" class="dropdown-item text-danger">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-door-open-fill mb-1" viewBox="0 0 16 16">
                   <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0

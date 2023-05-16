@@ -6,6 +6,7 @@ class Store(models.Model):
     url = models.URLField(unique=True)
     logo = models.ImageField(upload_to='stores')
     description = models.TextField()
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
