@@ -8,11 +8,23 @@ body {
 }
 
 .text-main {
+    font-weight: bold;
     color: var(--main-color);
 }
 
 .text-main-light {
     color: var(--main-color-light);
+}
+
+.link-main {
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.link-main:hover,
+.link-main:focus {
+    color: var(--main-color-light);
+    text-decoration: underline;
 }
 
 .logo {

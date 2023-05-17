@@ -14,7 +14,7 @@
 <body>
 <nav class="navbar navbar-expand-md sticky-top shadow-sm bg-white p-3">
   <div class="container-fluid px-4">
-    <span class="navbar-brand logo text-main d-flex align-items-center">
+    <span class="navbar-brand logo text-main d-flex align-items-center mb-1">
       <img class="img-fluid" src="{% static 'images/icon.png' %}" alt="icon" height="45" width="45">
       <span class="fs-4">StoreTracker</span>
     </span>
@@ -25,7 +25,8 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="nav nav-underline me-auto">
         <li class="nav-item">
-          <a class="nav-link nav-link-action link-dark active" aria-current="page" href="{% url 'products:index' %}">
+          <a class="nav-link nav-link-action link-dark {% if current_url_name == 'index' %} active {% endif %}"
+             aria-current="page" href="{% url 'products:index' %}">
             Home
           </a>
         </li>
@@ -47,7 +48,7 @@
              aria-expanded="false">
             <span>{{ request.user.username }}</span>
             <img class="rounded-circle object-fit-cover mb-1 ms-1" src="{{ request.user.image.url }}" alt="profile"
-                 width="32" height="32">
+                 width="36" height="36">
           </a>
           <ul class="dropdown-menu dropdown-menu-md-end dropdown-menu-sm-start">
             <li>
