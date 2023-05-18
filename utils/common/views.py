@@ -6,9 +6,13 @@ from django.views.generic.base import ContextMixin, View
 class TitleMixin(ContextMixin):
     title = None
 
+    def get_title(self):
+        return self.title
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'StoreTracker | {self.title}' if self.title else 'StoreTracker'
+        title = self.get_title()
+        context['title'] = f'StoreTracker | {title}' if title else 'StoreTracker'
         return context
 
 
