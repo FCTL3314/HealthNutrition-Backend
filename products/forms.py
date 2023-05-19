@@ -2,11 +2,6 @@ from django import forms
 
 
 class SearchForm(forms.Form):
-    choices = [
-        ('product', 'Product'),
-        ('category', 'Category'),
-    ]
-
     search_query = forms.CharField(
         max_length=128,
         widget=forms.TextInput(
@@ -17,6 +12,12 @@ class SearchForm(forms.Form):
             }
         )
     )
+
+    choices = [
+        ('product', 'Product'),
+        ('product_type', 'Category'),
+    ]
+
     search_type = forms.ChoiceField(
         choices=choices,
         widget=forms.Select(
@@ -25,3 +26,13 @@ class SearchForm(forms.Form):
             }
         )
     )
+
+    def clean_search_type(self):
+        if self.search_type not in ('product', 'product_type'):
+            return forms.ValidationError('Invalid search type')
+        return self.search_type
+
+    def __init__(self, search_query, search_type, *args, **kwargs):
+        super().__init__()
+        self.initial['search_query'] = search_query
+        self.initial['search_type'] = search_type

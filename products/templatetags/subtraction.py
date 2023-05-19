@@ -1,6 +1,5 @@
-from django.template.defaulttags import register
-
 from django.conf import settings
+from django.template.defaulttags import register
 
 
 @register.filter()

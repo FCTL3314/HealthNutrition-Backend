@@ -4,7 +4,7 @@
   <div class="w-75 text-center mx-auto mb-3">
     <h1 class="text-main">StoreTracker</h1>
     <p class="fs-4">Compare and find the best prices among all the largest stores in the world using our website!</p>
-    <form role="search" method="get">
+    <form role="search" action="{% url 'products:search' %}" method="get">
       <div class="row mb-3">
         <div class="col-lg-9">
           <div class="input-group">{{ form.search_query }}</div>

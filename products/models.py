@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import Avg, Count, Max, Min
 
-from django.conf import settings
+from products.managers import ProductTypeManager
 
 
 class Product(models.Model):
@@ -31,6 +32,8 @@ class ProductType(models.Model):
     highest_price = models.FloatField(editable=False)
     lowest_price = models.FloatField(editable=False)
     unique_store_count = models.IntegerField(editable=False)
+
+    objects = ProductTypeManager()
 
     def __str__(self):
         return self.name
