@@ -9,7 +9,7 @@
   </a>
   <div class="card-body d-flex flex-column">
     <h5 class="card-title">
-      <a class="link-main" href="#">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="#">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.card_description }}</p>
     <div class="d-flex align-items-center mt-auto">
@@ -24,7 +24,7 @@
     </div>
   </div>
   <ul class="list-group list-group-flush">
-    {% if object.price == object.product_type.lowest_price %}
+    {% if object.price == min_price %}
       <li class="list-group-item text-success d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
              class="bi bi-patch-check" viewBox="0 0 16 16">
@@ -42,7 +42,7 @@
         </svg>
         <span class="ms-1">Lowest Price</span>
       </li>
-    {% elif object.price == object.product_type.highest_price %}
+    {% elif object.price == max_price %}
       <li class="list-group-item text-danger d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
              class="bi bi-patch-exclamation" viewBox="0 0 16 16">
@@ -71,14 +71,14 @@
                0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826
                1.828-2.2 1.939V8.73l.348.086z"></path>
       </svg>
-      <span class="ms-1">Price: {{ object.price }}$
-        {% with object.price|subtract:object.product_type.average_price as price_difference %}
+      <span class="ms-1">Price: <span class="fw-semibold">{{ object.price }}$</span>
+        {% with object.price|subtract:avg_price as price_difference %}
           {% if price_difference < 0 %}
-            <span class="text-success">
+            <span class="text-success fw-semibold">
               ({{ price_difference }}$)
             </span>
           {% else %}
-            <span class="text-danger">
+            <span class="text-danger fw-semibold">
               (+{{ price_difference }}$)
             </span>
           {% endif %}

@@ -1,18 +1,20 @@
 from urllib.parse import urlencode
 
-from django.core.exceptions import BadRequest
-from django.db.models import Q
+from django.conf import settings
+from django.db.models import Avg, Max, Min
+from django.db.models.functions import Round
 from django.shortcuts import get_object_or_404
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
 from products.forms import SearchForm
-from products.models import Product, ProductType
+from products.models import ProductType
 from utils.common.views import PaginationUrlMixin, TitleMixin
 
 
-class BaseProductView(TitleMixin, FormMixin, ListView):
+class BaseProductView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
     form_class = SearchForm
+    paginate_by = 12
 
     def dispatch(self, request, *args, **kwargs):
         self.search_query = self.request.GET.get('search_query')
@@ -25,21 +27,32 @@ class BaseProductView(TitleMixin, FormMixin, ListView):
         kwargs['search_type'] = self.search_type
         return kwargs
 
+    def get_pagination_url(self):
+        if not self.search_query:
+            return super().get_pagination_url()
+        params = {'search_query': self.search_query, 'search_type': self.search_type, 'page': ''}
+        return '?' + urlencode(params)
 
-class IndexListView(BaseProductView):
+
+class ProductTypeView(BaseProductView):
     template_name = 'products/index.html'
-    queryset = ProductType.objects.popular()[:12]
+    ordering = ('views',)
+
+    def get_queryset(self):
+        queryset = ProductType.objects.popular()
+        result = ProductType.objects.annotate_products_statistic(queryset)
+        return result.order_by(*self.ordering)
 
 
-class ProductListView(PaginationUrlMixin, BaseProductView):
+class ProductView(BaseProductView):
     model = ProductType
     template_name = 'products/products.html'
-    paginate_by = 1
-    ordering = ('name',)
+    ordering = ('price',)
 
     def dispatch(self, request, *args, **kwargs):
         product_type_slug = kwargs.get('product_type')
         self.product_type = get_object_or_404(self.model, slug=product_type_slug)
+        self.products = self.product_type.product_set.all()
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -47,36 +60,18 @@ class ProductListView(PaginationUrlMixin, BaseProductView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        result = self.product_type.product_set.prefetch_related('store')
-        return result.order_by(*self.ordering)
+        queryset = self.products.prefetch_related('store')
+        return queryset.order_by(*self.ordering)
 
     def get_title(self):
         return self.product_type.name
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product_type'] = self.product_type
-        return context
-
-
-class SearchListView(PaginationUrlMixin, BaseProductView):
-    template_name = 'products/search.html'
-    title = 'Search'
-    paginate_by = 1
-    ordering = ('name',)
-
-    def get_queryset(self):
-        if self.search_type == 'product':
-            model = Product
-        elif self.search_type == 'product_type':
-            model = ProductType
-        else:
-            raise BadRequest('Invalid search type')
-        queryset = model.objects.filter(
-            Q(name__icontains=self.search_query) | Q(description__icontains=self.search_query),
+        products_price_stats = self.products.aggregate(
+            min_price=Round(Min('price'), settings.PRICE_ROUNDING),
+            max_price=Round(Max('price'), settings.PRICE_ROUNDING),
+            avg_price=Round(Avg('price'), settings.PRICE_ROUNDING),
         )
-        return queryset.order_by(*self.ordering)
-
-    def get_pagination_url(self):
-        params = {'search_query': self.search_query, 'search_type': self.search_type, 'page': ''}
-        return '?' + urlencode(params)
+        context.update(products_price_stats)
+        return context

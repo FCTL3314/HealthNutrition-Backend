@@ -3,6 +3,18 @@ body {
     --main-color-light: rgb(16, 115, 231);
 }
 
+.btn-up {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    transition: transform 0.1s;
+}
+
+.btn-up:hover,
+.btn-up:focus {
+    transform: scale(1.1);
+}
+
 .nav-underline .nav-link.active {
     color: var(--bs-primary);
 }

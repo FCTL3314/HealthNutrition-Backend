@@ -26,7 +26,7 @@
       <ul class="nav nav-underline me-auto">
         <li class="nav-item">
           <a class="nav-link nav-link-action link-dark {% if current_url_name == 'index' %} active {% endif %}"
-             aria-current="page" href="{% url 'products:index' %}">
+             aria-current="page" href="{% url 'products:product-types' %}">
             Home
           </a>
         </li>
@@ -128,8 +128,10 @@
   </div>
 </nav>
 
-<div class="container min-vh-100 pt-4 bg-light">
-  {% block content %} {% endblock %}
+<div class="container-fluid position-relative">
+  <div class="container min-vh-100 pt-4 bg-light">
+    {% block content %} {% endblock %}
+  </div>
 </div>
 
 <footer id="footer" class="bg-white shadow-lg">

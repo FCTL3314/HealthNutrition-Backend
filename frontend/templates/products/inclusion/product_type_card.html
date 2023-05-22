@@ -6,7 +6,7 @@
   </a>
   <div class="card-body">
     <h5 class="card-title">
-      <a class="link-main" href="{% url 'products:products' object.slug %}">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="{% url 'products:products' object.slug %}">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.description }}</p>
   </div>
@@ -21,7 +21,7 @@
                0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826
                1.828-2.2 1.939V8.73l.348.086z"></path>
       </svg>
-      <span class="ms-1">Average price: {{ object.get_rounded_average_price }}$</span>
+      <span class="ms-1">Average price: <span class="fw-semibold">{{ object.product__price__avg }}$</span></span>
     </li>
     <li class="list-group-item text-success d-flex align-items-center">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -38,7 +38,7 @@
                 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0
                 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"></path>
       </svg>
-      <span class="ms-1">Lowest Price: {{ object.get_rounded_lowest_price }}$</span>
+      <span class="ms-1">Lowest Price: <span class="fw-semibold">{{ object.product__price__min }}$</span></span>
     </li>
     <li class="list-group-item text-danger d-flex align-items-center">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -55,7 +55,7 @@
                 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0
                 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"></path>
       </svg>
-      <span class="ms-1">Highest Price: {{ object.get_rounded_highest_price }}$</span>
+      <span class="ms-1">Highest Price: <span class="fw-semibold">{{ object.product__price__max }}$</span></span>
     </li>
     <li class="list-group-item d-flex align-items-center text-primary">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-shop"
@@ -69,7 +69,7 @@
               0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1
                1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"></path>
       </svg>
-      <span class="ms-1">{{ object.unique_store_count }} Stores</span>
+      <span class="ms-1"><span class="fw-semibold">{{ object.product__store__count }}</span> Stores</span>
     </li>
   </ul>
 </div>
