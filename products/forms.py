@@ -14,8 +14,8 @@ class SearchForm(forms.Form):
     )
 
     choices = [
-        ('product', 'Product'),
         ('product_type', 'Category'),
+        ('product', 'Product'),
     ]
 
     search_type = forms.ChoiceField(

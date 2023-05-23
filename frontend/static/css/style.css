@@ -98,3 +98,10 @@ body {
 .card:hover .card-img-top {
     transform: scale(1.05);
 }
+
+
+@media (max-width: 1500px) {
+    .btn-up {
+        display: none !important;
+    }
+}
