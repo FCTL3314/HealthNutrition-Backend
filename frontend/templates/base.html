@@ -47,7 +47,7 @@
           <a class="dropdown-toggle link-dark text-decoration-none" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
             <span>{{ request.user.username }}</span>
-            <img class="rounded-circle object-fit-cover mb-1 ms-1" src="{{ request.user.image.url }}" alt="profile"
+            <img class="rounded-circle object-fit-cover mb-1 ms-1" src="{{ request.user.get_image_url }}" alt="profile"
                  width="36" height="36">
           </a>
           <ul class="dropdown-menu dropdown-menu-md-end dropdown-menu-sm-start">
@@ -58,7 +58,7 @@
               <hr class="dropdown-divider">
             </li>
             <li>
-              <a href="/accounts/user/f_c_t_l/" class="dropdown-item">
+              <a href="{% url 'users:profile' request.user.slug %}" class="dropdown-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-house-fill mb-1" viewBox="0 0 16 16">
                   <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0
@@ -129,7 +129,7 @@
 </nav>
 
 <div class="container-fluid position-relative">
-  <div class="container min-vh-100 pt-4 bg-light">
+  <div class="container min-vh-100 bg-light">
     {% block content %} {% endblock %}
   </div>
 </div>
