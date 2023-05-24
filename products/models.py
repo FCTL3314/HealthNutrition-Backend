@@ -1,6 +1,6 @@
 from django.db import models
 
-from products.managers import ProductTypeManager
+from products.managers import ProductManager, ProductTypeManager
 
 
 class Product(models.Model):
@@ -14,6 +14,8 @@ class Product(models.Model):
     store = models.ForeignKey(to='stores.Store', on_delete=models.CASCADE)
     product_type = models.ForeignKey(to='products.ProductType', on_delete=models.CASCADE)
     slug = models.SlugField(unique=True)
+
+    objects = ProductManager()
 
     def __str__(self):
         return f'{self.name} | {self.store}'

@@ -1,21 +1,77 @@
-{% extends 'products/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-
 {% block content %}
-  {{ block.super }}
-  <div class="row justify-content-center">
-    <div class="text-center">
-      <h2 class="text-main">{{ objects_title }}</h2>
-      <p class="fs-4">{{ objects_description }}</p>
-    </div>
-    <div class="row">
-      {% for object in object_list %}
-        <div class="col-lg-4 col-md-6 mb-3">
-          {% include 'products/inclusion/product_type_card.html' %}
+  <div class="w-75 text-center mx-auto mb-3">
+    <h1 class="text-main">StoreTracker</h1>
+    <p class="fs-4">Compare and find the best prices among all the largest stores in the world using our website!</p>
+    <form role="search" action="{% url 'products:search' %}" method="GET">
+      <div class="row mb-3">
+        <div class="col-lg-9">
+          <div class="input-group">{{ form.search_query }}</div>
         </div>
-      {% endfor %}
-    </div>
-    {% include 'products/inclusion/pagination.html' %}
+        <div class="col-lg-3">
+          <div class="input-group">{{ form.search_type }}</div>
+        </div>
+      </div>
+      <div class="row justify-content-center p-2">
+        <button class="col-lg-3 col-md-4 col-sm-4 btn btn-outline-primary" type="submit">Search</button>
+      </div>
+    </form>
   </div>
+  <hr>
+  <button class="btn border-0 btn-up text-primary d-flex flex-column align-items-center" onclick="scrollToTop()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-arrow-up-circle"
+         viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"></path>
+    </svg>
+    <span>To the top</span>
+  </button>
+  {% if object_list %}
+    <div class="row justify-content-center">
+    {% if object_list_title or object_list_description %}
+      <div class="text-center mb-3">
+        {% if object_list_title %}
+          <h2 class="text-main">{{ object_list_title }}</h2>
+        {% endif %}
+        {% if object_list_description %}
+          <p class="fs-4">{{ object_list_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+<div class="row">
+  {% if object_list %}
+    {% for object in object_list %}
+      <div class="col-lg-4 col-md-6 mb-3">
+        {% if current_url_name == 'products' %}
+          {% include 'products/inclusion/product_card.html' %}
+        {% elif current_url_name == 'product-types' %}
+          {% include 'products/inclusion/product_type_card.html' %}
+        {% elif current_url_name == 'search' %}
+          {% if search_type == 'product' %}
+            {% include 'products/inclusion/product_card.html' %}
+          {% elif search_type == 'product_type' %}
+            {% include 'products/inclusion/product_type_card.html' %}
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="text-center">
+      <img class="mb-4 mt-2" src="{% static 'images/magnifying-glass.svg' %}" alt="magnifying-glass" width="100"
+           height="100">
+    <h4>Looks like we couldn't find what you're looking for.</h4>
+    </div>
+  {% endif %}
+</div>
+{% if object_list %}
+  {% include 'products/inclusion/pagination.html' %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

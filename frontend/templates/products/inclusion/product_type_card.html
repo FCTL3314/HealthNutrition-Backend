@@ -1,12 +1,12 @@
 <div class="card h-100">
-  <a href="{% url 'products:product-type-products' object.slug %}">
+  <a href="{% url 'products:products' object.slug %}">
     <div class="card-img-scale-wrp">
       <img src="{{ object.image.url }}" class="card-img-top" alt="category_image">
     </div>
   </a>
   <div class="card-body">
     <h5 class="card-title">
-      <a class="link-main fw-semibold" href="{% url 'products:product-type-products' object.slug %}">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="{% url 'products:products' object.slug %}">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.description }}</p>
   </div>
