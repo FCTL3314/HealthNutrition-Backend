@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.views.generic.edit import UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from users import forms as user_forms
 from users.models import User
@@ -49,10 +48,13 @@ class LogoutView(auth_views.LogoutView):
         return get_referer_or_default(self.request)
 
 
-class ProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
+class ProfileMixin:
+    template_name = 'users/profile/profile.html'
+
+
+class ProfileView(ProfileMixin, TitleMixin, SuccessMessageMixin, UpdateView):
     model = User
     form_class = user_forms.ProfileForm
-    template_name = 'users/profile/profile.html'
     title = 'Account'
     success_message = 'Profile updated successfully!'
 
@@ -64,11 +66,19 @@ class ProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class ProfilePasswordView(SuccessMessageMixin, auth_views.PasswordChangeView):
+class ProfilePasswordView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
     form_class = user_forms.PasswordChangeForm
-    template_name = 'users/profile/profile.html'
     title = 'Password'
     success_message = 'Your password has been successfully updated!'
 
     def get_success_url(self):
         return reverse_lazy('users:profile-password', args={self.request.user.slug})
+
+
+class ProfileEmailView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
+    form_class = user_forms.EmailChangeForm
+    title = 'Email'
+    success_message = 'Your email has been successfully changed!'
+
+    def get_success_url(self):
+        return reverse_lazy('accounts:profile-email', args={self.request.user.slug})

@@ -7,12 +7,12 @@ body {
     position: absolute;
     right: 20px;
     bottom: 20px;
-    transition: transform 0.1s;
+    transition: transform 0.3s;
 }
 
 .btn-up:hover,
 .btn-up:focus {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .nav-underline .nav-link.active {
@@ -100,7 +100,7 @@ body {
 }
 
 
-@media (max-width: 1500px) {
+@media (max-width: 1550px) {
     .btn-up {
         display: none !important;
     }

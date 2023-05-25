@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import forms as auth_forms
+from django.core.exceptions import ValidationError
 
 from users.models import User
 
@@ -144,3 +145,39 @@ class PasswordChangeForm(auth_forms.PasswordChangeForm):
     class Meta:
         model = User
         fields = ('old_password', 'new_password1', 'new_password2')
+
+
+class EmailChangeForm(forms.Form):
+    new_email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter Email',
+    }))
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your password',
+    }))
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data['old_password']
+        if not self.user.check_password(old_password):
+            raise ValidationError('Your old password was entered incorrectly. Please try again.')
+        return old_password
+
+    def clean_new_email(self):
+        new_email = self.cleaned_data.get('new_email')
+        if self.user.email == new_email:
+            raise forms.ValidationError('You\'re already using this email address.')
+        if User.objects.filter(email=new_email).exists():
+            raise forms.ValidationError('This email address is already in use. Please use a different email address.')
+        return new_email
+
+    def save(self, commit=True):
+        self.user.email = self.cleaned_data['new_email']
+        self.user.is_verified = False
+        if commit:
+            self.user.save()
+        return self.user

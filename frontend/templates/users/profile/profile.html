@@ -16,7 +16,7 @@
           <hr>
           <div class="list-group rounded-top-2 rounded-bottom-2 ">
             <a class="list-group-item list-group-item-action {% if current_url_name == 'profile' %}
-                                                                 text-dark bg-body-secondary disabled
+                                                               list-group-item-primary pe-none
                                                              {% endif %}"
                href="{% url 'users:profile' user.slug %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -30,9 +30,9 @@
               <span>Account</span>
             </a>
             <a class="list-group-item list-group-item-action {% if current_url_name == 'profile-email' %}
-                                                                 text-dark bg-body-secondary disabled
+                                                               list-group-item-primary pe-none
                                                              {% endif %}"
-               href="#">
+               href="{% url 'users:profile-email' user.slug %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                    class="bi bi-envelope-fill mb-1" viewBox="0 0 16 16">
                 <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0
@@ -42,7 +42,7 @@
               <span>Email</span>
             </a>
             <a class="list-group-item list-group-item-action {% if current_url_name == 'profile-password' %}
-                                                                 text-dark bg-body-secondary disabled
+                                                               list-group-item-primary pe-none
                                                              {% endif %}"
                href="{% url 'users:profile-password' user.slug %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

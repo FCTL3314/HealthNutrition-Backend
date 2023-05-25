@@ -17,15 +17,16 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
     object_list_title = ''
     object_list_description = ''
 
-    def dispatch(self, request, *args, **kwargs):
-        self.search_query = self.request.GET.get('search_query', '')
-        self.search_type = self.request.GET.get('search_type')
-        return super().dispatch(request, *args, **kwargs)
+    def get_search_query(self):
+        return self.request.GET.get('search_query', '')
+
+    def get_search_type(self):
+        return self.request.GET.get('search_type')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['search_query'] = self.search_query
-        kwargs['search_type'] = self.search_type
+        kwargs['search_query'] = self.get_search_query()
+        kwargs['search_type'] = self.get_search_type()
         return kwargs
 
     def get_object_list_title(self):
@@ -38,8 +39,8 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['object_list_title'] = self.get_object_list_title()
         context['object_list_description'] = self.get_object_list_description()
-        context['search_query'] = self.search_query
-        context['search_type'] = self.search_type
+        context['search_query'] = self.get_search_query()
+        context['search_type'] = self.get_search_type()
         return context
 
 
@@ -59,6 +60,9 @@ class ProductListView(BaseProductsView):
     model = ProductType
     ordering = ('price',)
     object_list_description = 'List of products based on the category you selected.'
+
+    def __init__(self):
+        super().__init__()
 
     def dispatch(self, request, *args, **kwargs):
         product_type_slug = kwargs.get('slug')
@@ -92,19 +96,20 @@ class SearchListView(BaseProductsView):
     object_list_description = 'Search results based on your query.'
 
     def get_queryset(self):
-        if self.search_type == 'product':
-            return Product.objects.search(self.search_query).order_by('price')
-        elif self.search_type == 'product_type':
-            queryset = ProductType.objects.search(self.search_query)
+        if self.get_search_type() == 'product':
+            return Product.objects.search(self.get_search_query()).order_by('price')
+        elif self.get_search_type() == 'product_type':
+            queryset = ProductType.objects.search(self.get_search_query())
             return queryset.product_statistic_annotation().order_by('views')
         else:
             return list()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.search_type == 'product':
+        if self.get_search_type() == 'product':
             context.update(self.object_list.price_aggregation())
         return context
 
     def get_pagination_url(self):
-        return '?' + urlencode({'search_query': self.search_query, 'search_type': self.search_type, 'page': ''})
+        params = {'search_query': self.get_search_query(), 'search_type': self.get_search_type(), 'page': ''}
+        return '?' + urlencode(params)
