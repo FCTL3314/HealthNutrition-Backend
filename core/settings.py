@@ -89,6 +89,23 @@ DATABASES = {
     }
 }
 
+# Redis
+
+REDIS_HOST = env('REDIS_HOST')
+REDIS_PORT = env('REDIS_PORT')
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}',
+        'OPTIONS': {
+            'db': '1',
+        }
+    }
+}
+
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -141,3 +158,5 @@ LOGOUT_REDIRECT_URL = '/'
 # Products
 
 PRICE_ROUNDING = 2
+
+PRICE_AGGREGATION_CACHE_KEY = 'product_type_{}_aggregation'

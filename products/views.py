@@ -45,7 +45,7 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
 
 
 class ProductTypeListView(BaseProductsView):
-    ordering = ('views',)
+    ordering = ('-views',)
     title = 'Categories'
     object_list_title = 'Featured Categories'
     object_list_description = 'Categories of products that users open most often.'

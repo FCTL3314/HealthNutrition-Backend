@@ -8,7 +8,7 @@
     </div>
   </a>
   <div class="card-body d-flex flex-column">
-    <h5 class="card-title">
+    <h5 class="card-title text-main text-truncate">
       <a class="link-main fw-semibold" href="#">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.card_description }}</p>
@@ -77,7 +77,7 @@
             <span class="text-success fw-semibold">
               ({{ price_difference }}$)
             </span>
-          {% else %}
+          {% elif price_difference > 0 %}
             <span class="text-danger fw-semibold">
               (+{{ price_difference }}$)
             </span>
