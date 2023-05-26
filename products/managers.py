@@ -3,8 +3,10 @@ from django.db import models
 from django.db.models import Avg, Count, Max, Min, Q
 from django.db.models.functions import Round
 
+from utils.cache import get_cached_data_or_set_new
 
-class ProductQueryset(models.QuerySet):
+
+class ProductQuerySet(models.QuerySet):
 
     def price_aggregation(self):
         return self.aggregate(
@@ -15,7 +17,7 @@ class ProductQueryset(models.QuerySet):
 
 
 class ProductManager(models.Manager):
-    _queryset_class = ProductQueryset
+    _queryset_class = ProductQuerySet
 
     def search(self, query):
         return self.filter(Q(name__icontains=query) | Q(card_description__icontains=query))
@@ -23,7 +25,7 @@ class ProductManager(models.Manager):
 
 class ProductTypeQuerySet(models.QuerySet):
 
-    def product_statistic_annotation(self):
+    def product_price_annotation(self):
         return self.annotate(
             product__price__avg=Round(Avg('product__price'), settings.PRICE_ROUNDING),
             product__price__max=Round(Max('product__price'), settings.PRICE_ROUNDING),
@@ -36,7 +38,11 @@ class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
 
     def popular(self):
-        return self.order_by('-views')
+        return get_cached_data_or_set_new(
+            key=settings.POPULAR_PRODUCT_TYPES_CACHE_KEY,
+            callback=self.order_by('-views').all,
+            timeout=settings.POPULAR_PRODUCT_TYPES_CACHE_TIME,
+        )
 
     def search(self, query):
         return self.filter(Q(name__icontains=query) | Q(description__icontains=query))

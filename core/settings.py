@@ -153,10 +153,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Users
 
 AUTH_USER_MODEL = 'users.User'
+
 LOGOUT_REDIRECT_URL = '/'
 
 # Products
 
 PRICE_ROUNDING = 2
 
-PRICE_AGGREGATION_CACHE_KEY = 'product_type_{}_aggregation'
+POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
+PRODUCTS_CACHE_KEY = 'products_product_type:{id:}'
+PRODUCT_TYPE_VIEW_CACHE_KEY = 'address:{addr:}_product_type:{slug:}'
+
+POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
+PRODUCTS_CACHE_TIME = 60 * 60
+PRODUCT_TYPE_VIEW_CACHE_TIME = 60 * 30

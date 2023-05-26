@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.db import models
 
 from products.managers import ProductManager, ProductTypeManager
+from utils.cache import get_cached_data_or_set_new
 
 
 class Product(models.Model):
@@ -32,6 +34,14 @@ class ProductType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_products_with_stores(self, ordering=('name',)):
+        callback = self.product_set.prefetch_related('store').order_by(*ordering).all
+        return get_cached_data_or_set_new(
+            key=settings.PRODUCTS_CACHE_KEY.format(id=self.id),
+            callback=callback,
+            timeout=settings.PRODUCTS_CACHE_TIME,
+        )
 
     def increment_views(self):
         self.views += 1
