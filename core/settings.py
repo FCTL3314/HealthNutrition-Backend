@@ -7,14 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment variables
 
-env = environ.Env(
-    DEBUG=bool,
-    SECRET_KEY=str,
-    ALLOWED_HOSTS=list,
-    INTERNAL_IPS=list,
-)
+env = environ.Env()
 
-# Take environment variables from .env file.
 environ.Env.read_env(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -26,6 +20,10 @@ DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 INTERNAL_IPS = env.list('INTERNAL_IPS')
+
+DOMAIN_NAME = env.str('DOMAIN_NAME')
+
+PROTOCOL = env.str('PROTOCOL')
 
 # Application definition
 
@@ -72,7 +70,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'utils.common.context_processors.current_url_name',
+                'utils.context_processors.current_url_name',
             ],
         },
     },
@@ -91,8 +89,8 @@ DATABASES = {
 
 # Redis
 
-REDIS_HOST = env('REDIS_HOST')
-REDIS_PORT = env('REDIS_PORT')
+REDIS_HOST = env.str('REDIS_HOST')
+REDIS_PORT = env.str('REDIS_PORT')
 
 # Cache
 
@@ -150,6 +148,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Celery
+
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+
+CELERY_TASK_TIME_LIMIT = 60 * 30
+
 # Users
 
 AUTH_USER_MODEL = 'users.User'
@@ -167,3 +172,19 @@ PRODUCT_TYPE_VIEW_CACHE_KEY = 'address:{addr:}_product_type:{slug:}'
 POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60
 PRODUCT_TYPE_VIEW_CACHE_TIME = 60 * 30
+
+# Email
+
+EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_HOST = env.str('EMAIL_HOST')
+    EMAIL_PORT = env.str('EMAIL_PORT')
+    DEFAULT_FROM_EMAIL = env.str('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
+
+EMAIL_SEND_INTERVAL_SECONDS = 60
+EMAIL_EXPIRATION_HOURS = 3600 * 2

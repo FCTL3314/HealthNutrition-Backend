@@ -8,13 +8,16 @@ from django.views.generic.list import ListView
 
 from products.forms import SearchForm
 from products.models import Product, ProductType
-from utils.common.views import PaginationUrlMixin, TitleMixin
+from utils.views import PaginationUrlMixin, TitleMixin
 
 
 class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
     template_name = 'products/index.html'
     form_class = SearchForm
     paginate_by = 12
+
+    search_query: str
+    search_type: str
 
     object_list_title = ''
     object_list_description = ''
@@ -61,6 +64,9 @@ class ProductListView(BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
     object_list_description = 'List of products of the selected category.'
+
+    product_type_slug: str
+    product_type: ProductType
 
     def dispatch(self, request, *args, **kwargs):
         self.product_type_slug = kwargs.get('slug')

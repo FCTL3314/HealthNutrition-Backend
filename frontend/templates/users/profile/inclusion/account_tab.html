@@ -44,7 +44,7 @@
           Email
           {% if not user.is_verified %}
             (Unverified, click
-            <a class="text-decoration-none" href="#">here</a>
+            <a class="text-decoration-none" href="{% url 'users:send-verification-email' user.email %}">here</a>
             to send a verification email)
           {% else %}
             <span class="text-primary">&check; Verified</span>

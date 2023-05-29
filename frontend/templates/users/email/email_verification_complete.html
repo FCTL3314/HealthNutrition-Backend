@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <div class="pt-5">
+    <div class="row">
+      <div class="mx-auto rounded-4 py-4 px-3 col-md-8 shadow-lg">
+        <div class="text-center my-2">
+          <h1>Email verification</h1>
+        </div>
+        <hr>
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-warning">
+              <h3>{{ message }}</h3>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-primary">
+            <h3>Your email address has been successfully verified.</h3>
+          </div>
+        {% endif %}
+        <hr>
+        <div class="text-center">
+          <h3>
+            Click
+            <a class="link link-secondary text-decoration-none"
+               href="{% url 'users:profile' user.slug %}">here</a>
+            to go back to your profile.
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

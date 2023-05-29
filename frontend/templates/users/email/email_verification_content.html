@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hello, {{ user.username }}!
+
+You received this email because you requested an email verification. Please follow the link below to verify your email:
+
+{{ protocol }}://{{ verification_link }}
+
+The Special Recipe Team
+{% endautoescape %}
