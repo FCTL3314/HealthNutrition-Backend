@@ -34,7 +34,7 @@
             <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">Remember me</label>
           </div>
           <div>
-            <a href="#" class="link-secondary text-decoration-none">Forgot password ?</a>
+            <a href="{% url 'users:reset_password' %}" class="link-secondary text-decoration-none">Forgot password ?</a>
           </div>
         </div>
         <hr>

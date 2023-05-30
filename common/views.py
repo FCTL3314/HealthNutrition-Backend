@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.views.generic.base import ContextMixin, View
 
@@ -34,3 +35,36 @@ class PaginationUrlMixin(ContextMixin):
         context = super().get_context_data(**kwargs)
         context[self.context_pagination_url_name] = self.get_pagination_url()
         return context
+
+
+class UserViewMixin:
+    view_cache_time = 60
+
+    def get(self, *args, **kwargs):
+        if self._has_view(self.request):
+            self.user_viewed()
+        else:
+            self.user_not_viewed()
+        return super().get(*args, **kwargs)
+
+    def user_viewed(self):
+        pass
+
+    def user_not_viewed(self):
+        pass
+
+    def get_view_cache_key(self):
+        return ''
+
+    def get_view_cache_time(self):
+        return self.view_cache_time
+
+    def _has_view(self, request):
+        key = self.get_view_cache_key()
+
+        is_exists = cache.get(key)
+
+        if is_exists:
+            return True
+        cache.set(key, True, self.get_view_cache_time())
+        return False

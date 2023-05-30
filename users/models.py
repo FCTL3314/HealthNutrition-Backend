@@ -63,7 +63,7 @@ class EmailVerification(models.Model):
     def __str__(self):
         return f'{self.user.email} | {self.expiration}'
 
-    def send_verification_email(self, subject, html_email_template_name, protocol):
+    def send_verification_email(self, subject_template_name, html_email_template_name, protocol):
         link = reverse('users:email-verification', kwargs={'email': self.user.email, 'code': self.code})
 
         context = {
@@ -72,9 +72,12 @@ class EmailVerification(models.Model):
             'verification_link': settings.DOMAIN_NAME + link,
         }
 
-        msg = convert_html_to_email_message(html_email_template_name, context)
-        msg.subject = subject
-        msg.to = [self.user.email]
+        msg = convert_html_to_email_message(
+            subject_template_name=subject_template_name,
+            html_email_template_name=html_email_template_name,
+            emails_list=[self.user.email],
+            context=context,
+        )
         msg.send()
 
     def is_expired(self):

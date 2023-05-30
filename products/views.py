@@ -6,9 +6,9 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
+from common.views import PaginationUrlMixin, TitleMixin, UserViewMixin
 from products.forms import SearchForm
 from products.models import Product, ProductType
-from utils.views import PaginationUrlMixin, TitleMixin
 
 
 class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
@@ -60,10 +60,12 @@ class ProductTypeListView(BaseProductsView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(BaseProductsView):
+class ProductListView(UserViewMixin, BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
     object_list_description = 'List of products of the selected category.'
+
+    view_cache_time = 60
 
     product_type_slug: str
     product_type: ProductType
@@ -73,22 +75,12 @@ class ProductListView(BaseProductsView):
         self.product_type = get_object_or_404(self.model, slug=self.product_type_slug)
         return super().dispatch(request, *args, **kwargs)
 
-    def _has_viewed(self, request):
-        remote_addr = request.META.get('REMOTE_ADDR')
+    def get_view_cache_key(self):
+        remote_addr = self.request.META.get('REMOTE_ADDR')
+        return settings.PRODUCT_TYPE_VIEW_CACHE_KEY.format(addr=remote_addr, slug=self.product_type_slug)
 
-        key = settings.PRODUCT_TYPE_VIEW_CACHE_KEY.format(addr=remote_addr, slug=self.product_type_slug)
-        is_exists = cache.get(key)
-
-        if is_exists:
-            return True
-        cache.set(key, True, settings.PRODUCT_TYPE_VIEW_CACHE_TIME)
-        return False
-
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if not self._has_viewed(request):
-            self.product_type.increment_views()
-        return response
+    def user_not_viewed(self):
+        self.product_type.increment_views()
 
     def get_queryset(self):
         return self.product_type.get_products_with_stores(self.ordering)

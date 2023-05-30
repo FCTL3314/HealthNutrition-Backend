@@ -3,6 +3,7 @@ from django.contrib.auth import forms as auth_forms
 from django.core.exceptions import ValidationError
 
 from users.models import User
+from users.tasks import send_password_reset_email
 
 
 class RegistrationForm(auth_forms.UserCreationForm):
@@ -181,3 +182,44 @@ class EmailChangeForm(forms.Form):
         if commit:
             self.user.save()
         return self.user
+
+
+class PasswordResetForm(auth_forms.PasswordResetForm):
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter Email',
+    }))
+
+    def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email,
+                  html_email_template_name=None):
+        context['user'] = context['user'].id
+        send_password_reset_email.delay(subject_template_name, email_template_name, to_email, context)
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+
+class SetPasswordForm(auth_forms.SetPasswordForm):
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter new password',
+    }))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Confirm new password',
+    }))
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)
+        self.user = user
+
+    def clean_new_password2(self):
+        new_password = self.cleaned_data['new_password1']
+        if self.user.check_password(new_password):
+            raise forms.ValidationError('The new password must be different from the old one.')
+        return super().clean_new_password2()
+
+    class Meta:
+        model = User
+        fields = ('new_password1', 'new_password2')

@@ -3,5 +3,5 @@ from django.template.defaulttags import register
 
 
 @register.filter()
-def subtract(value, arg):
+def price_subtract(value, arg):
     return round(value - arg, settings.PRICE_ROUNDING)

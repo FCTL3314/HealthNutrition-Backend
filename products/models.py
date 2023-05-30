@@ -15,6 +15,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     store = models.ForeignKey(to='stores.Store', on_delete=models.CASCADE)
     product_type = models.ForeignKey(to='products.ProductType', on_delete=models.CASCADE)
+    views = models.PositiveIntegerField(default=0)
     slug = models.SlugField(unique=True)
 
     objects = ProductManager()

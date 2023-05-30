@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="py-4 px-2 mx-auto">
+    <div class="text-center">
+      <a class="fs-1 fw-semibold link-main" href="{{ object.url }}">
+        <img width="288" height="288" class="img-fluid" src="{{ object.logo.url }}" alt="store-logo">
+      </a>
+      <h5 class="py-3">
+        <a target="_blank" href="{{ object.url }}" class="fs-5 link-main">
+          Click to go to the store's website...
+        </a>
+      </h5>
+      <hr>
+      <h2 class="text-main">Description</h2>
+      <p class="fs-5">{{ object.description }}</p>
+      <hr>
+      <h2 class="text-main">Popular products</h2>
+    </div>
+  </div>
+{% endblock %}

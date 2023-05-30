@@ -9,11 +9,11 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
+from common.views import LogoutRequiredMixin, TitleMixin
 from users import forms as user_forms
 from users.models import EmailVerification, User
 from users.tasks import send_verification_email
 from utils.urls import get_referer_or_default
-from utils.views import LogoutRequiredMixin, TitleMixin
 
 
 class RegistrationCreateView(LogoutRequiredMixin, TitleMixin, SuccessMessageMixin, CreateView):
@@ -135,3 +135,24 @@ class EmailVerificationView(BaseEmailVerificationView):
         else:
             self.user.verify()
         return super().get(request, *args, **kwargs)
+
+
+class PasswordResetView(LogoutRequiredMixin, SuccessMessageMixin, auth_views.PasswordResetView):
+    title = 'Password Reset'
+    template_name = 'users/password/reset_password.html'
+    subject_template_name = 'users/password/password_reset_subject.html'
+    email_template_name = 'users/password/password_reset_content.html'
+    form_class = user_forms.PasswordResetForm
+    success_url = reverse_lazy('users:reset_password')
+    success_message = 'We’ve emailed you instructions for setting your password, if an account exists with the email ' \
+                      'you entered. You should receive them shortly. If you don’t receive an email, please make sure ' \
+                      'you’ve entered the address you registered with, and check your spam folder.'
+
+
+class PasswordResetConfirmView(LogoutRequiredMixin, SuccessMessageMixin, TitleMixin,
+                               auth_views.PasswordResetConfirmView):
+    title = 'Password Reset'
+    template_name = 'users/password/password_reset_confirm.html'
+    form_class = user_forms.SetPasswordForm
+    success_url = reverse_lazy('users:login')
+    success_message = 'Your password has been set. You can now sign into your account with the new password.'
