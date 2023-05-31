@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import ContextMixin, View
 
 
-class TitleMixin(ContextMixin):
+class TitleMixin:
     title = None
     context_title_name = 'title'
 
@@ -18,7 +18,7 @@ class TitleMixin(ContextMixin):
         return context
 
 
-class LogoutRequiredMixin(View):
+class LogoutRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
@@ -38,6 +38,7 @@ class PaginationUrlMixin(ContextMixin):
 
 
 class UserViewMixin:
+    view_cache_key = ''
     view_cache_time = 60
 
     def get(self, *args, **kwargs):
@@ -54,7 +55,7 @@ class UserViewMixin:
         pass
 
     def get_view_cache_key(self):
-        return ''
+        return self.view_cache_key
 
     def get_view_cache_time(self):
         return self.view_cache_time
