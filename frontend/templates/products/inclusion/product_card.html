@@ -2,14 +2,14 @@
 
 
 <div class="card h-100">
-  <a href="#">
+  <a href="{% url 'products:product-detail' object.slug %}">
     <div class="card-img-scale-wrp">
       <img src="{{ object.image.url }}" class="card-img-top" alt="product-image">
     </div>
   </a>
   <div class="card-body d-flex flex-column">
     <h5 class="card-title text-main text-truncate">
-      <a class="link-main fw-semibold" href="#">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="{% url 'products:product-detail' object.slug %}">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.card_description }}</p>
     <div class="d-flex align-items-center mt-auto">

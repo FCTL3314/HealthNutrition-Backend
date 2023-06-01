@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'stores',
     'products',
     'comparisons',
+    'interactions',
 ]
 
 MIDDLEWARE = [
@@ -168,10 +169,10 @@ PRICE_ROUNDING = 2
 POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
 PRODUCTS_CACHE_KEY = 'products_product_type:{id:}'
 PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product_type:{id:}'
+PRODUCT_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product:{id:}'
 
 POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60
-PRODUCT_TYPE_VIEW_TRACKING_CACHE_TIME = 60 * 30
 
 # Stores
 

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <div class="py-4 px-2 mx-auto">
+    <div class="text-center">
+      <img width="332" height="332" class="img-fluid mb-2" src="{{ object.image.url }}" alt="store-logo">
+      <h2 class="text-main">{{ object.name }}</h2>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Category:</span>
+            <span>{{ object.product_type.name }}</span>
+          </span>
+        </li>
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Price:</span>
+            <span>{{ object.price }}$</span>
+          </span>
+        </li>
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Views:</span>
+            <span>{{ object.views }}</span>
+          </span>
+        </li>
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Store:</span>
+              <a class="link-main" href="{% url 'stores:store-detail' object.store.slug %}">
+              <span>{{ object.store.name }}</span>
+            </a>
+          </span>
+        </li>
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Creation date:</span>
+            <span>{{ object.created_at|date }}</span>
+          </span>
+        </li>
+      </ul>
+      <hr>
+      <h2 class="text-main mb-4">Description</h2>
+      <p class="fs-5">{{ object.description }}</p>
+    </div>
+  </div>
+{% endblock %}

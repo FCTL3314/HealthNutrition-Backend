@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
@@ -64,7 +65,7 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
     ordering = ('store__name', 'price',)
     object_list_description = 'List of products of the selected category.'
 
-    view_tracking_cache_time = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TIME
+    view_tracking_cache_time = 60 * 30
 
     product_type: ProductType
 
@@ -93,6 +94,23 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         context = super().get_context_data(**kwargs)
         context['aggregations'] = self.object_list.price_aggregation()
         return context
+
+
+class ProductDetailView(UserViewTrackingMixin, TitleMixin, DetailView):
+    model = Product
+    template_name = 'products/product_detail.html'
+
+    view_tracking_cache_time = 60 * 30
+
+    def get_view_tracking_cache_key(self):
+        remote_addr = self.request.META.get('REMOTE_ADDR')
+        return settings.PRODUCT_VIEW_TRACKING_CACHE_KEY.format(addr=remote_addr, id=self.object.id)
+
+    def user_not_viewed(self):
+        self.object.increment_views()
+
+    def get_title(self):
+        return self.object.name
 
 
 class SearchListView(BaseProductsView):

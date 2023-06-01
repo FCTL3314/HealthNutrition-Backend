@@ -7,10 +7,9 @@ from stores.models import Store
 
 class StoreDetailView(TitleMixin, UserViewTrackingMixin, DetailView):
     model = Store
-    slug_url_kwarg = 'store_slug'
-    template_name = 'stores/stores.html'
+    template_name = 'stores/store_detail.html'
 
-    view_tracking_cache_time = settings.STORE_VIEW_TRACKING_CACHE_TIME
+    view_tracking_cache_time = 60 * 30
 
     def get_view_tracking_cache_key(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')
