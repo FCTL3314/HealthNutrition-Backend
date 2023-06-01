@@ -14,7 +14,7 @@ class AbstractComment(models.Model):
 
 
 class ProductComment(AbstractComment):
-    recipe = models.ForeignKey(to='products.Product', on_delete=models.CASCADE)
+    product = models.ForeignKey(to='products.Product', on_delete=models.CASCADE)
 
 
 class StoreComment(AbstractComment):

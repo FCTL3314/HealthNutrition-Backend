@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from interactions.admin import ProductCommentAdmin
 from products.models import Product, ProductType
 
 
@@ -16,3 +17,4 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug')
     ordering = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+    inlines = (ProductCommentAdmin,)
