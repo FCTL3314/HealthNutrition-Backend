@@ -1,12 +1,11 @@
 from urllib.parse import urlencode
 
 from django.conf import settings
-from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
-from common.views import PaginationUrlMixin, TitleMixin, UserViewMixin
+from common.views import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
 from products.forms import SearchForm
 from products.models import Product, ProductType
 
@@ -60,24 +59,23 @@ class ProductTypeListView(BaseProductsView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(UserViewMixin, BaseProductsView):
+class ProductListView(UserViewTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
     object_list_description = 'List of products of the selected category.'
 
-    view_cache_time = 60
+    view_tracking_cache_time = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TIME
 
-    product_type_slug: str
     product_type: ProductType
 
     def dispatch(self, request, *args, **kwargs):
-        self.product_type_slug = kwargs.get('slug')
-        self.product_type = get_object_or_404(self.model, slug=self.product_type_slug)
+        product_type_slug = kwargs.get('slug')
+        self.product_type = get_object_or_404(self.model, slug=product_type_slug)
         return super().dispatch(request, *args, **kwargs)
 
-    def get_view_cache_key(self):
+    def get_view_tracking_cache_key(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')
-        return settings.PRODUCT_TYPE_VIEW_CACHE_KEY.format(addr=remote_addr, slug=self.product_type_slug)
+        return settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY.format(addr=remote_addr, id=self.product_type.id)
 
     def user_not_viewed(self):
         self.product_type.increment_views()
@@ -93,7 +91,7 @@ class ProductListView(UserViewMixin, BaseProductsView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.object_list.price_aggregation())
+        context['aggregations'] = self.object_list.price_aggregation()
         return context
 
 
@@ -114,7 +112,7 @@ class SearchListView(BaseProductsView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.search_type == 'product':
-            context.update(self.object_list.price_aggregation())
+            context['aggregations'] = self.object_list.price_aggregation()
         return context
 
     def get_pagination_url(self):

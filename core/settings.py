@@ -167,11 +167,17 @@ PRICE_ROUNDING = 2
 
 POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
 PRODUCTS_CACHE_KEY = 'products_product_type:{id:}'
-PRODUCT_TYPE_VIEW_CACHE_KEY = 'address:{addr:}_product_type:{slug:}'
+PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product_type:{id:}'
 
 POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60
-PRODUCT_TYPE_VIEW_CACHE_TIME = 60 * 30
+PRODUCT_TYPE_VIEW_TRACKING_CACHE_TIME = 60 * 30
+
+# Stores
+
+STORE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_store:{id:}'
+
+STORE_VIEW_TRACKING_CACHE_TIME = 60 * 30
 
 # Email
 

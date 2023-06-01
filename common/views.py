@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
-from django.views.generic.base import ContextMixin, View
 
 
 class TitleMixin:
@@ -25,7 +24,7 @@ class LogoutRequiredMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class PaginationUrlMixin(ContextMixin):
+class PaginationUrlMixin:
     context_pagination_url_name = 'pagination_url'
 
     def get_pagination_url(self):
@@ -37,35 +36,40 @@ class PaginationUrlMixin(ContextMixin):
         return context
 
 
-class UserViewMixin:
-    view_cache_key = ''
-    view_cache_time = 60
+class UserViewTrackingMixin:
+    """Tracking of whether the user called a view during a some time."""
+
+    view_tracking_cache_key = ''
+    view_tracking_cache_time = 60
+
+    def get_view_tracking_cache_key(self):
+        return self.view_tracking_cache_key
+
+    def get_view_tracking_cache_time(self):
+        return self.view_tracking_cache_time
 
     def get(self, *args, **kwargs):
-        if self._has_view(self.request):
+        response = super().get(*args, **kwargs)
+        if self._has_viewed(self.request):
             self.user_viewed()
         else:
             self.user_not_viewed()
-        return super().get(*args, **kwargs)
+        return response
 
     def user_viewed(self):
+        """Logic if the user has already called this view."""
         pass
 
     def user_not_viewed(self):
+        """Logic if the user has not yet called this view."""
         pass
 
-    def get_view_cache_key(self):
-        return self.view_cache_key
-
-    def get_view_cache_time(self):
-        return self.view_cache_time
-
-    def _has_view(self, request):
-        key = self.get_view_cache_key()
+    def _has_viewed(self, request):
+        key = self.get_view_tracking_cache_key()
 
         is_exists = cache.get(key)
 
         if is_exists:
             return True
-        cache.set(key, True, self.get_view_cache_time())
+        cache.set(key, True, self.get_view_tracking_cache_time())
         return False

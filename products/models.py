@@ -23,6 +23,10 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.name} | {self.store}'
 
+    def increment_views(self):
+        self.views += 1
+        self.save(update_fields=('views',))
+
 
 class ProductType(models.Model):
     name = models.CharField(max_length=64)

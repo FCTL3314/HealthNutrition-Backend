@@ -13,10 +13,17 @@
         </a>
       </h5>
       <hr>
-      <h2 class="text-main">Description</h2>
+      <h2 class="text-main mb-4">Description</h2>
       <p class="fs-5">{{ object.description }}</p>
       <hr>
-      <h2 class="text-main">Popular products</h2>
+      <h2 class="text-main mb-4">Popular store products</h2>
+      <div class="row text-start">
+        {% for object in popular_products %}
+          <div class="col-lg-4 col-md-6 mb-3">
+            {% include 'products/inclusion/product_card.html' %}
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 {% endblock %}
