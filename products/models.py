@@ -40,8 +40,8 @@ class ProductType(models.Model):
     def __str__(self):
         return self.name
 
-    def get_products_with_stores(self, ordering=('name',)):
-        callback = self.product_set.prefetch_related('store').order_by(*ordering).all
+    def get_products_with_stores(self):
+        callback = self.product_set.prefetch_related('store').all
         return get_cached_data_or_set_new(
             key=settings.PRODUCTS_CACHE_KEY.format(id=self.id),
             callback=callback,

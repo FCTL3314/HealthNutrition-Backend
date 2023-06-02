@@ -1,12 +1,22 @@
 <div class="card h-100">
-  <a href="{% url 'products:products' object.slug %}">
+  <a href="{% if comparison %}
+             {% url 'comparisons:product-comparisons' object.slug %}
+           {% else %}
+             {% url 'products:products' object.slug %}
+           {% endif %}">
     <div class="card-img-scale-wrp">
       <img src="{{ object.image.url }}" class="card-img-top" alt="category_image">
     </div>
   </a>
   <div class="card-body">
     <h5 class="card-title text-main text-truncate">
-      <a class="link-main fw-semibold" href="{% url 'products:products' object.slug %}">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="{% if comparison %}
+                                               {% url 'comparisons:product-comparisons' object.slug %}
+                                             {% else %}
+                                               {% url 'products:products' object.slug %}
+                                             {% endif %}">
+        {{ object.name }}
+      </a>
     </h5>
     <p class="card-text">{{ object.description }}</p>
   </div>

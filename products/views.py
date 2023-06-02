@@ -50,8 +50,8 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
 
 
 class ProductTypeListView(BaseProductsView):
-    ordering = ('-views',)
     title = 'Categories'
+    ordering = ('-views',)
     object_list_title = 'Discover Popular Product Categories'
     object_list_description = 'Explore our curated list of popular product categories, sorted by their popularity ' \
                               'among users.'
@@ -72,8 +72,8 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
     product_type: ProductType
 
     def dispatch(self, request, *args, **kwargs):
-        product_type_slug = kwargs.get('slug')
-        self.product_type = get_object_or_404(self.model, slug=product_type_slug)
+        slug = kwargs.get('slug')
+        self.product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
     def get_view_tracking_cache_key(self):
@@ -84,7 +84,8 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         self.product_type.increment_views()
 
     def get_queryset(self):
-        return self.product_type.get_products_with_stores(self.ordering)
+        queryset = self.product_type.get_products_with_stores()
+        return queryset.order_by(*self.ordering)
 
     def get_title(self):
         return self.product_type.name

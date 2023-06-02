@@ -1,16 +1,47 @@
+from django.conf import settings
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common.mixins import TitleMixin
-from products.models import ProductType
+from common.mixins import TitleMixin, PaginationUrlMixin
+from products.models import Product, ProductType
 
 
-class ComparisonProductTypeListView(TitleMixin, ListView):
-    model = ProductType
+class BaseComparisonView(TitleMixin, PaginationUrlMixin, ListView):
     title = 'Comparisons'
-    template_name = 'comparisons/comparison.html'
+    paginate_by = settings.PRODUCTS_PAGINATE_BY
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comparison'] = True
+        return context
+
+
+class ComparisonProductTypeListView(BaseComparisonView):
+    model = ProductType
+    template_name = 'comparisons/product_type_comparison.html'
+    ordering = ('-views',)
 
     def get_queryset(self):
-        products = self.request.user.comparison_set.all()
-        product_types_id = products.values_list('product__product_type', flat=True)
+        comparisons = self.request.user.comparison_set.all()
+        product_types_id = comparisons.values_list('product__product_type', flat=True)
         product_types = self.model.objects.filter(id__in=product_types_id)
-        return product_types.product_price_annotation()
+        queryset = product_types.product_price_annotation()
+        return queryset.order_by(*self.ordering)
+
+
+class ComparisonProductListView(BaseComparisonView):
+    model = Product
+    template_name = 'comparisons/product_comparison.html'
+    ordering = ('store__name', 'price',)
+
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        product_type = get_object_or_404(ProductType, slug=slug)
+        products = product_type.get_products_with_stores()
+        queryset = products.filter(user=self.request.user)
+        return queryset.order_by(*self.ordering)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['aggregations'] = self.object_list.price_aggregation()
+        return context

@@ -8,9 +8,10 @@
     <div class="row">
       {% for object in object_list %}
         <div class="col-lg-4 col-md-6 mb-3">
-          {% include 'products/inclusions/product_type_card.html' %}
+          {% include 'products/inclusions/product_card.html' %}
         </div>
       {% endfor %}
     </div>
+    {% include 'products/inclusions/pagination.html' %}
   </div>
 {% endblock %}
