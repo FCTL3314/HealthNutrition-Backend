@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+
+    'widget_tweaks',
 
     'users',
     'stores',
@@ -166,6 +169,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 PRICE_ROUNDING = 2
 
+PRODUCTS_PAGINATE_BY = 12
+
 POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
 PRODUCTS_CACHE_KEY = 'products_product_type:{id:}'
 PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product_type:{id:}'
@@ -179,6 +184,10 @@ PRODUCTS_CACHE_TIME = 60 * 60
 STORE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_store:{id:}'
 
 STORE_VIEW_TRACKING_CACHE_TIME = 60 * 30
+
+# Interactions
+
+COMMENTS_PAGINATE_BY = 3
 
 # Email
 

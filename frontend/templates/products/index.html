@@ -4,7 +4,9 @@
 {% block content %}
   <div class="w-75 text-center mx-auto pt-4 mb-3">
     <h1 class="text-main">StoreTracker</h1>
-    <p class="fs-4">Compare and find the best prices among all the largest stores in the world using our website!</p>
+    <p class="fs-4">
+      Discover unbeatable deals and unlock the power of price comparison across global leading retailers on our platform!
+    </p>
     <form role="search" action="{% url 'products:search' %}" method="GET">
       <div class="row mb-3">
         <div class="col-lg-9">
@@ -46,14 +48,14 @@
     {% for object in object_list %}
       <div class="col-lg-4 col-md-6 mb-3">
         {% if current_url_name == 'products' %}
-          {% include 'products/inclusion/product_card.html' %}
+          {% include 'products/inclusions/product_card.html' %}
         {% elif current_url_name == 'product-types' %}
-          {% include 'products/inclusion/product_type_card.html' %}
+          {% include 'products/inclusions/product_type_card.html' %}
         {% elif current_url_name == 'search' %}
           {% if search_type == 'product' %}
-            {% include 'products/inclusion/product_card.html' %}
+            {% include 'products/inclusions/product_card.html' %}
           {% elif search_type == 'product_type' %}
-            {% include 'products/inclusion/product_type_card.html' %}
+            {% include 'products/inclusions/product_type_card.html' %}
           {% endif %}
         {% endif %}
       </div>
@@ -67,7 +69,7 @@
   {% endif %}
 </div>
 {% if object_list %}
-  {% include 'products/inclusion/pagination.html' %}
+  {% include 'products/inclusions/pagination.html' %}
 {% endif %}
 </div>
 {% endblock %}

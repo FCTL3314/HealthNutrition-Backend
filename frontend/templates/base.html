@@ -31,7 +31,10 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-action link-dark" href="#">My comparisons</a>
+          <a class="nav-link nav-link-action link-dark {% if current_url_name == 'product-type-comparisons' %} active {% endif %}"
+             href="{% url 'comparisons:product-type-comparisons' %}">
+            My comparisons
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link nav-link-action link-dark" target="_blank" href="https://github.com/FCTL3314/StoreTracker">

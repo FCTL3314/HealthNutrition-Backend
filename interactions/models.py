@@ -4,7 +4,7 @@ from django.db import models
 class AbstractComment(models.Model):
     author = models.ForeignKey(to='users.User', null=True, on_delete=models.CASCADE)
     text = models.CharField(max_length=516)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True

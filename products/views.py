@@ -6,7 +6,8 @@ from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
-from common.views import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
+from common.mixins import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
+from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
 
@@ -14,7 +15,7 @@ from products.models import Product, ProductType
 class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
     template_name = 'products/index.html'
     form_class = SearchForm
-    paginate_by = 12
+    paginate_by = settings.PRODUCTS_PAGINATE_BY
 
     search_query: str
     search_type: str
@@ -51,8 +52,9 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
 class ProductTypeListView(BaseProductsView):
     ordering = ('-views',)
     title = 'Categories'
-    object_list_title = 'Product Categories'
-    object_list_description = 'List of product categories sorted by popularity.'
+    object_list_title = 'Discover Popular Product Categories'
+    object_list_description = 'Explore our curated list of popular product categories, sorted by their popularity ' \
+                              'among users.'
 
     def get_queryset(self):
         initial_queryset = ProductType.objects.popular()
@@ -63,7 +65,7 @@ class ProductTypeListView(BaseProductsView):
 class ProductListView(UserViewTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
-    object_list_description = 'List of products of the selected category.'
+    object_list_description = 'Discover a wide range of products available in the selected category.'
 
     view_tracking_cache_time = 60 * 30
 
@@ -88,7 +90,7 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         return self.product_type.name
 
     def get_object_list_title(self):
-        return f'Products of category: {self.product_type.name}'
+        return f'Products in the category "{self.product_type.name}"'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,8 +98,9 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(UserViewTrackingMixin, TitleMixin, DetailView):
+class ProductDetailView(TitleMixin, UserViewTrackingMixin, FormMixin, DetailView):
     model = Product
+    form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
 
     view_tracking_cache_time = 60 * 30
@@ -112,11 +115,22 @@ class ProductDetailView(UserViewTrackingMixin, TitleMixin, DetailView):
     def get_title(self):
         return self.object.name
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        comments = self.object.productcomment_set.order_by('-created_at')
+        comments_count = comments.count()
+
+        context['comments'] = comments[:settings.COMMENTS_PAGINATE_BY]
+        context['comments_count'] = comments_count
+        context['has_more_comments'] = comments_count > settings.COMMENTS_PAGINATE_BY
+        return context
+
 
 class SearchListView(BaseProductsView):
     title = 'Search'
     object_list_title = 'Search results'
-    object_list_description = 'The results of your search query.'
+    object_list_description = 'Discover the results of your search query.'
 
     def get_queryset(self):
         queryset = list()

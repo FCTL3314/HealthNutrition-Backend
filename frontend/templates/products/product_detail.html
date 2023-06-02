@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
+{% load widget_tweaks %}
 
 
 {% block content %}
@@ -36,7 +38,7 @@
         </li>
         <li class="list-group-item bg-light">
           <span class="fs-5">
-            <span class="fw-semibold">Creation date:</span>
+            <span class="fw-semibold">Added:</span>
             <span>{{ object.created_at|date }}</span>
           </span>
         </li>
@@ -44,6 +46,12 @@
       <hr>
       <h2 class="text-main mb-4">Description</h2>
       <p class="fs-5">{{ object.description }}</p>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        {% include 'interactions/inclusions/comments.html' %}
+      </div>
     </div>
   </div>
 {% endblock %}

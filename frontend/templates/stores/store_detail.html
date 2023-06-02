@@ -20,9 +20,15 @@
       <div class="row text-start">
         {% for object in popular_products %}
           <div class="col-lg-4 col-md-6 mb-3">
-            {% include 'products/inclusion/product_card.html' %}
+            {% include 'products/inclusions/product_card.html' %}
           </div>
         {% endfor %}
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        {% include 'interactions/inclusions/comments.html' %}
       </div>
     </div>
   </div>

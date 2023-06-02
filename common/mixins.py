@@ -50,7 +50,7 @@ class UserViewTrackingMixin:
 
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
-        if self._has_viewed(self.request):
+        if self._has_viewed():
             self.user_viewed()
         else:
             self.user_not_viewed()
@@ -64,7 +64,7 @@ class UserViewTrackingMixin:
         """Logic if the user has not yet called this view."""
         pass
 
-    def _has_viewed(self, request):
+    def _has_viewed(self):
         key = self.get_view_tracking_cache_key()
 
         is_exists = cache.get(key)
