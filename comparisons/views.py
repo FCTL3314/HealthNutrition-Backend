@@ -23,7 +23,7 @@ class ComparisonProductTypeListView(BaseComparisonView):
 
     def get_queryset(self):
         comparisons = self.request.user.comparison_set.all()
-        product_types_id = comparisons.values_list('product__product_type', flat=True)
+        product_types_id = comparisons.values_list('product__product_type', flat=True).distinct()
         product_types = self.model.objects.filter(id__in=product_types_id)
         queryset = product_types.product_price_annotation()
         return queryset.order_by(*self.ordering)
