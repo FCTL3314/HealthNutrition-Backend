@@ -1,7 +1,10 @@
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.views.generic import RedirectView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
@@ -110,25 +113,52 @@ class ProductDetailView(CommonDetailView):
         return self.object.productcomment_set.order_by('-created_at')
 
 
-class SearchListView(BaseProductsView):
-    title = 'Search'
-    object_list_title = 'Search results'
-    object_list_description = 'Discover the results of your search query.'
+class SearchRedirectView(RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        search_type = self.request.GET.get('search_type')
+
+        match search_type:
+            case 'product':
+                redirect_url = reverse('products:product-search')
+            case 'product_type':
+                redirect_url = reverse('products:product-type-search')
+            case _:
+                raise BadRequest('search_type not in product or product_type')
+
+        params = self.request.META.get('QUERY_STRING')
+        return f'{redirect_url}?{params}'
+
+
+class BaseSearchView(BaseProductsView):
+    object_list_title = 'Search Results'
+    object_list_description = 'Explore the results of your search query.'
+
+    def get_pagination_url(self):
+        params = self.request.GET.dict().copy()
+        params['page'] = ''
+        return '?' + urlencode(params)
+
+
+class ProductSearchListView(BaseSearchView):
+    title = 'Product Search'
 
     def get_queryset(self):
-        queryset = list()
-        if self.search_type == 'product':
-            queryset = Product.objects.search(self.search_query).order_by('price')
-        elif self.search_type == 'product_type':
-            initial_queryset = ProductType.objects.search(self.search_query)
-            queryset = initial_queryset.product_price_annotation().order_by('views')
-        return queryset
+        return Product.objects.search(self.search_query).order_by('price')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.search_type == 'product':
-            context.update(self.object_list.price_aggregation())
+        context.update(self.object_list.price_aggregation())
         return context
+
+
+class ProductTypeSearchListView(BaseSearchView):
+    title = 'Category Search'
+
+    def get_queryset(self):
+        queryset = ProductType.objects.search(self.search_query)
+        queryset = queryset.product_price_annotation().order_by('views')
+        return queryset
 
     def get_pagination_url(self):
         params = self.request.GET.dict().copy()
