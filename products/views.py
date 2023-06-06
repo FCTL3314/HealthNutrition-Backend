@@ -2,11 +2,11 @@ from urllib.parse import urlencode
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
 from common.mixins import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
+from common.views import CustomBaseDetailView
 from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
@@ -99,33 +99,15 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(TitleMixin, UserViewTrackingMixin, FormMixin, DetailView):
+class ProductDetailView(CustomBaseDetailView):
     model = Product
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
 
-    view_tracking_cache_time = 60 * 30
+    view_tracking_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_KEY
 
-    def get_view_tracking_cache_key(self):
-        remote_addr = self.request.META.get('REMOTE_ADDR')
-        return settings.PRODUCT_VIEW_TRACKING_CACHE_KEY.format(addr=remote_addr, id=self.object.id)
-
-    def user_not_viewed(self):
-        self.object.increment_views()
-
-    def get_title(self):
-        return self.object.name
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        comments = self.object.productcomment_set.order_by('-created_at')
-        comments_count = comments.count()
-
-        context['comments'] = comments[:settings.COMMENTS_PAGINATE_BY]
-        context['comments_count'] = comments_count
-        context['has_more_comments'] = comments_count > settings.COMMENTS_PAGINATE_BY
-        return context
+    def get_comments(self):
+        return self.object.productcomment_set.order_by('-created_at')
 
 
 class SearchListView(BaseProductsView):

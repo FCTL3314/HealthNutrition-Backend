@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 
 from products.managers import ProductManager, ProductTypeManager
 from utils.cache import get_cached_data_or_set_new
@@ -22,6 +23,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} | {self.store}'
+
+    def get_absolute_url(self):
+        return reverse('products:product-detail', args=(self.slug,))
 
     def increment_views(self):
         self.views += 1

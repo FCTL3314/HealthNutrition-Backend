@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 
 
 class TitleMixin:
+    """Allows to add the title variable to the context."""
+
     title = None
     context_title_name = 'title'
 
@@ -13,7 +15,7 @@ class TitleMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = self.get_title()
-        context[self.context_title_name] = f'StoreTracker | {title}' if title else 'StoreTracker'
+        context[self.context_title_name] = f'{title} | StoreTracker' if title else 'StoreTracker'
         return context
 
 
@@ -25,6 +27,8 @@ class LogoutRequiredMixin:
 
 
 class PaginationUrlMixin:
+    """Allows to create pagination url and pass it to the context."""
+
     context_pagination_url_name = 'pagination_url'
 
     def get_pagination_url(self):
@@ -46,6 +50,7 @@ class UserViewTrackingMixin:
         return self.view_tracking_cache_key
 
     def get_view_tracking_cache_time(self):
+        """The time that a user's view is stored in the cache."""
         return self.view_tracking_cache_time
 
     def get(self, *args, **kwargs):
@@ -53,6 +58,7 @@ class UserViewTrackingMixin:
         if self._has_viewed():
             self.user_viewed()
         else:
+            cache.set(self.get_view_tracking_cache_key(), True, self.get_view_tracking_cache_time())
             self.user_not_viewed()
         return response
 
@@ -65,11 +71,6 @@ class UserViewTrackingMixin:
         pass
 
     def _has_viewed(self):
-        key = self.get_view_tracking_cache_key()
-
-        is_exists = cache.get(key)
-
-        if is_exists:
-            return True
-        cache.set(key, True, self.get_view_tracking_cache_time())
-        return False
+        """Checks if the cache of the user who called the view exists."""
+        is_exists = cache.get(self.get_view_tracking_cache_key())
+        return bool(is_exists)

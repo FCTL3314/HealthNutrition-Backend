@@ -2,14 +2,14 @@
 
 
 <div class="card h-100">
-  <a href="{% url 'products:product-detail' object.slug %}">
+  <a href="{{ object.get_absolute_url }}">
     <div class="card-img-scale-wrp">
       <img src="{{ object.image.url }}" class="card-img-top" alt="product-image">
     </div>
   </a>
   <div class="card-body d-flex flex-column">
     <h5 class="card-title text-main text-truncate">
-      <a class="link-main fw-semibold" href="{% url 'products:product-detail' object.slug %}">{{ object.name }}</a>
+      <a class="link-main fw-semibold" href="{{ object.get_absolute_url }}">{{ object.name }}</a>
     </h5>
     <p class="card-text">{{ object.card_description }}</p>
     <div class="d-flex align-items-center mt-auto">
@@ -100,7 +100,7 @@
               0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1
                1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"></path>
       </svg>
-      <a class="ms-1 text-important" href="{% url 'stores:store-detail' object.store.slug %}">
+      <a class="ms-1 text-important" href="{{ object.store.get_absolute_url }}">
         {{ object.store.name }}
       </a>
     </li>

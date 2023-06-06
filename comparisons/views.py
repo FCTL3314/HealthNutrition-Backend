@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common.mixins import TitleMixin, PaginationUrlMixin
+from common.mixins import PaginationUrlMixin, TitleMixin
 from products.models import Product, ProductType
 
 

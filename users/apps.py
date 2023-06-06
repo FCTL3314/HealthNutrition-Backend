@@ -6,4 +6,4 @@ class UsersConfig(AppConfig):
     name = 'users'
 
     def ready(self):
-        from users.signals import generate_slug
+        import users.signals

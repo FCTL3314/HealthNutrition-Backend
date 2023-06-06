@@ -42,13 +42,15 @@ class User(AbstractUser):
         verifications = self.emailverification_set.filter(expiration__gt=now())
         return verifications.order_by('-created_at')
 
-    def verify(self):
+    def verify(self, commit=True):
         self.is_verified = True
-        self.save(update_fields=('is_verified',))
+        if commit:
+            self.save(update_fields=('is_verified',))
 
-    def update_slug(self):
+    def update_slug(self, commit=True):
         self.slug = slugify(self.username)
-        self.save(update_fields=('slug',))
+        if commit:
+            self.save(update_fields=('slug',))
 
     def get_image_url(self):
         return self.image.url if self.image else os.path.join(settings.STATIC_URL, 'images/default_user_image.png')

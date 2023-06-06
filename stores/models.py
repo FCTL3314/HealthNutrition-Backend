@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Store(models.Model):
@@ -11,6 +12,9 @@ class Store(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('stores:store-detail', args=(self.slug,))
 
     def popular_products(self):
         return self.product_set.order_by('-views')
