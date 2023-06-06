@@ -9,11 +9,12 @@ from utils.cache import get_cached_data_or_set_new
 class ProductQuerySet(models.QuerySet):
 
     def price_aggregation(self):
-        return self.aggregate(
+        aggregations = self.aggregate(
             min_price=Round(Min('price'), settings.PRICE_ROUNDING),
             max_price=Round(Max('price'), settings.PRICE_ROUNDING),
             avg_price=Round(Avg('price'), settings.PRICE_ROUNDING),
         )
+        return {'aggregations': aggregations}
 
 
 class ProductManager(models.Manager):

@@ -1,11 +1,11 @@
 from django.conf import settings
 
-from common.views import CustomBaseDetailView
+from common.views import CommonDetailView
 from interactions.forms import StoreCommentForm
 from stores.models import Store
 
 
-class StoreDetailView(CustomBaseDetailView):
+class StoreDetailView(CommonDetailView):
     model = Store
     form_class = StoreCommentForm
     template_name = 'stores/store_detail.html'

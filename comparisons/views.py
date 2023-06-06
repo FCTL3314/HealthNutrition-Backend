@@ -43,5 +43,5 @@ class ComparisonProductListView(BaseComparisonView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['aggregations'] = self.object_list.price_aggregation()
+        context.update(self.object_list.price_aggregation())
         return context

@@ -6,7 +6,7 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
 from common.mixins import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
-from common.views import CustomBaseDetailView
+from common.views import CommonDetailView
 from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
@@ -95,11 +95,11 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['aggregations'] = self.object_list.price_aggregation()
+        context.update(self.object_list.price_aggregation())
         return context
 
 
-class ProductDetailView(CustomBaseDetailView):
+class ProductDetailView(CommonDetailView):
     model = Product
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
@@ -127,7 +127,7 @@ class SearchListView(BaseProductsView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.search_type == 'product':
-            context['aggregations'] = self.object_list.price_aggregation()
+            context.update(self.object_list.price_aggregation())
         return context
 
     def get_pagination_url(self):

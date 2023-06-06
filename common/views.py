@@ -7,7 +7,7 @@ from django.views.generic.edit import FormMixin
 from common.mixins import TitleMixin, UserViewTrackingMixin
 
 
-class CustomBaseDetailView(TitleMixin, UserViewTrackingMixin, FormMixin, DetailView):
+class CommonDetailView(TitleMixin, UserViewTrackingMixin, FormMixin, DetailView):
     view_tracking_cache_template: str
     view_tracking_cache_time = 60 * 30
 
