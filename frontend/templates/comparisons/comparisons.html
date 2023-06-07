@@ -8,7 +8,11 @@
     <div class="row">
       {% for object in object_list %}
         <div class="col-lg-4 col-md-6 mb-3">
-          {% include 'products/inclusions/product_card.html' %}
+          {% if current_url_name == 'product-type-comparisons' %}
+            {% include 'products/inclusions/product_type_card.html' %}
+          {% elif current_url_name == 'product-comparisons' %}
+            {% include 'products/inclusions/product_card.html' %}
+          {% endif %}
         </div>
       {% endfor %}
     </div>

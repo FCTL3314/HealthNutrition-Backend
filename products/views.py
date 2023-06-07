@@ -81,7 +81,7 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
     @property
     def view_tracking_cache_key(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')
-        return settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY.format(addr=remote_addr, id=self.product_type.id)
+        return settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE.format(addr=remote_addr, id=self.product_type.id)
 
     def user_not_viewed(self):
         self.product_type.increment_views()
@@ -107,7 +107,7 @@ class ProductDetailView(CommonDetailView):
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
 
-    view_tracking_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_KEY
+    view_tracking_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
     def get_comments(self):
         return self.object.productcomment_set.order_by('-created_at')

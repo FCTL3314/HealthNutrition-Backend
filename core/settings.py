@@ -174,9 +174,9 @@ PRICE_ROUNDING = 2
 PRODUCTS_PAGINATE_BY = 12
 
 POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
-PRODUCTS_CACHE_KEY = 'products_product_type:{id:}'
-PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product_type:{id:}'
-PRODUCT_VIEW_TRACKING_CACHE_KEY = 'address:{addr:}_product:{id:}'
+PRODUCTS_CACHE_TEMPLATE = 'products_product_type:{id:}'
+PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product_type:{id:}'
+PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product:{id:}'
 
 POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60

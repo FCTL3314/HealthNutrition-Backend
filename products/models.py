@@ -47,7 +47,7 @@ class ProductType(models.Model):
     def get_products_with_stores(self):
         callback = self.product_set.prefetch_related('store').all
         return get_cached_data_or_set_new(
-            key=settings.PRODUCTS_CACHE_KEY.format(id=self.id),
+            key=settings.PRODUCTS_CACHE_TEMPLATE.format(id=self.id),
             callback=callback,
             timeout=settings.PRODUCTS_CACHE_TIME,
         )

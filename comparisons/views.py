@@ -18,7 +18,7 @@ class BaseComparisonView(TitleMixin, PaginationUrlMixin, ListView):
 
 class ComparisonProductTypeListView(BaseComparisonView):
     model = ProductType
-    template_name = 'comparisons/product_type_comparison.html'
+    template_name = 'comparisons/comparisons.html'
     ordering = ('-views',)
 
     def get_queryset(self):
@@ -31,7 +31,7 @@ class ComparisonProductTypeListView(BaseComparisonView):
 
 class ComparisonProductListView(BaseComparisonView):
     model = Product
-    template_name = 'comparisons/product_comparison.html'
+    template_name = 'comparisons/comparisons.html'
     ordering = ('store__name', 'price',)
 
     def get_queryset(self):
