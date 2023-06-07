@@ -69,6 +69,7 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
     object_list_description = 'Discover a wide range of products available in the selected category.'
+    view_tracking_cache_time = settings.USER_VIEW_TRACKING_CACHE_TIME
 
     product_type: ProductType
 
@@ -77,7 +78,8 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         self.product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
-    def get_view_tracking_cache_key(self):
+    @property
+    def view_tracking_cache_key(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')
         return settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_KEY.format(addr=remote_addr, id=self.product_type.id)
 
