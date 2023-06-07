@@ -5,7 +5,6 @@ from uuid import uuid4
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -46,11 +45,6 @@ class User(AbstractUser):
         self.is_verified = True
         if commit:
             self.save(update_fields=('is_verified',))
-
-    def update_slug(self, commit=True):
-        self.slug = slugify(self.username)
-        if commit:
-            self.save(update_fields=('slug',))
 
     def get_image_url(self):
         return self.image.url if self.image else os.path.join(settings.STATIC_URL, 'images/default_user_image.png')
