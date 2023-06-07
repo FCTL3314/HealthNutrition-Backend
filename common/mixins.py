@@ -44,7 +44,7 @@ class UserViewTrackingMixin:
     """Tracking of whether the user called a view during a some time."""
 
     view_tracking_cache_key = ''
-    view_tracking_cache_time = 60
+    view_tracking_cache_time = (60 * 60) * 12
 
     def get_view_tracking_cache_key(self):
         return self.view_tracking_cache_key

@@ -9,7 +9,6 @@ from common.mixins import TitleMixin, UserViewTrackingMixin
 
 class CommonDetailView(TitleMixin, UserViewTrackingMixin, FormMixin, DetailView):
     view_tracking_cache_template: str
-    view_tracking_cache_time = 60 * 30
 
     def get_view_tracking_cache_key(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')

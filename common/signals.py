@@ -25,17 +25,14 @@ class BaseUpdateSlugSignal(ABC):
         pass
 
     def connect(self):
-        pre_save.connect(self.handler, sender=self.sender)
+        pre_save.connect(self._handler, sender=self.sender)
 
-    def handler(self, sender, instance, *args, **kwargs):
-        slugify_field = self.slugify_field
-        slugify_string = getattr(instance, slugify_field)
-
+    def _handler(self, sender, instance, *args, **kwargs):
         if not instance.id:
-            change_slug(instance=instance, slugify_string=slugify_string, commit=False)
+            change_slug(instance=instance, slugify_field=self.slugify_field, commit=False)
         else:
-            old_slugify_field = getattr(sender.objects.get(id=instance.id), slugify_field)
-            new_slugify_field = getattr(instance, slugify_field)
+            old_slugify_field = getattr(sender.objects.get(id=instance.id), self.slugify_field)
+            new_slugify_field = getattr(instance, self.slugify_field)
 
             if old_slugify_field != new_slugify_field:
-                change_slug(instance=instance, slugify_string=slugify_string, commit=False)
+                change_slug(instance=instance, slugify_field=self.slugify_field, commit=False)

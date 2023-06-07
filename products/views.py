@@ -70,8 +70,6 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
     ordering = ('store__name', 'price',)
     object_list_description = 'Discover a wide range of products available in the selected category.'
 
-    view_tracking_cache_time = 60 * 30
-
     product_type: ProductType
 
     def dispatch(self, request, *args, **kwargs):
