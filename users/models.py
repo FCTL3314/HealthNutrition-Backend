@@ -8,10 +8,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 
+from common.models import SlugifyMixin
 from utils.mail import convert_html_to_email_message
 
 
-class User(AbstractUser):
+class User(SlugifyMixin, AbstractUser):
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to='users', null=True, blank=True)
     slug = models.SlugField(unique=True)

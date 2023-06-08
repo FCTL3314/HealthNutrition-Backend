@@ -1,8 +1,10 @@
 from django.db import models
 from django.urls import reverse
 
+from common.models import IncrementMixin, SlugifyMixin
 
-class Store(models.Model):
+
+class Store(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=64, unique=True)
     url = models.URLField(unique=True)
     logo = models.ImageField(upload_to='stores')

@@ -1,18 +1,18 @@
 from django.utils.text import slugify
 
 
-def change_slug(instance, slugify_field, commit=True):
-    slugify_string = getattr(instance, slugify_field)
-    instance.slug = slugify(slugify_string)
-    if commit:
-        instance.save(update_fields=('slug',))
+class SlugifyMixin:
+
+    def change_slug(self, field_to_slugify, commit=True):
+        slugify_string = getattr(self, field_to_slugify)
+        self.slug = slugify(slugify_string)
+        if commit:
+            self.save(update_fields=('slug',))
 
 
-def increment_views(instance, views_field='views', commit=True):
-    setattr(
-        instance,
-        views_field,
-        getattr(instance, views_field) + 1,
-    )
-    if commit:
-        instance.save(update_fields=(views_field,))
+class IncrementMixin:
+
+    def increase(self, field, value=1, commit=True):
+        setattr(self, field, getattr(self, field) + value)
+        if commit:
+            self.save(update_fields=(field,))

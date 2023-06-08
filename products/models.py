@@ -2,11 +2,12 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
+from common.models import IncrementMixin, SlugifyMixin
 from products.managers import ProductManager, ProductTypeManager
 from utils.cache import get_cached_data_or_set_new
 
 
-class Product(models.Model):
+class Product(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=128)
     price = models.FloatField()
     card_description = models.CharField(max_length=128)
@@ -28,7 +29,7 @@ class Product(models.Model):
         return reverse('products:product-detail', args=(self.slug,))
 
 
-class ProductType(models.Model):
+class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
     image = models.ImageField(upload_to='products/product_types')

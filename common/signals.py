@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 
 from django.db.models.signals import pre_save
 
-from common.models import change_slug
-
 
 class BaseUpdateSlugSignal(ABC):
     """
@@ -29,10 +27,10 @@ class BaseUpdateSlugSignal(ABC):
 
     def _handler(self, sender, instance, *args, **kwargs):
         if not instance.id:
-            change_slug(instance=instance, slugify_field=self.slugify_field, commit=False)
+            instance.change_slug(self.slugify_field, commit=False)
         else:
             old_slugify_field = getattr(sender.objects.get(id=instance.id), self.slugify_field)
             new_slugify_field = getattr(instance, self.slugify_field)
 
             if old_slugify_field != new_slugify_field:
-                change_slug(instance=instance, slugify_field=self.slugify_field, commit=False)
+                instance.change_slug(self.slugify_field, commit=False)

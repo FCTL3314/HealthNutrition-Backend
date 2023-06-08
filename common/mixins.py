@@ -5,8 +5,6 @@ from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormMixin
 
-from common.models import increment_views
-
 
 class TitleMixin:
     """Allows to add the title variable to the context."""
@@ -118,17 +116,6 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         key = self.visit_cache_template
         kwargs = self.get_visit_cache_template_kwargs()
         return key.format(**kwargs)
-
-
-class SingleObjectVisitsTrackingMixin(VisitsTrackingMixin):
-
-    def not_visited(self):
-        increment_views(self.object)
-
-    def get_visit_cache_template_kwargs(self):
-        remote_addr = self.request.META.get('REMOTE_ADDR')
-        kwargs = {'addr': remote_addr, 'id': self.object.id}
-        return kwargs
 
 
 class CommentsMixin(FormMixin, ABC):

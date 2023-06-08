@@ -8,10 +8,8 @@ from django.views.generic import DetailView, RedirectView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
-from common.mixins import (CommentsMixin, PaginationUrlMixin,
-                           SingleObjectVisitsTrackingMixin, TitleMixin,
+from common.mixins import (CommentsMixin, PaginationUrlMixin, TitleMixin,
                            VisitsTrackingMixin)
-from common.models import increment_views
 from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
@@ -91,7 +89,7 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
         return kwargs
 
     def not_visited(self):
-        increment_views(self.product_type)
+        self.product_type.increase('views')
 
     def get_title(self):
         return self.product_type.name
@@ -105,7 +103,7 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(TitleMixin, CommentsMixin, SingleObjectVisitsTrackingMixin, DetailView):
+class ProductDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailView):
     model = Product
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
@@ -118,6 +116,14 @@ class ProductDetailView(TitleMixin, CommentsMixin, SingleObjectVisitsTrackingMix
     @property
     def comments(self):
         return self.object.productcomment_set.order_by('-created_at')
+
+    def get_visit_cache_template_kwargs(self):
+        remote_addr = self.request.META.get('REMOTE_ADDR')
+        kwargs = {'addr': remote_addr, 'id': self.object.id}
+        return kwargs
+
+    def not_visited(self):
+        self.object.increase('views')
 
 
 class SearchRedirectView(RedirectView):
