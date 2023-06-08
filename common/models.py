@@ -8,7 +8,11 @@ def change_slug(instance, slugify_field, commit=True):
         instance.save(update_fields=('slug',))
 
 
-def increment_views(instance, commit=True):
-    instance.views += 1
+def increment_views(instance, views_field='views', commit=True):
+    setattr(
+        instance,
+        views_field,
+        getattr(instance, views_field) + 1,
+    )
     if commit:
-        instance.save(update_fields=('views',))
+        instance.save(update_fields=(views_field,))

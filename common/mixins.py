@@ -6,7 +6,6 @@ from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormMixin
 
 from common.models import increment_views
-from utils.validators import validate_attribute_not_none
 
 
 class TitleMixin:
@@ -52,12 +51,12 @@ class BaseVisitsTrackingMixin(ABC):
     _visit_cache_time = None
 
     @property
+    @abstractmethod
     def visit_cache_key(self):
         """
         The cache key with which in the future it will be possible to determine
         whether this entity has watched this view.
         """
-        validate_attribute_not_none(self._visit_cache_key, 'visit_cache_key')
         return self._visit_cache_key
 
     @visit_cache_key.setter
@@ -65,9 +64,9 @@ class BaseVisitsTrackingMixin(ABC):
         self._visit_cache_key = value
 
     @property
+    @abstractmethod
     def visit_cache_time(self):
         """The time that the cache will be stored."""
-        validate_attribute_not_none(self._visit_cache_time, 'visit_cache_time')
         return self._visit_cache_time
 
     @visit_cache_time.setter
@@ -102,8 +101,8 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
     visit_cache_time = settings.VISITS_CACHE_TIME
 
     @property
+    @abstractmethod
     def visit_cache_template(self):
-        validate_attribute_not_none(self._visit_cache_template, 'visit_cache_template')
         return self._visit_cache_template
 
     @visit_cache_template.setter
@@ -136,8 +135,8 @@ class CommentsMixin(FormMixin, ABC):
     _comments = None
 
     @property
+    @abstractmethod
     def comments(self):
-        validate_attribute_not_none(self._comments, 'comments')
         return self._comments
 
     @comments.setter
