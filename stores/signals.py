@@ -4,7 +4,7 @@ from users.signals import BaseUpdateSlugSignal
 
 class StoreUpdateSlugSignal(BaseUpdateSlugSignal):
     sender = Store
-    slugify_field = 'name'
+    field_to_slugify = 'name'
 
 
 store_update_slug_signal = StoreUpdateSlugSignal()

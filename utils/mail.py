@@ -2,7 +2,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
 
-def convert_html_to_email_message(subject_template_name, html_email_template_name, emails_list, context=None):
+def convert_html_to_email_message(subject_template_name: str, html_email_template_name: str, emails_list: list,
+                                  context: dict = None) -> EmailMultiAlternatives:
+    """
+    Converts html templates into a string, attaching them to an
+    EmailMultiAlternatives object for later sending.
+    """
     raw_subject = render_to_string(subject_template_name)
 
     subject = ''.join(raw_subject.splitlines())
