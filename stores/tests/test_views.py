@@ -2,7 +2,6 @@ import os
 
 import pytest
 from django.conf import settings
-from django.urls import reverse
 
 from interactions.models import StoreComment
 from stores.models import Store

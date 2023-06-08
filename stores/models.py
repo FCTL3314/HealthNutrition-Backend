@@ -18,7 +18,3 @@ class Store(models.Model):
 
     def popular_products(self):
         return self.product_set.order_by('-views')
-
-    def increment_views(self):
-        self.views += 1
-        self.save(update_fields=('views',))

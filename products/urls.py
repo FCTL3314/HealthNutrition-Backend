@@ -11,6 +11,6 @@ urlpatterns = [
     path('products/<slug:slug>/', ProductListView.as_view(), name='products'),
     path('product/<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
     path('search/redirect/', SearchRedirectView.as_view(), name='search-redirect'),
-    path('search/product/', ProductSearchListView.as_view(), name='product-search'),
-    path('search/product-type/', ProductTypeSearchListView.as_view(), name='product-type-search'),
+    path('search/products/', ProductSearchListView.as_view(), name='product-search'),
+    path('search/product-types/', ProductTypeSearchListView.as_view(), name='product-type-search'),
 ]

@@ -1,8 +1,12 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import FormMixin
+
+from common.models import increment_views
+from utils.validators import validate_attribute_not_none
 
 
 class TitleMixin:
@@ -42,38 +46,111 @@ class PaginationUrlMixin:
         return context
 
 
-class UserViewTrackingMixin(ABC):
-    """Tracking of whether the user called a view during a some time."""
+class BaseVisitsTrackingMixin(ABC):
+    """Checks if this view has been called based on whether the given cache exists."""
+    _visit_cache_key = None
+    _visit_cache_time = None
 
     @property
-    @abstractmethod
-    def view_tracking_cache_key(self):
+    def visit_cache_key(self):
+        """
+        The cache key with which in the future it will be possible to determine
+        whether this entity has watched this view.
+        """
+        validate_attribute_not_none(self._visit_cache_key, 'visit_cache_key')
+        return self._visit_cache_key
+
+    @visit_cache_key.setter
+    def visit_cache_key(self, value):
+        self._visit_cache_key = value
+
+    @property
+    def visit_cache_time(self):
+        """The time that the cache will be stored."""
+        validate_attribute_not_none(self._visit_cache_time, 'visit_cache_time')
+        return self._visit_cache_time
+
+    @visit_cache_time.setter
+    def visit_cache_time(self, value):
+        self._visit_cache_time = value
+
+    def _has_visited(self):
+        """Checks if the cache exists."""
+        is_exists = cache.get(self.visit_cache_key)
+        return bool(is_exists)
+
+    def visited(self):
+        """Logic if the cache exists."""
         pass
 
-    @property
-    @abstractmethod
-    def view_tracking_cache_time(self):
-        """The time that a user's view is stored in the cache."""
+    def not_visited(self):
+        """Logic if the cache not exists."""
         pass
 
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
-        if self._has_viewed():
-            self.user_viewed()
+        if self._has_visited():
+            self.visited()
         else:
-            cache.set(self.view_tracking_cache_key, True, self.view_tracking_cache_time)
-            self.user_not_viewed()
+            cache.set(self.visit_cache_key, True, self.visit_cache_time)
+            self.not_visited()
         return response
 
-    def user_viewed(self):
-        """Logic if the user has already called this view."""
+
+class VisitsTrackingMixin(BaseVisitsTrackingMixin):
+    _visit_cache_template = None
+    visit_cache_time = settings.VISITS_CACHE_TIME
+
+    @property
+    def visit_cache_template(self):
+        validate_attribute_not_none(self._visit_cache_template, 'visit_cache_template')
+        return self._visit_cache_template
+
+    @visit_cache_template.setter
+    def visit_cache_template(self, value):
+        self._visit_cache_template = value
+
+    @abstractmethod
+    def get_visit_cache_template_kwargs(self):
         pass
 
-    def user_not_viewed(self):
-        """Logic if the user has not yet called this view."""
-        pass
+    @property
+    def visit_cache_key(self):
+        key = self.visit_cache_template
+        kwargs = self.get_visit_cache_template_kwargs()
+        return key.format(**kwargs)
 
-    def _has_viewed(self):
-        """Checks if the cache of the user who called the view exists."""
-        is_exists = cache.get(self.view_tracking_cache_key)
-        return bool(is_exists)
+
+class SingleObjectVisitsTrackingMixin(VisitsTrackingMixin):
+
+    def not_visited(self):
+        increment_views(self.object)
+
+    def get_visit_cache_template_kwargs(self):
+        remote_addr = self.request.META.get('REMOTE_ADDR')
+        kwargs = {'addr': remote_addr, 'id': self.object.id}
+        return kwargs
+
+
+class CommentsMixin(FormMixin, ABC):
+    _comments = None
+
+    @property
+    def comments(self):
+        validate_attribute_not_none(self._comments, 'comments')
+        return self._comments
+
+    @comments.setter
+    def comments(self, value):
+        self._comments = value
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        comments = self.comments.prefetch_related('author')
+        comments_count = comments.count()
+
+        context['comments'] = comments[:settings.COMMENTS_PAGINATE_BY]
+        context['comments_count'] = comments_count
+        context['has_more_comments'] = comments_count > settings.COMMENTS_PAGINATE_BY
+        return context

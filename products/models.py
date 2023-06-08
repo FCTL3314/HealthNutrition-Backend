@@ -27,10 +27,6 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('products:product-detail', args=(self.slug,))
 
-    def increment_views(self):
-        self.views += 1
-        self.save(update_fields=('views',))
-
 
 class ProductType(models.Model):
     name = models.CharField(max_length=64)
@@ -51,7 +47,3 @@ class ProductType(models.Model):
             callback=callback,
             timeout=settings.PRODUCTS_CACHE_TIME,
         )
-
-    def increment_views(self):
-        self.views += 1
-        self.save(update_fields=('views',))

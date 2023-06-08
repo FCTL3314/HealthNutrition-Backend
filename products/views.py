@@ -4,12 +4,14 @@ from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views.generic import RedirectView
+from django.views.generic import DetailView, RedirectView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
-from common.mixins import PaginationUrlMixin, TitleMixin, UserViewTrackingMixin
-from common.views import CommonDetailView
+from common.mixins import (CommentsMixin, PaginationUrlMixin,
+                           SingleObjectVisitsTrackingMixin, TitleMixin,
+                           VisitsTrackingMixin)
+from common.models import increment_views
 from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
@@ -65,11 +67,12 @@ class ProductTypeListView(BaseProductsView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(UserViewTrackingMixin, BaseProductsView):
+class ProductListView(VisitsTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = ('store__name', 'price',)
     object_list_description = 'Discover a wide range of products available in the selected category.'
-    view_tracking_cache_time = settings.USER_VIEW_TRACKING_CACHE_TIME
+    visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
+    visit_cache_time = settings.VISITS_CACHE_TIME
 
     product_type: ProductType
 
@@ -78,17 +81,17 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         self.product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
-    @property
-    def view_tracking_cache_key(self):
-        remote_addr = self.request.META.get('REMOTE_ADDR')
-        return settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE.format(addr=remote_addr, id=self.product_type.id)
-
-    def user_not_viewed(self):
-        self.product_type.increment_views()
-
     def get_queryset(self):
         queryset = self.product_type.get_products_with_stores()
         return queryset.order_by(*self.ordering)
+
+    def get_visit_cache_template_kwargs(self):
+        remote_addr = self.request.META.get('REMOTE_ADDR')
+        kwargs = {'addr': remote_addr, 'id': self.product_type.id}
+        return kwargs
+
+    def not_visited(self):
+        increment_views(self.product_type)
 
     def get_title(self):
         return self.product_type.name
@@ -102,14 +105,18 @@ class ProductListView(UserViewTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(CommonDetailView):
+class ProductDetailView(TitleMixin, CommentsMixin, SingleObjectVisitsTrackingMixin, DetailView):
     model = Product
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
 
-    view_tracking_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
+    visit_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
-    def get_comments(self):
+    def get_title(self):
+        return self.object.name
+
+    @property
+    def comments(self):
         return self.object.productcomment_set.order_by('-created_at')
 
 
