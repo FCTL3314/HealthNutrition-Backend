@@ -163,6 +163,7 @@ CELERY_TASK_TIME_LIMIT = 60 * 30
 
 AUTH_USER_MODEL = 'users.User'
 
+LOGIN_URL = '/users/login/'
 LOGOUT_REDIRECT_URL = '/'
 
 VISITS_CACHE_TIME = (60 * 60) * 12

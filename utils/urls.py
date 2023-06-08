@@ -1,4 +1,4 @@
-def get_referer_or_default(request, default: str = '/') -> str:
+def get_referer_or_default(request, default: str | None = '/') -> str:
     """
     Returns the url from which the user went to this page,
     if there is no such url, then returns dafault argument.
