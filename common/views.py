@@ -116,7 +116,7 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         Allows to use template strings to create a cache key.
 
         Example:
-            >>> 'addr:{addr:}_product:{id:}'
+            return 'addr:{addr:}_product:{id:}'
         """
         return self._visit_cache_template
 
@@ -131,7 +131,8 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         creating a template cache string.
 
         Example:
-            >>> kwargs = {'addr': '127.0.0.1', 'id': '4'}
+            kwargs = {'addr': '127.0.0.1', 'id': '4'}
+            return kwargs
         """
         pass
 

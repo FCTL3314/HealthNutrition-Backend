@@ -1,21 +1,21 @@
 import pytest
-from faker import Faker
+from factory import Faker
+from factory.django import DjangoModelFactory
 
 from users.models import User
 
 
-@pytest.fixture()
-def user():
-    user = User.objects.create(
-        username='TestUser',
-        first_name='Test',
-        last_name='User',
-        email='email@example.com',
-        password='qnjCmk27yzKTCWWiwdYH',
-    )
-    return user
+class TestUserFactory(DjangoModelFactory):
+    class Meta:
+        model = User
+
+    username = Faker('user_name')
+    first_name = Faker('first_name')
+    last_name = Faker('last_name')
+    email = Faker('email')
+    password = Faker('password')
 
 
 @pytest.fixture()
-def faker():
-    return Faker()
+def user(faker):
+    return TestUserFactory()
