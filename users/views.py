@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from common.mixins import LogoutRequiredMixin, TitleMixin
+from common.views import LogoutRequiredMixin, TitleMixin
 from users import forms as user_forms
 from users.models import EmailVerification, User
 from users.tasks import send_verification_email

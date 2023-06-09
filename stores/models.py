@@ -18,5 +18,8 @@ class Store(SlugifyMixin, IncrementMixin, models.Model):
     def get_absolute_url(self):
         return reverse('stores:store-detail', args=(self.slug,))
 
+    def get_comments(self):
+        return self.storecomment_set.order_by('-created_at')
+
     def popular_products(self):
         return self.product_set.order_by('-views')

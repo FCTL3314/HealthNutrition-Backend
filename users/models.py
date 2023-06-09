@@ -1,4 +1,3 @@
-import os
 from datetime import timedelta
 from uuid import uuid4
 
@@ -10,6 +9,7 @@ from django.utils.timezone import now
 
 from common.models import SlugifyMixin
 from utils.mail import convert_html_to_email_message
+from utils.static import get_static_file
 
 
 class User(SlugifyMixin, AbstractUser):
@@ -48,7 +48,7 @@ class User(SlugifyMixin, AbstractUser):
             self.save(update_fields=('is_verified',))
 
     def get_image_url(self):
-        return self.image.url if self.image else os.path.join(settings.STATIC_URL, 'images/default_user_image.png')
+        return self.image.url if self.image else get_static_file('images/default_user_image.png')
 
 
 class EmailVerification(models.Model):

@@ -8,8 +8,8 @@ from django.views.generic import DetailView, RedirectView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
-from common.mixins import (CommentsMixin, PaginationUrlMixin, TitleMixin,
-                           VisitsTrackingMixin)
+from common.views import (CommentsMixin, PaginationUrlMixin, TitleMixin,
+                          VisitsTrackingMixin)
 from interactions.forms import ProductCommentForm
 from products.forms import SearchForm
 from products.models import Product, ProductType
@@ -115,7 +115,7 @@ class ProductDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailVi
 
     @property
     def comments(self):
-        return self.object.productcomment_set.order_by('-created_at')
+        return self.object.get_comments()
 
     def get_visit_cache_template_kwargs(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')

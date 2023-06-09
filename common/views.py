@@ -131,8 +131,7 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         creating a template cache string.
 
         Example:
-            >>> kwargs = self.get_visit_cache_template_kwargs()
-            >>> 'addr:{addr:}_product:{id:}'.format(**kwargs)
+            >>> kwargs = {'addr': '127.0.0.1', 'id': '4'}
         """
         pass
 

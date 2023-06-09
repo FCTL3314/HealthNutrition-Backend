@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common.mixins import PaginationUrlMixin, TitleMixin
+from common.views import PaginationUrlMixin, TitleMixin
 from products.models import Product, ProductType
 
 

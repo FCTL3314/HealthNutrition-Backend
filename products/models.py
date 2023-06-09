@@ -28,6 +28,9 @@ class Product(SlugifyMixin, IncrementMixin, models.Model):
     def get_absolute_url(self):
         return reverse('products:product-detail', args=(self.slug,))
 
+    def get_comments(self):
+        return self.productcomment_set.order_by('-created_at')
+
 
 class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=64)

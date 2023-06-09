@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.views.generic import DetailView
 
-from common.mixins import CommentsMixin, TitleMixin, VisitsTrackingMixin
+from common.views import CommentsMixin, TitleMixin, VisitsTrackingMixin
 from interactions.forms import StoreCommentForm
 from stores.models import Store
 
@@ -18,7 +18,7 @@ class StoreDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailView
 
     @property
     def comments(self):
-        return self.object.storecomment_set.order_by('-created_at')
+        return self.object.get_comments()
 
     def get_visit_cache_template_kwargs(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')

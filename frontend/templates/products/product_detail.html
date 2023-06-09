@@ -12,20 +12,14 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item bg-light">
           <span class="fs-5">
-            <span class="fw-semibold">Category:</span>
-            <span>{{ object.product_type.name }}</span>
-          </span>
-        </li>
-        <li class="list-group-item bg-light">
-          <span class="fs-5">
             <span class="fw-semibold">Price:</span>
             <span>{{ object.price }}$</span>
           </span>
         </li>
         <li class="list-group-item bg-light">
           <span class="fs-5">
-            <span class="fw-semibold">Views:</span>
-            <span>{{ object.views }}</span>
+            <span class="fw-semibold">Category:</span>
+            <span>{{ object.product_type.name }}</span>
           </span>
         </li>
         <li class="list-group-item bg-light">
@@ -34,6 +28,12 @@
               <a class="link-main" href="{% url 'stores:store-detail' object.store.slug %}">
               <span>{{ object.store.name }}</span>
             </a>
+          </span>
+        </li>
+        <li class="list-group-item bg-light">
+          <span class="fs-5">
+            <span class="fw-semibold">Views:</span>
+            <span>{{ object.views }}</span>
           </span>
         </li>
         <li class="list-group-item bg-light">
