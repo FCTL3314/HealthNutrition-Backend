@@ -87,7 +87,7 @@ class ProfileEmailView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views
     success_message = 'Your email has been successfully changed!'
 
     def get_success_url(self):
-        return reverse_lazy('accounts:profile-email', args={self.request.user.slug})
+        return reverse_lazy('users:profile-email', args={self.request.user.slug})
 
 
 class BaseEmailVerificationView(TitleMixin, LoginRequiredMixin, TemplateView):

@@ -23,9 +23,14 @@
 {% endif %}
 <div class="row">
   <div class="mb-4">
-    {% block form %} {% endblock %}
-    <div class="row justify-content-center">
-      <button class="btn btn-outline-primary col-3" type="submit">{% block submit_btn_text %} {% endblock %}</button>
-    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      {% block form %} {% endblock %}
+      <div class="row justify-content-center">
+        <button class="btn btn-outline-primary col-3" type="submit">{% block submit_btn_text %} {% endblock %}</button>
+      </div>
+    </form>
   </div>
 </div>

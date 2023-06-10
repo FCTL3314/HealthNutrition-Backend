@@ -6,10 +6,6 @@
 {% endblock %}
 
 {% block form %}
-  <form action="" method="POST" enctype="multipart/form-data">
-
-    {% csrf_token %}
-
     <div class="mb-4">
       <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
       {{ form.username }}
@@ -41,7 +37,6 @@
         {{ form.image }}
       </div>
     </div>
-  </form>
 {% endblock %}
 
 {% block submit_btn_text %}

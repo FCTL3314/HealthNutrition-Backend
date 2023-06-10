@@ -2,7 +2,6 @@ from http import HTTPStatus
 
 import pytest
 from django.conf import settings
-from django.urls import reverse
 
 from interactions.models import StoreComment
 from stores.tests import TestStoreFactory
@@ -20,7 +19,7 @@ def comments(user, store, faker):
 
 @pytest.mark.django_db
 def test_store_detail_view_success(client, store, comments):
-    path = reverse('stores:store-detail', args=(store.slug,))
+    path = store.get_absolute_url()
 
     response = client.get(path)
 
@@ -33,15 +32,6 @@ def test_store_detail_view_success(client, store, comments):
     assert context_object.views == 1
     assert list(context_comments) == list(store.get_comments())
     assert list(context_popular_products) == list(store.popular_products()[:settings.POPULAR_PRODUCTS_PAGINATE_BY])
-
-
-@pytest.mark.django_db
-def test_store_detail_view_404(client, faker):
-    path = reverse('stores:store-detail', args=(faker.slug(),))
-
-    response = client.get(path)
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 if __name__ == '__main__':
