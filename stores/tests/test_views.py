@@ -23,9 +23,13 @@ def test_store_detail_view_success(client, store, comments):
 
     response = client.get(path)
 
+    context_object = response.context_data.get('object')
+    context_comments = response.context_data.get('comments')
+
     assert response.status_code == HTTPStatus.OK
-    assert response.context_data.get('object') == store
-    assert list(response.context_data.get('comments')) == list(store.get_comments())
+    assert context_object == store
+    assert list(context_comments) == list(store.get_comments())
+    assert context_object.views > 0
 
 
 @pytest.mark.django_db

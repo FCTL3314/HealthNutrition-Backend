@@ -2,8 +2,7 @@ from pathlib import Path
 
 import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Environment variables
 
@@ -11,11 +10,11 @@ env = environ.Env()
 
 environ.Env.read_env(BASE_DIR / '.env')
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+# Security
+
+DEBUG = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -54,11 +53,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'core.urls'
 
@@ -138,10 +132,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = 'static/'
-if DEBUG:
-    STATICFILES_DIRS = (BASE_DIR / 'frontend/static',)
-else:
-    STATIC_ROOT = BASE_DIR / 'frontend/static'
 
 # Media files
 
@@ -195,15 +185,6 @@ COMMENTS_PAGINATE_BY = 3
 # Email
 
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
-
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_HOST = env.str('EMAIL_HOST')
-    EMAIL_PORT = env.str('EMAIL_PORT')
-    DEFAULT_FROM_EMAIL = env.str('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
-    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
 
 EMAIL_SEND_INTERVAL_SECONDS = 60
 EMAIL_EXPIRATION_HOURS = 3600 * 2
