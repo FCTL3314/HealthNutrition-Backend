@@ -30,5 +30,5 @@ class StoreDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['popular_products'] = self.object.popular_products()[:12]
+        context['popular_products'] = self.object.popular_products()[:settings.POPULAR_PRODUCTS_PAGINATE_BY]
         return context

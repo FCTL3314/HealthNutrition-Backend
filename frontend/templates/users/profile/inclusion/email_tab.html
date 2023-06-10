@@ -1,43 +1,26 @@
-<div class="mb-4">
-  <h2>{{ user.username }}'s Email</h2>
-</div>
-<hr>
-{% if form.errors %}
-  <div class="alert alert-warning" role="alert">
-    {% for field, errors in form.errors.items %}
-      {% for error in errors %}
-        <ul class="m-0">
-          <li>
-            {{ error }}
-          </li>
-        </ul>
-      {% endfor %}
-    {% endfor %}
-  </div>
-{% elif messages %}
-  <div class="alert alert-success" role="alert">
-    {% for message in messages %}
-      {{ message }}
-    {% endfor %}
-  </div>
-{% endif %}
-<div class="row">
-  <div>
-    <form action="" method="POST">
+{% extends 'users/profile/inclusion/base_tab.html' %}
 
-      {% csrf_token %}
 
-      <div class="mb-4">
-        <label for="{{ form.new_email.id_for_label }}" class="form-label">New email</label>
-        {{ form.new_email }}
-      </div>
-      <div class="mb-4">
-        <label for="{{ form.old_password.id_for_label }}" class="form-label">Password</label>
-        {{ form.old_password }}
-      </div>
-      <div>
-        <button class="btn btn-outline-primary" type="submit">Change</button>
-      </div>
-    </form>
-  </div>
-</div>
+{% block tab_title %}
+  {{ user.username }}'s Email
+{% endblock %}
+
+{% block form %}
+  <form action="" method="POST">
+
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label for="{{ form.new_email.id_for_label }}" class="form-label">New email</label>
+      {{ form.new_email }}
+    </div>
+    <div class="mb-4">
+      <label for="{{ form.old_password.id_for_label }}" class="form-label">Password</label>
+      {{ form.old_password }}
+    </div>
+  </form>
+{% endblock %}
+
+{% block submit_btn_text %}
+  Change Email
+{% endblock %}

@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from interactions.models import StoreComment
@@ -25,11 +26,13 @@ def test_store_detail_view_success(client, store, comments):
 
     context_object = response.context_data.get('object')
     context_comments = response.context_data.get('comments')
+    context_popular_products = response.context_data.get('popular_products')
 
     assert response.status_code == HTTPStatus.OK
     assert context_object == store
+    assert context_object.views == 1
     assert list(context_comments) == list(store.get_comments())
-    assert context_object.views > 0
+    assert list(context_popular_products) == list(store.popular_products()[:settings.POPULAR_PRODUCTS_PAGINATE_BY])
 
 
 @pytest.mark.django_db

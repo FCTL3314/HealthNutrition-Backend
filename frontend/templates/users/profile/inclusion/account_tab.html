@@ -1,66 +1,49 @@
-<div class="mb-4">
-  <h2>{{ user.username }}'s Account</h2>
-</div>
-<hr>
-{% if form.errors %}
-  <div class="alert alert-warning" role="alert">
-    {% for field, errors in form.errors.items %}
-      {% for error in errors %}
-        <ul class="m-0">
-          <li>
-            {{ error }}
-          </li>
-        </ul>
-      {% endfor %}
-    {% endfor %}
-  </div>
-{% elif messages %}
-  <div class="alert alert-success" role="alert">
-    {% for message in messages %}
-      {{ message }}
-    {% endfor %}
-  </div>
-{% endif %}
-<div class="row">
-  <div>
-    <form action="" method="POST" enctype="multipart/form-data">
+{% extends 'users/profile/inclusion/base_tab.html' %}
 
-      {% csrf_token %}
 
-      <div class="mb-4">
-        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-        {{ form.username }}
+{% block tab_title %}
+  {{ user.username }}'s Account
+{% endblock %}
+
+{% block form %}
+  <form action="" method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+      {{ form.username }}
+    </div>
+    <div class="mb-4">
+      <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+      {{ form.first_name }}
+    </div>
+    <div class="mb-4">
+      <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+      {{ form.last_name }}
+    </div>
+    <div class="mb-4">
+      <label for="{{ form.email.id_for_label }}" class="form-label ">
+        Email
+        {% if not user.is_verified %}
+          (Unverified, click
+          <a class="text-decoration-none" href="{% url 'users:send-verification-email' user.email %}">here</a>
+          to send a verification email)
+        {% else %}
+          <span class="text-primary">&check; Verified</span>
+        {% endif %}
+      </label>
+      {{ form.email }}
+    </div>
+    <div class="mb-4">
+      <label for="{{ form.image.id_for_label }}" class="form-label">Image</label>
+      <div class="input-group">
+        {{ form.image }}
       </div>
-      <div class="mb-4">
-        <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
-        {{ form.first_name }}
-      </div>
-      <div class="mb-4">
-        <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
-        {{ form.last_name }}
-      </div>
-      <div class="mb-4">
-        <label for="{{ form.email.id_for_label }}" class="form-label ">
-          Email
-          {% if not user.is_verified %}
-            (Unverified, click
-            <a class="text-decoration-none" href="{% url 'users:send-verification-email' user.email %}">here</a>
-            to send a verification email)
-          {% else %}
-            <span class="text-primary">&check; Verified</span>
-          {% endif %}
-        </label>
-        {{ form.email }}
-      </div>
-      <div class="mb-4">
-        <label for="{{ form.image.id_for_label }}" class="form-label">Image</label>
-        <div class="input-group">
-          {{ form.image }}
-        </div>
-      </div>
-      <div>
-        <button class="btn btn-outline-primary" type="submit">Update</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block submit_btn_text %}
+  Update Profile
+{% endblock %}
