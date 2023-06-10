@@ -4,9 +4,10 @@ from factory.django import DjangoModelFactory
 from stores.models import Store
 
 
-class TestStoreFactory(DjangoModelFactory):
+class StoreTestFactory(DjangoModelFactory):
     class Meta:
         model = Store
+        django_get_or_create = ('name',)
 
     name = Faker('company')
     url = Faker('url')
