@@ -5,7 +5,10 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
+from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
+
+from products.forms import SearchForm
 
 
 class TitleMixin:
@@ -24,13 +27,6 @@ class TitleMixin:
         return context
 
 
-class LogoutRequiredMixin:
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
-        return super().dispatch(request, *args, **kwargs)
-
-
 class PaginationUrlMixin:
     """Allows to create and add a pagination_url variable to the context."""
 
@@ -47,6 +43,13 @@ class PaginationUrlMixin:
         context = super().get_context_data(**kwargs)
         context[self.context_pagination_url_name] = self.get_pagination_url()
         return context
+
+
+class LogoutRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class BaseVisitsTrackingMixin(ABC):
@@ -133,6 +136,27 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         return key.format(**kwargs)
 
 
+class SearchMixin(FormMixin):
+    form_class = SearchForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.search_query = self.request.GET.get('search_query', '')
+        self.search_type = self.request.GET.get('search_type')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['search_query'] = self.search_query
+        kwargs['search_type'] = self.search_type
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.search_query
+        context['search_type'] = self.search_type
+        return context
+
+
 class CommentsMixin(FormMixin, ABC):
     @property
     @abstractmethod
@@ -149,4 +173,21 @@ class CommentsMixin(FormMixin, ABC):
         context['comments'] = comments[:settings.COMMENTS_PAGINATE_BY]
         context['comments_count'] = comments_count
         context['has_more_comments'] = comments_count > settings.COMMENTS_PAGINATE_BY
+        return context
+
+
+class CommonListView(PaginationUrlMixin, ListView):
+    object_list_title = ''
+    object_list_description = ''
+
+    def get_object_list_title(self):
+        return self.object_list_title
+
+    def get_object_list_description(self):
+        return self.object_list_description
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list_title'] = self.get_object_list_title()
+        context['object_list_description'] = self.get_object_list_description()
         return context

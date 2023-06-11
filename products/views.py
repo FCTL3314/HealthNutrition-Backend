@@ -3,56 +3,18 @@ from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, RedirectView
-from django.views.generic.edit import FormMixin
-from django.views.generic.list import ListView
 
-from common.views import (CommentsMixin, PaginationUrlMixin, TitleMixin,
-                          VisitsTrackingMixin)
+from common.views import (CommentsMixin, CommonListView, SearchMixin,
+                          TitleMixin, VisitsTrackingMixin)
 from interactions.forms import ProductCommentForm
-from products.forms import SearchForm
 from products.models import Product, ProductType
 
 
-class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
-    template_name = 'products/index.html'
-    form_class = SearchForm
-    paginate_by = settings.PRODUCTS_PAGINATE_BY
-
-    search_query: str
-    search_type: str
-
-    object_list_title = ''
-    object_list_description = ''
-
-    def dispatch(self, request, *args, **kwargs):
-        self.search_query = self.request.GET.get('search_query', '')
-        self.search_type = self.request.GET.get('search_type')
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['search_query'] = self.search_query
-        kwargs['search_type'] = self.search_type
-        return kwargs
-
-    def get_object_list_title(self):
-        return self.object_list_title
-
-    def get_object_list_description(self):
-        return self.object_list_description
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list_title'] = self.get_object_list_title()
-        context['object_list_description'] = self.get_object_list_description()
-        context['search_query'] = self.search_query
-        context['search_type'] = self.search_type
-        return context
-
-
-class ProductTypeListView(BaseProductsView):
+class ProductTypeListView(SearchMixin, TitleMixin, CommonListView):
+    ordering = settings.PRODUCT_TYPES_ORDERING
+    paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
+    template_name = 'products/product_types.html'
     title = 'Categories'
-    ordering = ('-product__store__count', '-views')
     object_list_title = 'Discover Popular Product Categories'
     object_list_description = 'Explore our curated list of popular product categories, sorted by their popularity ' \
                               'among users.'
@@ -63,9 +25,11 @@ class ProductTypeListView(BaseProductsView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(VisitsTrackingMixin, BaseProductsView):
+class ProductListView(VisitsTrackingMixin, SearchMixin, TitleMixin, CommonListView):
     model = ProductType
-    ordering = ('store__name', 'price',)
+    ordering = settings.PRODUCTS_ORDERING
+    paginate_by = settings.PRODUCTS_PAGINATE_BY
+    template_name = 'products/products.html'
     object_list_description = 'Discover a wide range of products available in the selected category.'
     visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
 
@@ -100,10 +64,10 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailView):
+class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailView):
     model = Product
-    form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
+    form_class = ProductCommentForm
     visit_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
     def get_title(self):
@@ -122,12 +86,10 @@ class ProductDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailVi
         self.object.increase('views')
 
 
-class SearchRedirectView(RedirectView):
+class SearchRedirectView(SearchMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        search_type = self.request.GET.get('search_type')
-
-        match search_type:
+        match self.search_type:
             case 'product':
                 redirect_url = reverse('products:product-search')
             case 'product_type':
@@ -139,14 +101,28 @@ class SearchRedirectView(RedirectView):
         return f'{redirect_url}?{params}'
 
 
-class BaseSearchView(BaseProductsView):
+class BaseSearchView(SearchMixin, TitleMixin, CommonListView):
     object_list_title = 'Search Results'
     object_list_description = 'Explore the results of your search query.'
 
 
+class ProductTypeSearchListView(BaseSearchView):
+    ordering = settings.PRODUCT_TYPES_ORDERING
+    paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
+    template_name = 'products/product_types.html'
+    title = 'Category Search'
+
+    def get_queryset(self):
+        queryset = ProductType.objects.search(self.search_query)
+        queryset = queryset.product_price_annotation().order_by(*self.ordering)
+        return queryset
+
+
 class ProductSearchListView(BaseSearchView):
+    ordering = settings.PRODUCTS_ORDERING
+    paginate_by = settings.PRODUCTS_PAGINATE_BY
+    template_name = 'products/products.html'
     title = 'Product Search'
-    ordering = ('store__name', 'price',)
 
     def get_queryset(self):
         return Product.objects.search(self.search_query).order_by(*self.ordering)
@@ -155,13 +131,3 @@ class ProductSearchListView(BaseSearchView):
         context = super().get_context_data(**kwargs)
         context.update(self.object_list.price_aggregation())
         return context
-
-
-class ProductTypeSearchListView(BaseSearchView):
-    title = 'Category Search'
-    ordering = ('-product__store__count', '-views')
-
-    def get_queryset(self):
-        queryset = ProductType.objects.search(self.search_query)
-        queryset = queryset.product_price_annotation().order_by(*self.ordering)
-        return queryset

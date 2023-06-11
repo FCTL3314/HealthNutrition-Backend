@@ -47,11 +47,7 @@
   {% if object_list %}
     {% for object in object_list %}
       <div class="col-lg-4 col-md-6 mb-3">
-        {% if current_url_name == 'products' or current_url_name == 'product-search' %}
-          {% include 'products/inclusions/product_card.html' %}
-        {% elif current_url_name == 'product-types' or current_url_name == 'product-type-search' %}
-          {% include 'products/inclusions/product_type_card.html' %}
-        {% endif %}
+        {% block card %} {% endblock %}
       </div>
     {% endfor %}
   {% else %}

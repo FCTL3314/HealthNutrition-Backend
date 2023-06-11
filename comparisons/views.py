@@ -1,15 +1,15 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
 
-from common.views import PaginationUrlMixin, TitleMixin
+from common.views import CommonListView, SearchMixin, TitleMixin
 from products.models import Product, ProductType
 
 
-class BaseComparisonView(LoginRequiredMixin, TitleMixin, PaginationUrlMixin, ListView):
+class BaseComparisonView(LoginRequiredMixin, SearchMixin, TitleMixin, CommonListView):
     title = 'Comparisons'
-    paginate_by = settings.PRODUCTS_PAGINATE_BY
+    object_list_title = 'My Comparison'
+    object_list_description = 'Products you have saved for comparison.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -19,8 +19,9 @@ class BaseComparisonView(LoginRequiredMixin, TitleMixin, PaginationUrlMixin, Lis
 
 class ComparisonProductTypeListView(BaseComparisonView):
     model = ProductType
-    template_name = 'comparisons/comparisons.html'
-    ordering = ('-views',)
+    ordering = settings.PRODUCT_TYPES_ORDERING
+    paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
+    template_name = 'products/product_types.html'
 
     def get_queryset(self):
         comparisons = self.request.user.comparison_set.all()
@@ -32,8 +33,9 @@ class ComparisonProductTypeListView(BaseComparisonView):
 
 class ComparisonProductListView(BaseComparisonView):
     model = Product
-    template_name = 'comparisons/comparisons.html'
-    ordering = ('store__name', 'price',)
+    ordering = settings.PRODUCTS_ORDERING
+    paginate_by = settings.PRODUCTS_PAGINATE_BY
+    template_name = 'products/products.html'
 
     def get_queryset(self):
         slug = self.kwargs.get('slug')
