@@ -16,7 +16,7 @@ def product_type():
 
 @pytest.fixture()
 def product_types():
-    return ProductTypeTestFactory.create_batch(settings.PRODUCTS_PAGINATE_BY * 2)
+    return ProductTypeTestFactory.create_batch(settings.PRODUCT_TYPES_PAGINATE_BY * 2)
 
 
 @pytest.fixture()
@@ -33,7 +33,7 @@ def test_product_type_list_view(client, product_types):
     context_object_list = response.context_data.get('object_list')
 
     assert response.status_code == HTTPStatus.OK
-    assert len(context_object_list) == len(product_types[:settings.PRODUCTS_PAGINATE_BY])
+    assert len(context_object_list) == len(product_types[:settings.PRODUCT_TYPES_PAGINATE_BY])
 
 
 @pytest.mark.django_db
