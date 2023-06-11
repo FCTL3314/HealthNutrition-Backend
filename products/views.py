@@ -70,7 +70,6 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
     ordering = ('store__name', 'price',)
     object_list_description = 'Discover a wide range of products available in the selected category.'
     visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
-    visit_cache_time = settings.VISITS_CACHE_TIME
 
     product_type: ProductType
 
@@ -107,7 +106,6 @@ class ProductDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailVi
     model = Product
     form_class = ProductCommentForm
     template_name = 'products/product_detail.html'
-
     visit_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
     def get_title(self):

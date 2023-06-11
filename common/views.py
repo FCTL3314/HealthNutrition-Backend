@@ -53,8 +53,6 @@ class BaseVisitsTrackingMixin(ABC):
     The object can be either a user, which will be most often, or any
     other entity for which a unique cache key can be created.
     """
-    _visit_cache_key = None
-    _visit_cache_time = None
 
     @property
     @abstractmethod
@@ -66,21 +64,13 @@ class BaseVisitsTrackingMixin(ABC):
             'user_addr:127.0.0.1_product_id:4'
             That is, a user with ip 127.0.0.1 visited the product object with id 4.
         """
-        return self._visit_cache_key
-
-    @visit_cache_key.setter
-    def visit_cache_key(self, value):
-        self._visit_cache_key = value
+        pass
 
     @property
     @abstractmethod
     def visit_cache_time(self) -> int:
         """The time that the cache(object visit) will be stored."""
-        return self._visit_cache_time
-
-    @visit_cache_time.setter
-    def visit_cache_time(self, value):
-        self._visit_cache_time = value
+        pass
 
     def _has_visited(self) -> bool:
         """Checks if the object has visited this view, that is, if its cache exists."""
@@ -106,7 +96,6 @@ class BaseVisitsTrackingMixin(ABC):
 
 
 class VisitsTrackingMixin(BaseVisitsTrackingMixin):
-    _visit_cache_template = None
     visit_cache_time = settings.VISITS_CACHE_TIME
 
     @property
@@ -118,11 +107,7 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         Example:
             return 'addr:{addr:}_product:{id:}'
         """
-        return self._visit_cache_template
-
-    @visit_cache_template.setter
-    def visit_cache_template(self, value):
-        self._visit_cache_template = value
+        pass
 
     @abstractmethod
     def get_visit_cache_template_kwargs(self) -> dict:
@@ -144,17 +129,11 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
 
 
 class CommentsMixin(FormMixin, ABC):
-    _comments = None
-
     @property
     @abstractmethod
     def comments(self) -> QuerySet:
         """Returns a QuerySet of comment objects."""
-        return self._comments
-
-    @comments.setter
-    def comments(self, value):
-        self._comments = value
+        pass
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

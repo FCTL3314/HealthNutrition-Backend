@@ -9,19 +9,29 @@ class BaseUpdateSlugSignal(ABC):
     The base class for changing the slug of a model
     object when a save method is called.
     """
+    _sender = None
+    _field_to_slugify = None
 
     def __init__(self):
         self.connect()
 
     @property
-    @abstractmethod
     def sender(self) -> Model:
-        pass
+        return self._sender
+
+    @sender.setter
+    @abstractmethod
+    def sender(self, value):
+        self.sender = value
 
     @property
-    @abstractmethod
     def field_to_slugify(self) -> str:
-        pass
+        return self._field_to_slugify
+
+    @field_to_slugify.setter
+    @abstractmethod
+    def field_to_slugify(self, value):
+        self._field_to_slugify = value
 
     def connect(self) -> None:
         pre_save.connect(self._handler, sender=self.sender)
