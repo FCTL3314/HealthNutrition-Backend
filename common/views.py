@@ -176,7 +176,7 @@ class CommentsMixin(FormMixin, ABC):
         return context
 
 
-class CommonListView(PaginationUrlMixin, ListView):
+class CommonListView(PaginationUrlMixin, TitleMixin, ListView):
     object_list_title = ''
     object_list_description = ''
 

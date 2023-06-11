@@ -10,7 +10,7 @@ from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 
-class ProductTypeListView(SearchMixin, TitleMixin, CommonListView):
+class ProductTypeListView(SearchMixin, CommonListView):
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
     template_name = 'products/product_types.html'
@@ -25,7 +25,7 @@ class ProductTypeListView(SearchMixin, TitleMixin, CommonListView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(VisitsTrackingMixin, SearchMixin, TitleMixin, CommonListView):
+class ProductListView(VisitsTrackingMixin, SearchMixin, CommonListView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
@@ -101,7 +101,7 @@ class SearchRedirectView(SearchMixin, RedirectView):
         return f'{redirect_url}?{params}'
 
 
-class BaseSearchView(SearchMixin, TitleMixin, CommonListView):
+class BaseSearchView(SearchMixin, CommonListView):
     object_list_title = 'Search Results'
     object_list_description = 'Explore the results of your search query.'
 
