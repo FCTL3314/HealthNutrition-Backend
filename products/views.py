@@ -1,5 +1,3 @@
-from urllib.parse import urlencode
-
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
@@ -54,7 +52,7 @@ class BaseProductsView(TitleMixin, PaginationUrlMixin, FormMixin, ListView):
 
 class ProductTypeListView(BaseProductsView):
     title = 'Categories'
-    ordering = ('-views',)
+    ordering = ('-product__store__count', '-views')
     object_list_title = 'Discover Popular Product Categories'
     object_list_description = 'Explore our curated list of popular product categories, sorted by their popularity ' \
                               'among users.'
@@ -145,17 +143,13 @@ class BaseSearchView(BaseProductsView):
     object_list_title = 'Search Results'
     object_list_description = 'Explore the results of your search query.'
 
-    def get_pagination_url(self):
-        params = self.request.GET.dict().copy()
-        params['page'] = ''
-        return '?' + urlencode(params)
-
 
 class ProductSearchListView(BaseSearchView):
     title = 'Product Search'
+    ordering = ('store__name', 'price',)
 
     def get_queryset(self):
-        return Product.objects.search(self.search_query).order_by('price')
+        return Product.objects.search(self.search_query).order_by(*self.ordering)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -165,13 +159,9 @@ class ProductSearchListView(BaseSearchView):
 
 class ProductTypeSearchListView(BaseSearchView):
     title = 'Category Search'
+    ordering = ('-product__store__count', '-views')
 
     def get_queryset(self):
         queryset = ProductType.objects.search(self.search_query)
-        queryset = queryset.product_price_annotation().order_by('views')
+        queryset = queryset.product_price_annotation().order_by(*self.ordering)
         return queryset
-
-    def get_pagination_url(self):
-        params = self.request.GET.dict().copy()
-        params.update({'page': ''})
-        return '?' + urlencode(params)

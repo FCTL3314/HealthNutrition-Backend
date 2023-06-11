@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.core.cache import cache
@@ -36,7 +37,11 @@ class PaginationUrlMixin:
     context_pagination_url_name = 'pagination_url'
 
     def get_pagination_url(self) -> str:
-        return '?page='
+        params = self.request.GET.dict().copy()
+        if 'page' in params:
+            params.pop('page')
+        encoded_params = urlencode(params)
+        return f'?{encoded_params}&page=' if encoded_params else '?page='
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
