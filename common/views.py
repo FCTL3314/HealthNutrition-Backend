@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from functools import cached_property
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -158,21 +159,34 @@ class SearchMixin(FormMixin):
 
 
 class CommentsMixin(FormMixin, ABC):
+    """
+        Mixin that provides comments and additional comments info for the context.
+
+        Attributes:
+            _comments (QuerySet): QuerySet of comments for any object.
+    """
+    _comments: QuerySet = None
+
     @property
     @abstractmethod
     def comments(self) -> QuerySet:
-        """Returns a QuerySet of comment objects."""
-        pass
+        return self._comments
+
+    @cached_property
+    def comments_count(self):
+        return self.comments.count()
+
+    def has_more_comments(self):
+        return self.comments_count > settings.COMMENTS_PAGINATE_BY
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        comments = self.comments.prefetch_related('author')
-        comments_count = comments.count()
+        prefetched_comments = self.comments.prefetch_related('author')
 
-        context['comments'] = comments[:settings.COMMENTS_PAGINATE_BY]
-        context['comments_count'] = comments_count
-        context['has_more_comments'] = comments_count > settings.COMMENTS_PAGINATE_BY
+        context['comments'] = prefetched_comments[:settings.COMMENTS_PAGINATE_BY]
+        context['comments_count'] = self.comments_count
+        context['has_more_comments'] = self.has_more_comments()
         return context
 
 
