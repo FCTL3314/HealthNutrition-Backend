@@ -176,18 +176,31 @@ class CommentsMixin(FormMixin, ABC):
         return context
 
 
-class CommonListView(PaginationUrlMixin, TitleMixin, ListView):
-    object_list_title = ''
-    object_list_description = ''
+class ObjectListInfoMixin:
+    """
+        Mixin that provides object list title and description for the context.
 
-    def get_object_list_title(self):
-        return self.object_list_title
+        Attributes:
+            _object_list_title (str): Title for the object list.
+            _object_list_description (str): Description for the object list.
+    """
+    _object_list_title: str = ''
+    _object_list_description: str = ''
 
-    def get_object_list_description(self):
-        return self.object_list_description
+    @property
+    def object_list_title(self) -> str:
+        return self._object_list_title
+
+    @property
+    def object_list_description(self) -> str:
+        return self._object_list_description
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list_title'] = self.get_object_list_title()
-        context['object_list_description'] = self.get_object_list_description()
+        context['object_list_title'] = self.object_list_title
+        context['object_list_description'] = self.object_list_description
         return context
+
+
+class CommonListView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, ListView):
+    pass

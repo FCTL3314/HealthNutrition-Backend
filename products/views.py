@@ -33,30 +33,31 @@ class ProductListView(VisitsTrackingMixin, SearchMixin, CommonListView):
     object_list_description = 'Discover a wide range of products available in the selected category.'
     visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
 
-    product_type: ProductType
+    _product_type: ProductType = None
 
     def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get('slug')
-        self.product_type = get_object_or_404(self.model, slug=slug)
+        self._product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = self.product_type.get_products_with_stores()
+        queryset = self._product_type.get_products_with_stores()
         return queryset.order_by(*self.ordering)
 
     def get_visit_cache_template_kwargs(self):
         remote_addr = self.request.META.get('REMOTE_ADDR')
-        kwargs = {'addr': remote_addr, 'id': self.product_type.id}
+        kwargs = {'addr': remote_addr, 'id': self._product_type.id}
         return kwargs
 
     def not_visited(self):
-        self.product_type.increase('views')
+        self._product_type.increase('views')
 
     def get_title(self):
-        return self.product_type.name
+        return self._product_type.name
 
-    def get_object_list_title(self):
-        return f'Products in the category "{self.product_type.name}"'
+    @property
+    def object_list_title(self):
+        return f'Products in the category "{self._product_type.name}"'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
