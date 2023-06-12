@@ -23,7 +23,7 @@ def test_store_detail_view(client, store):
     context_popular_products = response.context_data['popular_products']
 
     assert response.status_code == HTTPStatus.OK
-    assert len(context_popular_products) == len(store.popular_products()[:settings.POPULAR_PRODUCTS_PAGINATE_BY])
+    assert len(context_popular_products) == len(store.popular_products()[:settings.PRODUCTS_PAGINATE_BY])
     common_detail_view_tests(response, store, comments)
 
 

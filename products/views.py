@@ -20,7 +20,7 @@ class ProductTypeListView(SearchMixin, CommonListView):
                               'among users.'
 
     def get_queryset(self):
-        initial_queryset = ProductType.objects.popular()
+        initial_queryset = ProductType.objects.cached()
         queryset = initial_queryset.product_price_annotation()
         return queryset.order_by(*self.ordering)
 
@@ -41,7 +41,8 @@ class ProductListView(VisitsTrackingMixin, SearchMixin, CommonListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = self._product_type.get_products_with_stores()
+        initial_queryset = self._product_type.cached_products()
+        queryset = initial_queryset.prefetch_related('store')
         return queryset.order_by(*self.ordering)
 
     def get_visit_cache_template_kwargs(self):
@@ -114,8 +115,8 @@ class ProductTypeSearchListView(BaseSearchView):
     title = 'Category Search'
 
     def get_queryset(self):
-        queryset = ProductType.objects.search(self.search_query)
-        queryset = queryset.product_price_annotation().order_by(*self.ordering)
+        initial_queryset = ProductType.objects.search(self.search_query)
+        queryset = initial_queryset.product_price_annotation().order_by(*self.ordering)
         return queryset
 
 
@@ -126,7 +127,9 @@ class ProductSearchListView(BaseSearchView):
     title = 'Product Search'
 
     def get_queryset(self):
-        return Product.objects.search(self.search_query).order_by(*self.ordering)
+        initial_queryset = Product.objects.search(self.search_query)
+        queryset = initial_queryset.prefetch_related('store')
+        return queryset.order_by(*self.ordering)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

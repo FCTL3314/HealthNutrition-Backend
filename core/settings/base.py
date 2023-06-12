@@ -158,18 +158,17 @@ PRICE_ROUNDING = 2
 PRODUCTS_PAGINATE_BY = 24
 PRODUCT_TYPES_PAGINATE_BY = 12
 
-POPULAR_PRODUCTS_PAGINATE_BY = 12
+PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
+PRODUCTS_CACHE_TEMPLATE = 'products_product_type:{product_id:}'
 
-POPULAR_PRODUCT_TYPES_CACHE_KEY = 'popular_product_types'
-PRODUCTS_CACHE_TEMPLATE = 'products_product_type:{id:}'
-PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product_type:{id:}'
-PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product:{id:}'
-
-POPULAR_PRODUCT_TYPES_CACHE_TIME = 60 * 60
+PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60
 
 PRODUCTS_ORDERING = ('store__name', 'price')
 PRODUCT_TYPES_ORDERING = ('-product__store__count', '-views')
+
+PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product_type:{id:}'
+PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE = 'address:{addr:}_product:{id:}'
 
 # Stores
 

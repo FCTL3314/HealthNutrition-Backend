@@ -44,10 +44,9 @@ class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     def __str__(self):
         return self.name
 
-    def get_products_with_stores(self):
-        callback = self.product_set.prefetch_related('store').all
+    def cached_products(self):
         return get_cached_data_or_set_new(
-            key=settings.PRODUCTS_CACHE_TEMPLATE.format(id=self.id),
-            callback=callback,
+            key=settings.PRODUCTS_CACHE_TEMPLATE.format(product_id=self.id),
+            callback=self.product_set.all,
             timeout=settings.PRODUCTS_CACHE_TIME,
         )

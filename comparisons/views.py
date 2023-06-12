@@ -40,7 +40,7 @@ class ComparisonProductListView(BaseComparisonView):
     def get_queryset(self):
         slug = self.kwargs.get('slug')
         product_type = get_object_or_404(ProductType, slug=slug)
-        products = product_type.get_products_with_stores()
+        products = product_type.cached_products()
         queryset = products.filter(user=self.request.user)
         return queryset.order_by(*self.ordering)
 

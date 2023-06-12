@@ -38,11 +38,11 @@ class ProductTypeQuerySet(models.QuerySet):
 class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
 
-    def popular(self):
+    def cached(self):
         return get_cached_data_or_set_new(
-            key=settings.POPULAR_PRODUCT_TYPES_CACHE_KEY,
-            callback=self.order_by('-views').all,
-            timeout=settings.POPULAR_PRODUCT_TYPES_CACHE_TIME,
+            key=settings.PRODUCT_TYPES_CACHE_KEY,
+            callback=self.all,
+            timeout=settings.PRODUCT_TYPES_CACHE_TIME,
         )
 
     def search(self, query):
