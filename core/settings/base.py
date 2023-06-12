@@ -147,7 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REQUIRED_REDIRECT_URL = '/'
 
 VISITS_CACHE_TIME = (60 * 60) * 12
 

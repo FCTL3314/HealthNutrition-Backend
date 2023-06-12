@@ -4,13 +4,14 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, RedirectView
 
-from common.views import (CommentsMixin, CommonListView, SearchMixin,
-                          TitleMixin, VisitsTrackingMixin)
+from common.views import (CommentsMixin, CommonListView,
+                          SearchWithSearchTypeFormMixin, TitleMixin,
+                          VisitsTrackingMixin)
 from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 
-class ProductTypeListView(SearchMixin, CommonListView):
+class ProductTypeListView(CommonListView):
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
     template_name = 'products/product_types.html'
@@ -25,7 +26,7 @@ class ProductTypeListView(SearchMixin, CommonListView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(VisitsTrackingMixin, SearchMixin, CommonListView):
+class ProductListView(VisitsTrackingMixin, CommonListView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
@@ -88,7 +89,7 @@ class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailVi
         self.object.increase('views')
 
 
-class SearchRedirectView(SearchMixin, RedirectView):
+class SearchRedirectView(SearchWithSearchTypeFormMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         match self.search_type:
@@ -103,7 +104,7 @@ class SearchRedirectView(SearchMixin, RedirectView):
         return f'{redirect_url}?{params}'
 
 
-class BaseSearchView(SearchMixin, CommonListView):
+class BaseSearchView(CommonListView):
     object_list_title = 'Search Results'
     object_list_description = 'Explore the results of your search query.'
 

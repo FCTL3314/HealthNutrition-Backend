@@ -13,7 +13,7 @@ from products.forms import SearchForm
 
 
 class TitleMixin:
-    """Allows to create and add a title variable to the contest."""
+    """Mixin to create and add a title variable to the context."""
 
     title = None
     context_title_name = 'title'
@@ -29,7 +29,7 @@ class TitleMixin:
 
 
 class PaginationUrlMixin:
-    """Allows to create and add a pagination_url variable to the context."""
+    """Mixin to create and add a pagination_url variable to the context."""
 
     context_pagination_url_name = 'pagination_url'
 
@@ -49,18 +49,15 @@ class PaginationUrlMixin:
 class LogoutRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
+            return HttpResponseRedirect(settings.LOGOUT_REQUIRED_REDIRECT_URL)
         return super().dispatch(request, *args, **kwargs)
 
 
 class BaseVisitsTrackingMixin(ABC):
     """
-    Checks if any object, for example, the user has visited this view,
-    and implements interfaces to determine the logic if the view was
-    visited or not visited by object.
-
-    The object can be either a user, which will be most often, or any
-    other entity for which a unique cache key can be created.
+    Mixin that checks if user (not necessarily a user, can be any object), has visited
+    this view, implements interfaces to determine the logic if the view
+    was visited or not visited by user.
     """
 
     @property
@@ -76,22 +73,21 @@ class BaseVisitsTrackingMixin(ABC):
         pass
 
     @property
-    @abstractmethod
     def visit_cache_time(self) -> int:
         """The time that the cache(object visit) will be stored."""
-        pass
+        return settings.VISITS_CACHE_TIME
 
     def _has_visited(self) -> bool:
-        """Checks if the object has visited this view, that is, if its cache exists."""
+        """Checks if the user has visited this view, i.e. if its cache exists."""
         is_exists = cache.get(self.visit_cache_key)
         return bool(is_exists)
 
     def visited(self) -> None:
-        """The logic if the view has been visited by an object before."""
+        """The logic if the view has been visited by a user before."""
         pass
 
     def not_visited(self) -> None:
-        """The logic if the view has not been visited by an object before."""
+        """The logic if the view has not been visited by a user before."""
         pass
 
     def get(self, *args, **kwargs):
@@ -105,7 +101,10 @@ class BaseVisitsTrackingMixin(ABC):
 
 
 class VisitsTrackingMixin(BaseVisitsTrackingMixin):
-    visit_cache_time = settings.VISITS_CACHE_TIME
+    """
+    Wrapper for BaseVisitsTrackingMixin to use cache_template
+    instead of regular cache_key.
+    """
 
     @property
     @abstractmethod
@@ -137,34 +136,53 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         return key.format(**kwargs)
 
 
-class SearchMixin(FormMixin):
+class SearchFormMixin(FormMixin):
+    """A mixin for finding and storing the search query and search type."""
+
     form_class = SearchForm
 
     def dispatch(self, request, *args, **kwargs):
         self.search_query = self.request.GET.get('search_query', '')
-        self.search_type = self.request.GET.get('search_type')
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
+        """
+        Passes the search query and search type to the form initialization
+        so that the form will then set them as initial for its fields.
+        """
         kwargs = super().get_form_kwargs()
         kwargs['search_query'] = self.search_query
-        kwargs['search_type'] = self.search_type
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.search_query
+        return context
+
+
+class SearchWithSearchTypeFormMixin(SearchFormMixin):
+    """A wrapper for SearchMixin that adds a search type."""
+
+    form_class = SearchForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.search_type = self.request.GET.get('search_type')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['search_type'] = self.search_type
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['search_type'] = self.search_type
         return context
 
 
 class CommentsMixin(FormMixin, ABC):
-    """
-        Mixin that provides comments and additional comments info for the context.
+    """Mixin that provides comments and additional comments info for the context."""
 
-        Attributes:
-            _comments (QuerySet): QuerySet of comments for any object.
-    """
     _comments: QuerySet = None
 
     @property
@@ -191,13 +209,8 @@ class CommentsMixin(FormMixin, ABC):
 
 
 class ObjectListInfoMixin:
-    """
-        Mixin that provides object list title and description for the context.
+    """Mixin that provides object list title and description for the context."""
 
-        Attributes:
-            _object_list_title (str): Title for the object list.
-            _object_list_description (str): Description for the object list.
-    """
     _object_list_title: str = ''
     _object_list_description: str = ''
 
@@ -216,5 +229,10 @@ class ObjectListInfoMixin:
         return context
 
 
-class CommonListView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, ListView):
-    pass
+class CommonListView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, SearchWithSearchTypeFormMixin, ListView):
+    """
+    Wrapper for ListView that implement commonly used methods,
+    allows to create a Pagination URL, page title, title and
+    description for a list of objects, retrieve and store
+    search queries.
+    """

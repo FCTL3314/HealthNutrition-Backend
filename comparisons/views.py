@@ -2,11 +2,11 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 
-from common.views import CommonListView, SearchMixin
+from common.views import CommonListView
 from products.models import Product, ProductType
 
 
-class BaseComparisonView(LoginRequiredMixin, SearchMixin, CommonListView):
+class BaseComparisonView(LoginRequiredMixin, CommonListView):
     title = 'Comparisons'
     object_list_title = 'My Comparison'
     object_list_description = 'Products you have saved for comparison.'
