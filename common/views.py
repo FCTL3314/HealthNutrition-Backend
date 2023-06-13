@@ -182,12 +182,10 @@ class SearchWithSearchTypeFormMixin(SearchFormMixin):
 class CommentsMixin(FormMixin, ABC):
     """Mixin that provides comments and additional comments info for the context."""
 
-    _comments: QuerySet = None
-
     @property
     @abstractmethod
     def comments(self) -> QuerySet:
-        return self._comments
+        pass
 
     @cached_property
     def comments_count(self):
