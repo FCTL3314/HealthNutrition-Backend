@@ -2,16 +2,20 @@ from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views.generic import DetailView, RedirectView
+from django.views.generic import DetailView, ListView, RedirectView
 
-from common.views import (CommentsMixin, CommonListView,
-                          SearchWithSearchTypeFormMixin, TitleMixin,
-                          VisitsTrackingMixin)
+from common.views import (CommentsMixin, ObjectListInfoMixin,
+                          PaginationUrlMixin, SearchWithSearchTypeFormMixin,
+                          TitleMixin, VisitsTrackingMixin)
 from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 
-class ProductTypeListView(CommonListView):
+class BaseProductsView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, SearchWithSearchTypeFormMixin, ListView):
+    """A base view for the 'products' application."""
+
+
+class ProductTypeListView(BaseProductsView):
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
     template_name = 'products/product_types.html'
@@ -26,7 +30,7 @@ class ProductTypeListView(CommonListView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(VisitsTrackingMixin, CommonListView):
+class ProductListView(VisitsTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
@@ -104,7 +108,7 @@ class SearchRedirectView(SearchWithSearchTypeFormMixin, RedirectView):
         return f'{redirect_url}?{params}'
 
 
-class BaseSearchView(CommonListView):
+class BaseSearchView(BaseProductsView):
     object_list_title = 'Search Results'
     object_list_description = 'Explore the results of your search query.'
 

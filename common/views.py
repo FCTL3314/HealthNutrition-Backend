@@ -227,12 +227,3 @@ class ObjectListInfoMixin:
         context['object_list_title'] = self.object_list_title
         context['object_list_description'] = self.object_list_description
         return context
-
-
-class CommonListView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, SearchWithSearchTypeFormMixin, ListView):
-    """
-    Wrapper for ListView that implement commonly used methods,
-    allows to create a Pagination URL, page title, title and
-    description for a list of objects, retrieve and store
-    search queries.
-    """
