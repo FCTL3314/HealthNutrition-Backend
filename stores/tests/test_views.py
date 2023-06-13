@@ -2,20 +2,19 @@ from http import HTTPStatus
 
 import pytest
 from django.conf import settings
+from mixer.backend.django import mixer
 
 from common.tests import common_detail_view_tests
-from interactions.tests import StoreCommentTestFactory
-from stores.tests import StoreTestFactory
 
 
 @pytest.fixture()
 def store():
-    return StoreTestFactory()
+    return mixer.blend('stores.Store')
 
 
 @pytest.mark.django_db
 def test_store_detail_view(client, store):
-    comments = StoreCommentTestFactory.create_batch(settings.COMMENTS_PAGINATE_BY * 2, store=store)
+    comments = mixer.cycle(settings.COMMENTS_PAGINATE_BY * 2).blend('interactions.StoreComment', store=store)
 
     path = store.get_absolute_url()
 

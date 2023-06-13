@@ -1,8 +1,7 @@
 import pytest
-
-from users.tests import UserTestFactory
+from mixer.backend.django import mixer
 
 
 @pytest.fixture()
 def user(faker):
-    return UserTestFactory()
+    return mixer.blend('users.User')

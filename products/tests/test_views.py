@@ -4,25 +4,24 @@ from urllib.parse import urlencode
 import pytest
 from django.conf import settings
 from django.urls import reverse
+from mixer.backend.django import mixer
 
 from common.tests import common_detail_view_tests
-from interactions.tests import ProductCommentTestFactory
-from products.tests import ProductTestFactory, ProductTypeTestFactory
 
 
 @pytest.fixture()
 def product_type():
-    return ProductTypeTestFactory()
+    return mixer.blend('products.ProductType')
 
 
 @pytest.fixture()
 def product_types():
-    return ProductTypeTestFactory.create_batch(settings.PRODUCT_TYPES_PAGINATE_BY * 2)
+    return mixer.cycle(settings.PRODUCT_TYPES_PAGINATE_BY * 2).blend('products.ProductType')
 
 
 @pytest.fixture()
 def product():
-    return ProductTestFactory()
+    return mixer.blend('products.Product')
 
 
 @pytest.mark.django_db
@@ -39,7 +38,7 @@ def test_product_type_list_view(client, product_types):
 
 @pytest.mark.django_db
 def test_product_list_view(client, product_type):
-    products = ProductTestFactory.create_batch(settings.PRODUCTS_PAGINATE_BY * 2, product_type=product_type)
+    products = mixer.cycle(settings.PRODUCTS_PAGINATE_BY * 2).blend('products.Product', product_type=product_type)
 
     path = reverse('products:products', args=(product_type.slug,))
 
@@ -55,7 +54,7 @@ def test_product_list_view(client, product_type):
 
 @pytest.mark.django_db
 def test_product_detail_view(client, product):
-    comments = ProductCommentTestFactory.create_batch(settings.COMMENTS_PAGINATE_BY * 2, product=product)
+    comments = mixer.cycle(settings.COMMENTS_PAGINATE_BY * 2).blend('interactions.ProductComment', product=product)
 
     path = product.get_absolute_url()
 
@@ -106,8 +105,8 @@ def test_search_redirect_view(client, search_type, expected_status):
     ],
 )
 def test_search_list_view(client, search_query, search_type, expected_results):
-    ProductTypeTestFactory.create(name='Coffee', description='Coffee and coffee-related products.')
-    ProductTestFactory.create(name='Coffee', card_description='The best roasting!')
+    mixer.blend('products.ProductType', name='Coffee', description='Coffee and coffee-related products.')
+    mixer.blend('products.Product', name='Coffee', card_description='The best roasting!')
 
     params = {
         'search_query': search_query,
