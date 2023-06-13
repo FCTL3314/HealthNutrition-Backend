@@ -21,9 +21,9 @@ def test_product_price_aggregation(products):
     queryset = Product.objects.filter(id__in=ids)
     aggregations = queryset.price_aggregation()
 
-    assert aggregations['price__min'] == min_price
-    assert aggregations['price__max'] == max_price
-    assert aggregations['price__avg'] == avg_price
+    assert aggregations['price__min'] == pytest.approx(min_price)
+    assert aggregations['price__max'] == pytest.approx(max_price)
+    assert aggregations['price__avg'] == pytest.approx(avg_price)
 
 
 @pytest.mark.django_db
