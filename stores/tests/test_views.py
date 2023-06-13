@@ -7,11 +7,6 @@ from mixer.backend.django import mixer
 from common.tests import common_detail_view_tests
 
 
-@pytest.fixture()
-def store():
-    return mixer.blend('stores.Store')
-
-
 @pytest.mark.django_db
 def test_store_detail_view(client, store):
     comments = mixer.cycle(settings.COMMENTS_PAGINATE_BY * 2).blend('interactions.StoreComment', store=store)
