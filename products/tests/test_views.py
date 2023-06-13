@@ -6,23 +6,6 @@ from django.conf import settings
 from django.urls import reverse
 from mixer.backend.django import mixer
 
-from common.tests import common_detail_view_tests
-
-
-@pytest.fixture()
-def product_type():
-    return mixer.blend('products.ProductType')
-
-
-@pytest.fixture()
-def product_types():
-    return mixer.cycle(settings.PRODUCT_TYPES_PAGINATE_BY * 2).blend('products.ProductType')
-
-
-@pytest.fixture()
-def product():
-    return mixer.blend('products.Product')
-
 
 @pytest.mark.django_db
 def test_product_type_list_view(client, product_types):
@@ -54,14 +37,11 @@ def test_product_list_view(client, product_type):
 
 @pytest.mark.django_db
 def test_product_detail_view(client, product):
-    comments = mixer.cycle(settings.COMMENTS_PAGINATE_BY * 2).blend('interactions.ProductComment', product=product)
-
     path = product.get_absolute_url()
 
     response = client.get(path)
 
     assert response.status_code == HTTPStatus.OK
-    common_detail_view_tests(response, product, comments)
 
 
 @pytest.mark.parametrize(

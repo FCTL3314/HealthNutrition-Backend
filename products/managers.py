@@ -10,11 +10,11 @@ class ProductQuerySet(models.QuerySet):
 
     def price_aggregation(self):
         aggregations = self.aggregate(
-            min_price=Round(Min('price'), settings.PRICE_ROUNDING),
-            max_price=Round(Max('price'), settings.PRICE_ROUNDING),
-            avg_price=Round(Avg('price'), settings.PRICE_ROUNDING),
+            price__min=Round(Min('price'), settings.PRICE_ROUNDING),
+            price__max=Round(Max('price'), settings.PRICE_ROUNDING),
+            price__avg=Round(Avg('price'), settings.PRICE_ROUNDING),
         )
-        return {'aggregations': aggregations}
+        return aggregations
 
 
 class ProductManager(models.Manager):
