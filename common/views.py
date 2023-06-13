@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 
 from products.forms import SearchForm

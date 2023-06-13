@@ -8,8 +8,14 @@ from common.views import (ObjectListInfoMixin, PaginationUrlMixin,
 from products.models import Product, ProductType
 
 
-class BaseComparisonView(LoginRequiredMixin, PaginationUrlMixin, TitleMixin, ObjectListInfoMixin,
-                         SearchWithSearchTypeFormMixin, ListView):
+class BaseComparisonView(
+    LoginRequiredMixin,
+    PaginationUrlMixin,
+    TitleMixin,
+    ObjectListInfoMixin,
+    SearchWithSearchTypeFormMixin,
+    ListView
+):
     """A base view for the 'comparisons' application."""
 
     title = 'Comparisons'

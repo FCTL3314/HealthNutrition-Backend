@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from urllib.parse import urlencode
 
 import pytest
 from django.conf import settings
@@ -62,6 +63,69 @@ def test_product_detail_view(client, product):
 
     assert response.status_code == HTTPStatus.OK
     common_detail_view_tests(response, product, comments)
+
+
+@pytest.mark.parametrize(
+    'search_type, expected_status',
+    [
+        ('product', HTTPStatus.FOUND),
+        ('product_type', HTTPStatus.FOUND),
+        ('nonexistent', HTTPStatus.BAD_REQUEST),
+    ],
+)
+def test_search_redirect_view(client, search_type, expected_status):
+    params = {
+        'search_query': 'coffee',
+        'search_type': search_type,
+    }
+    query_string = urlencode(params)
+    path = reverse('products:search-redirect') + '?' + query_string
+
+    response = client.get(path)
+
+    assert response.status_code == expected_status
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'search_query, search_type, expected_results',
+    [
+        ('coffee', 'product_type', True),
+        ('cOfFeE', 'product_type', True),
+        ('cof', 'product_type', True),
+        ('Coffee and coffee-related products.', 'product_type', True),
+        ('Coffee AnD cOFFee-reLATeD', 'product_type', True),
+        ('nonexistent_product_type', 'product_type', False),
+
+        ('coffee', 'product', True),
+        ('cOfFeE', 'product', True),
+        ('cof', 'product', True),
+        ('The best roasting!', 'product', True),
+        ('ThE BE', 'product', True),
+        ('nonexistent_product', 'product', False),
+    ],
+)
+def test_search_list_view(client, search_query, search_type, expected_results):
+    ProductTypeTestFactory.create(name='Coffee', description='Coffee and coffee-related products.')
+    ProductTestFactory.create(name='Coffee', card_description='The best roasting!')
+
+    params = {
+        'search_query': search_query,
+        'search_type': search_type,
+    }
+    query_string = urlencode(params)
+
+    url_mapping = {
+        'product_type': 'products:product-type-search',
+        'product': 'products:product-search',
+    }
+
+    path = reverse(url_mapping[search_type]) + '?' + query_string
+
+    response = client.get(path)
+
+    assert response.status_code == HTTPStatus.OK
+    assert bool(response.context_data['object_list']) is expected_results
 
 
 if __name__ == '__main__':
