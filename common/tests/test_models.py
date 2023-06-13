@@ -62,5 +62,22 @@ def test_model_get_absolute_url(model, url_pattern, identifier_field):
     assert expected_url == actual_url
 
 
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'model, increment_field',
+    [
+        ('stores.Store', 'views'),
+        ('products.ProductType', 'views'),
+        ('products.Product', 'views'),
+    ],
+)
+def test_model_increment(model, increment_field):
+    test_object = mixer.blend(model)
+
+    test_object.increase(increment_field, 1)
+
+    assert getattr(test_object, increment_field) == 1
+
+
 if __name__ == '__main__':
     pytest.main()
