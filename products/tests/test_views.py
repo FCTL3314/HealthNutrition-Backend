@@ -67,44 +67,37 @@ def test_search_redirect_view(client, search_type, expected_status):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'search_query, search_type, expected_results',
+    'search_queries, search_type, expected_results',
     [
-        ('coffee', 'product_type', True),
-        ('cOfFeE', 'product_type', True),
-        ('cof', 'product_type', True),
-        ('Coffee and coffee-related products.', 'product_type', True),
-        ('Coffee AnD cOFFee-reLATeD', 'product_type', True),
-        ('nonexistent_product_type', 'product_type', False),
+        (['cOfF', 'Coffee AnD cOFFee-reLATeD'], 'product_type', True),
+        (['nonexistent_search_query'], 'product_type', False),
 
-        ('coffee', 'product', True),
-        ('cOfFeE', 'product', True),
-        ('cof', 'product', True),
-        ('The best roasting!', 'product', True),
-        ('ThE BE', 'product', True),
-        ('nonexistent_product', 'product', False),
+        (['cOfF', 'ThE BeSt roASTinG!'], 'product', True),
+        (['nonexistent_search_query'], 'product', False),
     ],
 )
-def test_search_list_view(client, search_query, search_type, expected_results):
+def test_search_list_view(client, search_queries, search_type, expected_results):
     mixer.blend('products.ProductType', name='Coffee', description='Coffee and coffee-related products.')
     mixer.blend('products.Product', name='Coffee', card_description='The best roasting!')
 
-    params = {
-        'search_query': search_query,
-        'search_type': search_type,
-    }
-    query_string = urlencode(params)
+    for search_query in search_queries:
+        params = {
+            'search_query': search_query,
+            'search_type': search_type,
+        }
+        query_string = urlencode(params)
 
-    url_mapping = {
-        'product_type': 'products:product-type-search',
-        'product': 'products:product-search',
-    }
+        url_mapping = {
+            'product_type': 'products:product-type-search',
+            'product': 'products:product-search',
+        }
 
-    path = reverse(url_mapping[search_type]) + '?' + query_string
+        path = reverse(url_mapping[search_type]) + '?' + query_string
 
-    response = client.get(path)
+        response = client.get(path)
 
-    assert response.status_code == HTTPStatus.OK
-    assert bool(response.context_data['object_list']) is expected_results
+        assert response.status_code == HTTPStatus.OK
+        assert bool(response.context_data['object_list']) is expected_results
 
 
 if __name__ == '__main__':
