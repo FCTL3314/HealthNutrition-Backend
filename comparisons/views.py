@@ -29,21 +29,17 @@ class BaseComparisonView(
 
 
 class ComparisonProductTypeListView(BaseComparisonView):
-    model = ProductType
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
     template_name = 'products/product_types.html'
 
     def get_queryset(self):
-        comparisons = self.request.user.comparison_set.all()
-        product_types_id = comparisons.values_list('product__product_type', flat=True).distinct()
-        product_types = self.model.objects.filter(id__in=product_types_id)
+        product_types = self.request.user.comparison_set.product_types()
         queryset = product_types.product_price_annotation()
         return queryset.order_by(*self.ordering)
 
 
 class ComparisonProductListView(BaseComparisonView):
-    model = Product
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
     template_name = 'products/products.html'
