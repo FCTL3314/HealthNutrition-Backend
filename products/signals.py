@@ -4,12 +4,12 @@ from users.signals import BaseUpdateSlugSignal
 
 class ProductUpdateSlugSignal(BaseUpdateSlugSignal):
     sender = Product
-    field_to_slugify = 'name'
+    slug_related_field = 'name'
 
 
 class ProductTypeUpdateSlugSignal(BaseUpdateSlugSignal):
     sender = ProductType
-    field_to_slugify = 'name'
+    slug_related_field = 'name'
 
 
 product_update_slug_signal = ProductUpdateSlugSignal()

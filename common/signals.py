@@ -20,7 +20,7 @@ class BaseUpdateSlugSignal(ABC):
 
     @property
     @abstractmethod
-    def field_to_slugify(self) -> str:
+    def slug_related_field(self) -> str:
         pass
 
     def connect(self) -> None:
@@ -32,10 +32,10 @@ class BaseUpdateSlugSignal(ABC):
         if the field associated with the slug field has changed.
         """
         if not instance.id:
-            instance.change_slug(self.field_to_slugify, commit=False)
+            instance.change_slug(self.slug_related_field, commit=False)
         else:
-            old_slugify_field = getattr(sender.objects.get(id=instance.id), self.field_to_slugify)
-            new_slugify_field = getattr(instance, self.field_to_slugify)
+            old_slugify_field = getattr(sender.objects.get(id=instance.id), self.slug_related_field)
+            new_slugify_field = getattr(instance, self.slug_related_field)
 
             if old_slugify_field != new_slugify_field:
-                instance.change_slug(self.field_to_slugify, commit=False)
+                instance.change_slug(self.slug_related_field, commit=False)
