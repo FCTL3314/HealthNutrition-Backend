@@ -1,4 +1,4 @@
-# 📃 About
+# 📃 Description
 
 This Django application is designed for **comparing prices between different stores, helping users find the best 
 deals on various products**. The project provides a **user-friendly interface** to browse products across different 
@@ -17,3 +17,12 @@ Overall, this application provides a valuable tool for consumers to find the mos
 savings while shopping across different stores for a wide range of products.
 
 > The project was created for educational purposes, simulating fictitious products without real value.
+
+# 🔥 Features
+
+* Postponed Tasks / Celery
+* Authentication / Authorization
+* Profile editing
+* Email verification
+* Tests (PyTest)
+
