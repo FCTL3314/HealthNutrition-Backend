@@ -4,23 +4,16 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
-from common.views import (
-    CommentsMixin,
-    ObjectListInfoMixin,
-    PaginationUrlMixin,
-    SearchWithSearchTypeFormMixin,
-    TitleMixin,
-    VisitsTrackingMixin,
-)
+from common import views as common_views
 from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 
 class BaseProductsView(
-    PaginationUrlMixin,
-    TitleMixin,
-    ObjectListInfoMixin,
-    SearchWithSearchTypeFormMixin,
+    common_views.PaginationUrlMixin,
+    common_views.TitleMixin,
+    common_views.ObjectListInfoMixin,
+    common_views.SearchWithSearchTypeFormMixin,
     ListView,
 ):
     """A base view for the 'products' application."""
@@ -43,7 +36,7 @@ class ProductTypeListView(BaseProductsView):
         return queryset.order_by(*self.ordering)
 
 
-class ProductListView(VisitsTrackingMixin, BaseProductsView):
+class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
@@ -86,7 +79,12 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
         return context
 
 
-class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailView):
+class ProductDetailView(
+    common_views.CommentsMixin,
+    common_views.VisitsTrackingMixin,
+    common_views.TitleMixin,
+    DetailView,
+):
     model = Product
     template_name = "products/product_detail.html"
     form_class = ProductCommentForm
@@ -108,7 +106,7 @@ class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailVi
         self.object.increase("views")
 
 
-class SearchRedirectView(SearchWithSearchTypeFormMixin, RedirectView):
+class SearchRedirectView(common_views.SearchWithSearchTypeFormMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         match self.search_type:
             case "product":

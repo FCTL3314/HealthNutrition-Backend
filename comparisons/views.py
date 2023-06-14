@@ -3,21 +3,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common.views import (
-    ObjectListInfoMixin,
-    PaginationUrlMixin,
-    SearchWithSearchTypeFormMixin,
-    TitleMixin,
-)
+from common import views as common_views
 from products.models import ProductType
 
 
 class BaseComparisonView(
     LoginRequiredMixin,
-    PaginationUrlMixin,
-    TitleMixin,
-    ObjectListInfoMixin,
-    SearchWithSearchTypeFormMixin,
+    common_views.PaginationUrlMixin,
+    common_views.TitleMixin,
+    common_views.ObjectListInfoMixin,
+    common_views.SearchWithSearchTypeFormMixin,
     ListView,
 ):
     """A base view for the 'comparisons' application."""

@@ -1,12 +1,17 @@
 from django.conf import settings
 from django.views.generic import DetailView
 
-from common.views import CommentsMixin, TitleMixin, VisitsTrackingMixin
+from common import views as common_views
 from interactions.forms import StoreCommentForm
 from stores.models import Store
 
 
-class StoreDetailView(TitleMixin, CommentsMixin, VisitsTrackingMixin, DetailView):
+class StoreDetailView(
+    common_views.TitleMixin,
+    common_views.CommentsMixin,
+    common_views.VisitsTrackingMixin,
+    DetailView,
+):
     model = Store
     form_class = StoreCommentForm
     template_name = "stores/store_detail.html"

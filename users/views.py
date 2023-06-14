@@ -9,8 +9,8 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from common.views import LogoutRequiredMixin, TitleMixin
-from users import forms as user_forms
+from common import views as common_views
+from users import forms
 from users.mixins import ProfileMixin
 from users.models import EmailVerification, User
 from users.tasks import send_verification_email
@@ -18,18 +18,23 @@ from utils.urls import get_referer_or_default
 
 
 class RegistrationCreateView(
-    LogoutRequiredMixin, TitleMixin, SuccessMessageMixin, CreateView
+    common_views.LogoutRequiredMixin,
+    common_views.TitleMixin,
+    SuccessMessageMixin,
+    CreateView,
 ):
     model = User
-    form_class = user_forms.RegistrationForm
+    form_class = forms.RegistrationForm
     template_name = "users/auth/registration.html"
     title = "Sign Up"
     success_message = "You have successfully registered!"
     success_url = reverse_lazy("users:login")
 
 
-class LoginView(LogoutRequiredMixin, TitleMixin, auth_views.LoginView):
-    form_class = user_forms.LoginForm
+class LoginView(
+    common_views.LogoutRequiredMixin, common_views.TitleMixin, auth_views.LoginView
+):
+    form_class = forms.LoginForm
     template_name = "users/auth/login.html"
     title = "Log In"
 
@@ -63,9 +68,11 @@ class LogoutView(auth_views.LogoutView):
         return get_referer_or_default(self.request)
 
 
-class ProfileAccountView(ProfileMixin, SuccessMessageMixin, TitleMixin, UpdateView):
+class ProfileAccountView(
+    ProfileMixin, SuccessMessageMixin, common_views.TitleMixin, UpdateView
+):
     model = User
-    form_class = user_forms.ProfileForm
+    form_class = forms.ProfileForm
     title = "Account"
     success_message = "Profile updated successfully!"
 
@@ -78,9 +85,12 @@ class ProfileAccountView(ProfileMixin, SuccessMessageMixin, TitleMixin, UpdateVi
 
 
 class ProfilePasswordView(
-    ProfileMixin, SuccessMessageMixin, TitleMixin, auth_views.PasswordChangeView
+    ProfileMixin,
+    SuccessMessageMixin,
+    common_views.TitleMixin,
+    auth_views.PasswordChangeView,
 ):
-    form_class = user_forms.PasswordChangeForm
+    form_class = forms.PasswordChangeForm
     title = "Password"
     success_message = "Your password has been successfully updated!"
 
@@ -89,9 +99,12 @@ class ProfilePasswordView(
 
 
 class ProfileEmailView(
-    ProfileMixin, SuccessMessageMixin, TitleMixin, auth_views.PasswordChangeView
+    ProfileMixin,
+    SuccessMessageMixin,
+    common_views.TitleMixin,
+    auth_views.PasswordChangeView,
 ):
-    form_class = user_forms.EmailChangeForm
+    form_class = forms.EmailChangeForm
     title = "Email"
     success_message = "Your email has been successfully changed!"
 
@@ -99,7 +112,9 @@ class ProfileEmailView(
         return reverse_lazy("users:profile-email", args={self.request.user.slug})
 
 
-class BaseEmailVerificationView(TitleMixin, LoginRequiredMixin, TemplateView):
+class BaseEmailVerificationView(
+    common_views.TitleMixin, LoginRequiredMixin, TemplateView
+):
     user: User = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -153,13 +168,13 @@ class EmailVerificationView(BaseEmailVerificationView):
 
 
 class PasswordResetView(
-    LogoutRequiredMixin, SuccessMessageMixin, auth_views.PasswordResetView
+    common_views.LogoutRequiredMixin, SuccessMessageMixin, auth_views.PasswordResetView
 ):
     title = "Password Reset"
     template_name = "users/password/reset_password.html"
     subject_template_name = "users/password/password_reset_subject.html"
     email_template_name = "users/password/password_reset_content.html"
-    form_class = user_forms.PasswordResetForm
+    form_class = forms.PasswordResetForm
     success_url = reverse_lazy("users:reset_password")
     success_message = (
         "We’ve emailed you instructions for setting your password, if an account exists with the email "
@@ -169,13 +184,13 @@ class PasswordResetView(
 
 
 class PasswordResetConfirmView(
-    LogoutRequiredMixin,
+    common_views.LogoutRequiredMixin,
     SuccessMessageMixin,
-    TitleMixin,
+    common_views.TitleMixin,
     auth_views.PasswordResetConfirmView,
 ):
     title = "Password Reset"
     template_name = "users/password/password_reset_confirm.html"
-    form_class = user_forms.SetPasswordForm
+    form_class = forms.SetPasswordForm
     success_url = reverse_lazy("users:login")
     success_message = "Your password has been set. You can now sign into your account with the new password."
