@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from common.views import LogoutRequiredMixin, TitleMixin
 from users import forms as user_forms
+from users.mixins import ProfileMixin
 from users.models import EmailVerification, User
 from users.tasks import send_verification_email
 from utils.urls import get_referer_or_default
@@ -54,11 +55,7 @@ class LogoutView(auth_views.LogoutView):
         return get_referer_or_default(self.request)
 
 
-class ProfileMixin:
-    template_name = 'users/profile/profile.html'
-
-
-class ProfileView(ProfileMixin, TitleMixin, SuccessMessageMixin, UpdateView):
+class ProfileAccountView(ProfileMixin, SuccessMessageMixin, TitleMixin, UpdateView):
     model = User
     form_class = user_forms.ProfileForm
     title = 'Account'
@@ -72,7 +69,7 @@ class ProfileView(ProfileMixin, TitleMixin, SuccessMessageMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class ProfilePasswordView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
+class ProfilePasswordView(ProfileMixin, SuccessMessageMixin, TitleMixin, auth_views.PasswordChangeView):
     form_class = user_forms.PasswordChangeForm
     title = 'Password'
     success_message = 'Your password has been successfully updated!'
@@ -81,7 +78,7 @@ class ProfilePasswordView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_vi
         return reverse_lazy('users:profile-password', args={self.request.user.slug})
 
 
-class ProfileEmailView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
+class ProfileEmailView(ProfileMixin, SuccessMessageMixin, TitleMixin, auth_views.PasswordChangeView):
     form_class = user_forms.EmailChangeForm
     title = 'Email'
     success_message = 'Your email has been successfully changed!'
@@ -91,7 +88,7 @@ class ProfileEmailView(ProfileMixin, TitleMixin, SuccessMessageMixin, auth_views
 
 
 class BaseEmailVerificationView(TitleMixin, LoginRequiredMixin, TemplateView):
-    user: User
+    user: User = None
 
     def dispatch(self, request, *args, **kwargs):
         email = kwargs.get('email')
