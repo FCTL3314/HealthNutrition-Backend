@@ -5,7 +5,7 @@ from django.views.generic import ListView
 
 from common.views import (ObjectListInfoMixin, PaginationUrlMixin,
                           SearchWithSearchTypeFormMixin, TitleMixin)
-from products.models import Product, ProductType
+from products.models import ProductType
 
 
 class BaseComparisonView(
