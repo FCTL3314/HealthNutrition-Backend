@@ -4,21 +4,25 @@ from interactions.models import ProductComment, StoreComment
 
 
 class BaseCommentForm(forms.ModelForm):
-    text = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Add a comment...',
-        'type': 'text',
-        'maxlength': '516',
-    }))
+    text = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Add a comment...",
+                "type": "text",
+                "maxlength": "516",
+            }
+        )
+    )
 
 
 class ProductCommentForm(BaseCommentForm):
     class Meta:
-        fields = ('text',)
+        fields = ("text",)
         model = ProductComment
 
 
 class StoreCommentForm(BaseCommentForm):
     class Meta:
-        fields = ('text',)
+        fields = ("text",)
         model = StoreComment

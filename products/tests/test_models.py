@@ -21,14 +21,14 @@ def test_product_manager_price_aggregation(products):
     queryset = Product.objects.filter(id__in=ids)
     aggregations = queryset.price_aggregation()
 
-    assert aggregations['price__min'] == pytest.approx(min_price)
-    assert aggregations['price__max'] == pytest.approx(max_price)
-    assert aggregations['price__avg'] == pytest.approx(avg_price)
+    assert aggregations["price__min"] == pytest.approx(min_price)
+    assert aggregations["price__max"] == pytest.approx(max_price)
+    assert aggregations["price__avg"] == pytest.approx(avg_price)
 
 
 @pytest.mark.django_db
 def test_product_type_manager_price_annotation(product_type):
-    mixer.cycle(5).blend('products.Product', product_type=product_type)
+    mixer.cycle(5).blend("products.Product", product_type=product_type)
     queryset = ProductType.objects.filter(id=product_type.id)
     annotated_queryset = queryset.product_price_annotation()
 
@@ -38,10 +38,10 @@ def test_product_type_manager_price_annotation(product_type):
     products_queryset = Product.objects.filter(id__in=products_ids)
     products_aggregations = products_queryset.price_aggregation()
 
-    assert test_object.product__price__min == products_aggregations['price__min']
-    assert test_object.product__price__max == products_aggregations['price__max']
-    assert test_object.product__price__avg == products_aggregations['price__avg']
+    assert test_object.product__price__min == products_aggregations["price__min"]
+    assert test_object.product__price__max == products_aggregations["price__max"]
+    assert test_object.product__price__avg == products_aggregations["price__avg"]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pytest.main()

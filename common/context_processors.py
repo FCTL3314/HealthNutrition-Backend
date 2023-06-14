@@ -8,4 +8,4 @@ def current_url_name(request):
     Example:
         'http://127.0.0.1:8000/products/' - 'products:index'
     """
-    return {'current_url_name': resolve(request.path).url_name}
+    return {"current_url_name": resolve(request.path).url_name}

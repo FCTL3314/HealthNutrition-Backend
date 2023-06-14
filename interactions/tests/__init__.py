@@ -13,8 +13,8 @@ class ProductCommentTestFactory(DjangoModelFactory):
 
     author = SubFactory(UserTestFactory)
     product = SubFactory(ProductTestFactory)
-    text = Faker('text')
-    created_at = Faker('date_time')
+    text = Faker("text")
+    created_at = Faker("date_time")
 
 
 class StoreCommentTestFactory(DjangoModelFactory):
@@ -23,5 +23,5 @@ class StoreCommentTestFactory(DjangoModelFactory):
 
     author = SubFactory(UserTestFactory)
     store = SubFactory(StoreTestFactory)
-    text = Faker('text')
-    created_at = Faker('date_time')
+    text = Faker("text")
+    created_at = Faker("date_time")

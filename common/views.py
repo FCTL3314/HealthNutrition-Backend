@@ -15,7 +15,7 @@ class TitleMixin:
     """Mixin to create and add a title variable to the context."""
 
     title = None
-    context_title_name = 'title'
+    context_title_name = "title"
 
     def get_title(self) -> str:
         return self.title
@@ -23,21 +23,23 @@ class TitleMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = self.get_title()
-        context[self.context_title_name] = f'{title} | StoreTracker' if title else 'StoreTracker'
+        context[self.context_title_name] = (
+            f"{title} | StoreTracker" if title else "StoreTracker"
+        )
         return context
 
 
 class PaginationUrlMixin:
     """Mixin to create and add a pagination_url variable to the context."""
 
-    context_pagination_url_name = 'pagination_url'
+    context_pagination_url_name = "pagination_url"
 
     def get_pagination_url(self) -> str:
         params = self.request.GET.dict().copy()
-        if 'page' in params:
-            params.pop('page')
+        if "page" in params:
+            params.pop("page")
         encoded_params = urlencode(params)
-        return f'?{encoded_params}&page=' if encoded_params else '?page='
+        return f"?{encoded_params}&page=" if encoded_params else "?page="
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -141,7 +143,7 @@ class SearchFormMixin(FormMixin):
     form_class = SearchForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.search_query = self.request.GET.get('search_query', '')
+        self.search_query = self.request.GET.get("search_query", "")
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -150,12 +152,12 @@ class SearchFormMixin(FormMixin):
         so that the form will then set them as initial for its fields.
         """
         kwargs = super().get_form_kwargs()
-        kwargs['search_query'] = self.search_query
+        kwargs["search_query"] = self.search_query
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_query'] = self.search_query
+        context["search_query"] = self.search_query
         return context
 
 
@@ -165,17 +167,17 @@ class SearchWithSearchTypeFormMixin(SearchFormMixin):
     form_class = SearchForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.search_type = self.request.GET.get('search_type')
+        self.search_type = self.request.GET.get("search_type")
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['search_type'] = self.search_type
+        kwargs["search_type"] = self.search_type
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_type'] = self.search_type
+        context["search_type"] = self.search_type
         return context
 
 
@@ -197,19 +199,19 @@ class CommentsMixin(FormMixin, ABC):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        prefetched_comments = self.comments.prefetch_related('author')
+        prefetched_comments = self.comments.prefetch_related("author")
 
-        context['comments'] = prefetched_comments[:settings.COMMENTS_PAGINATE_BY]
-        context['comments_count'] = self.comments_count
-        context['has_more_comments'] = self.has_more_comments()
+        context["comments"] = prefetched_comments[: settings.COMMENTS_PAGINATE_BY]
+        context["comments_count"] = self.comments_count
+        context["has_more_comments"] = self.has_more_comments()
         return context
 
 
 class ObjectListInfoMixin:
     """Mixin that provides object list title and description for the context."""
 
-    _object_list_title: str = ''
-    _object_list_description: str = ''
+    _object_list_title: str = ""
+    _object_list_description: str = ""
 
     @property
     def object_list_title(self) -> str:
@@ -221,6 +223,6 @@ class ObjectListInfoMixin:
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list_title'] = self.object_list_title
-        context['object_list_description'] = self.object_list_description
+        context["object_list_title"] = self.object_list_title
+        context["object_list_description"] = self.object_list_description
         return context

@@ -5,14 +5,16 @@ from mixer.backend.django import mixer
 
 @pytest.fixture()
 def user():
-    return mixer.blend('users.User')
+    return mixer.blend("users.User")
 
 
 @pytest.fixture()
 def product_type():
-    return mixer.blend('products.ProductType')
+    return mixer.blend("products.ProductType")
 
 
 @pytest.fixture()
 def product_types():
-    return mixer.cycle(settings.PRODUCT_TYPES_PAGINATE_BY * 2).blend('products.ProductType')
+    return mixer.cycle(settings.PRODUCT_TYPES_PAGINATE_BY * 2).blend(
+        "products.ProductType"
+    )

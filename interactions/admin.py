@@ -4,8 +4,8 @@ from interactions.models import ProductComment, StoreComment
 
 
 class BaseCommentAdmin(admin.TabularInline):
-    search_fields = ('text',)
-    ordering = ('text',)
+    search_fields = ("text",)
+    ordering = ("text",)
 
 
 class ProductCommentAdmin(BaseCommentAdmin):

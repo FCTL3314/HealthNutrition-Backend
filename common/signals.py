@@ -34,7 +34,9 @@ class BaseUpdateSlugSignal(ABC):
         if not instance.id:
             instance.change_slug(self.slug_related_field, commit=False)
         else:
-            old_slugify_field = getattr(sender.objects.get(id=instance.id), self.slug_related_field)
+            old_slugify_field = getattr(
+                sender.objects.get(id=instance.id), self.slug_related_field
+            )
             new_slugify_field = getattr(instance, self.slug_related_field)
 
             if old_slugify_field != new_slugify_field:

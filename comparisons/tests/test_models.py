@@ -11,5 +11,5 @@ def test_comparison_manager_product_types(user, comparisons):
     assert len(expected) == len(actual)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pytest.main()

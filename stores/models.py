@@ -7,7 +7,7 @@ from common.models import IncrementMixin, SlugifyMixin
 class Store(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=64, unique=True)
     url = models.URLField(unique=True)
-    logo = models.ImageField(upload_to='stores')
+    logo = models.ImageField(upload_to="stores")
     description = models.TextField()
     views = models.PositiveIntegerField(default=0)
     slug = models.SlugField(unique=True)
@@ -16,10 +16,10 @@ class Store(SlugifyMixin, IncrementMixin, models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('stores:store-detail', args=(self.slug,))
+        return reverse("stores:store-detail", args=(self.slug,))
 
     def get_comments(self):
-        return self.storecomment_set.order_by('-created_at')
+        return self.storecomment_set.order_by("-created_at")
 
     def popular_products(self):
-        return self.product_set.order_by('-views')
+        return self.product_set.order_by("-views")

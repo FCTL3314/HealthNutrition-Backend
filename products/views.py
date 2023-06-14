@@ -4,25 +4,38 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
-from common.views import (CommentsMixin, ObjectListInfoMixin,
-                          PaginationUrlMixin, SearchWithSearchTypeFormMixin,
-                          TitleMixin, VisitsTrackingMixin)
+from common.views import (
+    CommentsMixin,
+    ObjectListInfoMixin,
+    PaginationUrlMixin,
+    SearchWithSearchTypeFormMixin,
+    TitleMixin,
+    VisitsTrackingMixin,
+)
 from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 
-class BaseProductsView(PaginationUrlMixin, TitleMixin, ObjectListInfoMixin, SearchWithSearchTypeFormMixin, ListView):
+class BaseProductsView(
+    PaginationUrlMixin,
+    TitleMixin,
+    ObjectListInfoMixin,
+    SearchWithSearchTypeFormMixin,
+    ListView,
+):
     """A base view for the 'products' application."""
 
 
 class ProductTypeListView(BaseProductsView):
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
-    template_name = 'products/product_types.html'
-    title = 'Categories'
-    object_list_title = 'Discover Popular Product Categories'
-    object_list_description = 'Explore our curated list of popular product categories, sorted by their popularity ' \
-                              'among users.'
+    template_name = "products/product_types.html"
+    title = "Categories"
+    object_list_title = "Discover Popular Product Categories"
+    object_list_description = (
+        "Explore our curated list of popular product categories, sorted by their popularity "
+        "among users."
+    )
 
     def get_queryset(self):
         initial_queryset = ProductType.objects.cached()
@@ -34,29 +47,31 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
-    template_name = 'products/products.html'
-    object_list_description = 'Discover a wide range of products available in the selected category.'
+    template_name = "products/products.html"
+    object_list_description = (
+        "Discover a wide range of products available in the selected category."
+    )
     visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
 
     _product_type: ProductType = None
 
     def dispatch(self, request, *args, **kwargs):
-        slug = kwargs.get('slug')
+        slug = kwargs.get("slug")
         self._product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         initial_queryset = self._product_type.cached_products()
-        queryset = initial_queryset.prefetch_related('store')
+        queryset = initial_queryset.prefetch_related("store")
         return queryset.order_by(*self.ordering)
 
     def get_visit_cache_template_kwargs(self):
-        remote_addr = self.request.META.get('REMOTE_ADDR')
-        kwargs = {'addr': remote_addr, 'id': self._product_type.id}
+        remote_addr = self.request.META.get("REMOTE_ADDR")
+        kwargs = {"addr": remote_addr, "id": self._product_type.id}
         return kwargs
 
     def not_visited(self):
-        self._product_type.increase('views')
+        self._product_type.increase("views")
 
     def get_title(self):
         return self._product_type.name
@@ -73,7 +88,7 @@ class ProductListView(VisitsTrackingMixin, BaseProductsView):
 
 class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailView):
     model = Product
-    template_name = 'products/product_detail.html'
+    template_name = "products/product_detail.html"
     form_class = ProductCommentForm
     visit_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
@@ -85,39 +100,38 @@ class ProductDetailView(CommentsMixin, VisitsTrackingMixin, TitleMixin, DetailVi
         return self.object.get_comments()
 
     def get_visit_cache_template_kwargs(self):
-        remote_addr = self.request.META.get('REMOTE_ADDR')
-        kwargs = {'addr': remote_addr, 'id': self.object.id}
+        remote_addr = self.request.META.get("REMOTE_ADDR")
+        kwargs = {"addr": remote_addr, "id": self.object.id}
         return kwargs
 
     def not_visited(self):
-        self.object.increase('views')
+        self.object.increase("views")
 
 
 class SearchRedirectView(SearchWithSearchTypeFormMixin, RedirectView):
-
     def get_redirect_url(self, *args, **kwargs):
         match self.search_type:
-            case 'product':
-                redirect_url = reverse('products:product-search')
-            case 'product_type':
-                redirect_url = reverse('products:product-type-search')
+            case "product":
+                redirect_url = reverse("products:product-search")
+            case "product_type":
+                redirect_url = reverse("products:product-type-search")
             case _:
-                raise BadRequest('search_type not in product or product_type')
+                raise BadRequest("search_type not in product or product_type")
 
-        params = self.request.META.get('QUERY_STRING')
-        return f'{redirect_url}?{params}'
+        params = self.request.META.get("QUERY_STRING")
+        return f"{redirect_url}?{params}"
 
 
 class BaseSearchView(BaseProductsView):
-    object_list_title = 'Search Results'
-    object_list_description = 'Explore the results of your search query.'
+    object_list_title = "Search Results"
+    object_list_description = "Explore the results of your search query."
 
 
 class ProductTypeSearchListView(BaseSearchView):
     ordering = settings.PRODUCT_TYPES_ORDERING
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
-    template_name = 'products/product_types.html'
-    title = 'Category Search'
+    template_name = "products/product_types.html"
+    title = "Category Search"
 
     def get_queryset(self):
         initial_queryset = ProductType.objects.search(self.search_query)
@@ -128,12 +142,12 @@ class ProductTypeSearchListView(BaseSearchView):
 class ProductSearchListView(BaseSearchView):
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
-    template_name = 'products/products.html'
-    title = 'Product Search'
+    template_name = "products/products.html"
+    title = "Product Search"
 
     def get_queryset(self):
         initial_queryset = Product.objects.search(self.search_query)
-        queryset = initial_queryset.prefetch_related('store')
+        queryset = initial_queryset.prefetch_related("store")
         return queryset.order_by(*self.ordering)
 
     def get_context_data(self, **kwargs):

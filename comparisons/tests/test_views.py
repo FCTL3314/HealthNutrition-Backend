@@ -7,13 +7,15 @@ from mixer.backend.django import mixer
 def test_comparison_product_type_list_view(client, comparisons):
     client.force_login(comparisons[0].user)
 
-    product_types_ids = {comparison.product.product_type.id for comparison in comparisons}
+    product_types_ids = {
+        comparison.product.product_type.id for comparison in comparisons
+    }
 
-    path = reverse('comparisons:product-type-comparisons')
+    path = reverse("comparisons:product-type-comparisons")
 
     response = client.get(path)
 
-    context_object_list = response.context_data.get('object_list')
+    context_object_list = response.context_data.get("object_list")
 
     assert response.status_code == 200
     assert len(context_object_list) == len(product_types_ids)
@@ -23,19 +25,19 @@ def test_comparison_product_type_list_view(client, comparisons):
 def test_comparison_product_list_view(client, user, product_type):
     client.force_login(user)
 
-    products = mixer.cycle(5).blend('products.Product', product_type=product_type)
+    products = mixer.cycle(5).blend("products.Product", product_type=product_type)
     for product in products:
-        mixer.blend('comparisons.Comparison', user=user, product=product)
+        mixer.blend("comparisons.Comparison", user=user, product=product)
 
-    path = reverse('comparisons:product-comparisons', args=(product_type.slug,))
+    path = reverse("comparisons:product-comparisons", args=(product_type.slug,))
 
     response = client.get(path)
 
-    context_object_list = response.context_data.get('object_list')
+    context_object_list = response.context_data.get("object_list")
 
     assert response.status_code == 200
     assert len(context_object_list) == len(products)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pytest.main()

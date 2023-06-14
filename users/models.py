@@ -14,9 +14,11 @@ from utils.static import get_static_file
 
 class User(SlugifyMixin, AbstractUser):
     email = models.EmailField(unique=True)
-    image = models.ImageField(upload_to='users', null=True, blank=True)
+    image = models.ImageField(upload_to="users", null=True, blank=True)
     slug = models.SlugField(unique=True)
-    comparisons = models.ManyToManyField('products.Product', through='comparisons.Comparison', blank=True)
+    comparisons = models.ManyToManyField(
+        "products.Product", through="comparisons.Comparison", blank=True
+    )
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
@@ -40,15 +42,19 @@ class User(SlugifyMixin, AbstractUser):
 
     def valid_email_verifications(self):
         verifications = self.emailverification_set.filter(expiration__gt=now())
-        return verifications.order_by('-created_at')
+        return verifications.order_by("-created_at")
 
     def verify(self, commit=True):
         self.is_verified = True
         if commit:
-            self.save(update_fields=('is_verified',))
+            self.save(update_fields=("is_verified",))
 
     def get_image_url(self):
-        return self.image.url if self.image else get_static_file('images/default_user_image.png')
+        return (
+            self.image.url
+            if self.image
+            else get_static_file("images/default_user_image.png")
+        )
 
 
 class EmailVerification(models.Model):
@@ -58,15 +64,20 @@ class EmailVerification(models.Model):
     expiration = models.DateTimeField(default=now() + timedelta(hours=2))
 
     def __str__(self):
-        return f'{self.user.email} | {self.expiration}'
+        return f"{self.user.email} | {self.expiration}"
 
-    def send_verification_email(self, subject_template_name, html_email_template_name, protocol):
-        link = reverse('users:email-verification', kwargs={'email': self.user.email, 'code': self.code})
+    def send_verification_email(
+        self, subject_template_name, html_email_template_name, protocol
+    ):
+        link = reverse(
+            "users:email-verification",
+            kwargs={"email": self.user.email, "code": self.code},
+        )
 
         context = {
-            'user': self.user,
-            'protocol': protocol,
-            'verification_link': settings.DOMAIN_NAME + link,
+            "user": self.user,
+            "protocol": protocol,
+            "verification_link": settings.DOMAIN_NAME + link,
         }
 
         msg = convert_html_to_email_message(
