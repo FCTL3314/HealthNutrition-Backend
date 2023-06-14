@@ -4,7 +4,7 @@ from mixer.backend.django import mixer
 
 
 @pytest.fixture()
-def user(faker):
+def user():
     return mixer.blend('users.User')
 
 
