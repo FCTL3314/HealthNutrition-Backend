@@ -1,7 +1,6 @@
 django==4.2.1
 django-environ==0.10.0
 django-filter==23.2
+django-cleanup==7.0.0
 pillow==9.5.0
 pytest-django==4.5.2
-faker==18.10.1
-factory_boy==3.2.1
