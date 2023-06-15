@@ -6,7 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from common import views as common_views
@@ -65,7 +65,15 @@ class LoginView(
 
 class LogoutView(auth_views.LogoutView):
     def get_redirect_url(self):
-        return get_referer_or_default(self.request)
+        return reverse_lazy("users:login")
+
+
+class ProfileView(common_views.TitleMixin, DetailView):
+    model = User
+    template_name = "users/profile/profile.html"
+
+    def get_title(self):
+        return f"{self.object.username}'s Profile"
 
 
 class ProfileAccountView(
