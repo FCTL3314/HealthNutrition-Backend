@@ -7,7 +7,7 @@
   <h3>{{ comments_count }} {% if comments_count == 1 %} Comment {% else %} Comments {% endif %}</h3>
 </div>
 <div class="d-flex mb-3">
-  <img class="me-3 rounded-circle"
+  <img class="me-3 rounded-circle object-fit-cover"
        src="{{ request.user.get_image_url }}" alt="author-image" width="40" height="40">
   <form id="add-comment-form" method="POST" class="w-100" data-recipe-id="{{ object.id }}">
 
@@ -35,8 +35,8 @@
     {% for comment in comments %}
       <div class="d-flex align-items-start mb-4">
         <a href="{% url 'users:profile' comment.author.slug %}">
-          <img class="me-3 rounded-circle" src="{{ comment.author.get_image_url }}" alt="user-image" width="40"
-               height="40">
+          <img class="me-3 rounded-circle object-fit-cover" src="{{ comment.author.get_image_url }}" alt="user-image"
+               width="40" height="40">
         </a>
         <div>
           <a class="fs-5 me-1 link link-dark text-decoration-none"
