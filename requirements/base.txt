@@ -4,3 +4,4 @@ django-filter==23.2
 django-cleanup==7.0.0
 pillow==9.5.0
 pytest-django==4.5.2
+faker==12.0.1
