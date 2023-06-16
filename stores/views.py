@@ -35,7 +35,5 @@ class StoreDetailView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["popular_products"] = self.object.popular_products()[
-            : settings.PRODUCTS_PAGINATE_BY
-        ]
+        context["popular_products"] = self.object.popular_products()[:settings.PRODUCTS_PAGINATE_BY]
         return context
