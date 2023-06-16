@@ -17,55 +17,51 @@
 
           <div>
             <h2>Information</h2>
-            <hr class="m-0">
-            <div class="row mt-5">
-              <div class="col-6">
+            <hr class="mb-0">
+            <ul class="row mt-5 list-unstyled">
+              <li class="col-6 profile-list-item">
                 <h3 class="mb-4 fw-semibold">Username</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">{{ object.username }}</h4>
-              </div>
+                <h4 class="text-main-light text-truncate ps-1">{{ object.username }}</h4>
+              </li>
               {% if  request.user == object %}
-                <div class="col-6">
+                <li class="col-6 profile-list-item">
                   <div class="d-flex mb-4 align-items-start">
                     <h3 class="mb-0 me-1 fw-semibold">Email</h3>
-                    <small class="text-main-secondary">Private</small>
+                    <span>[<small class="text-main-light">Private</small>]</span>
                   </div>
-                  <h4 class="text-main-secondary text-truncate ps-1">{{ object.email }}</h4>
-                </div>
+                  <h4 class="text-main-light text-truncate ps-1">{{ object.email }}</h4>
+                </li>
               {% endif %}
-              <div class="col-6 mt-5">
+              <li class="col-6 profile-list-item">
                 <h3 class="mb-4 fw-semibold">Member since</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">{{ object.date_joined|date:"F j, Y" }}</h4>
-              </div>
-              <div class="col-6 mt-5">
-                <h3 class="mb-4 fw-semibold">Last login date</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">{{ object.last_login|date:"F j, Y" }}</h4>
-              </div>
-            </div>
+                <h4 class="text-main-light text-truncate ps-1">{{ object.date_joined|date:"F j, Y" }}</h4>
+              </li>
+            </ul>
           </div>
 
           <div class="mt-5">
-            <h2>About</h2>
-            <hr class="m-0">
-            <div class="row mt-5">
-              <div class="col-6">
+            <h2>Personal</h2>
+            <hr class="mb-0">
+            <ul class="row mt-5 list-unstyled">
+              <li class="col-6 profile-list-item">
                 <h3 class="mb-4 fw-semibold">First name</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">
+                <h4 class="text-main-light text-truncate ps-1">
                   {% if object.first_name %} {{ object.first_name }} {% else %} Not specified {% endif %}
                 </h4>
-              </div>
-              <div class="col-6">
+              </li>
+              <li class="col-6 profile-list-item">
                 <h3 class="mb-4 fw-semibold">Last name</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">
+                <h4 class="text-main-light text-truncate ps-1">
                   {% if object.last_name %} {{ object.last_name }} {% else %} Not specified {% endif %}
                 </h4>
-              </div>
-              <div class="col-12 mt-5">
+              </li>
+              <li class="col-12 profile-list-item">
                 <h3 class="mb-4 fw-semibold">About me</h3>
-                <h4 class="text-main-secondary text-truncate ps-1">
-                  {% if object.last_name %} {{ object.last_name }} {% else %} Not specified {% endif %}
+                <h4 class="text-main-light ps-1">
+                  {% if object.about %} {{ object.about }} {% else %} Not specified {% endif %}
                 </h4>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
 
         </div>

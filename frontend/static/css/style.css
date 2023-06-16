@@ -1,7 +1,6 @@
 body {
     --main-color: rgb(14, 96, 192);
     --main-color-light: rgb(16, 115, 231);
-    --main-color-secondary: rgba(72, 147, 236, 0.92);
 }
 
 .btn-up {
@@ -27,10 +26,6 @@ body {
 
 .text-main-light {
     color: var(--main-color-light);
-}
-
-.text-main-secondary {
-    color: var(--main-color-secondary);
 }
 
 .link-main {
@@ -102,6 +97,10 @@ body {
 
 .card:hover .card-img-top {
     transform: scale(1.05);
+}
+
+.profile-list-item:nth-of-type(3) {
+    margin-top: 50px;
 }
 
 
