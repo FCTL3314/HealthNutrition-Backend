@@ -123,7 +123,7 @@ class ProfileForm(auth_forms.UserChangeForm):
                 "class": "form-control",
                 "readonly": True,
             }
-        )
+        ),
     )
     image = forms.ImageField(
         required=False,
@@ -135,6 +135,17 @@ class ProfileForm(auth_forms.UserChangeForm):
             }
         ),
     )
+    about = forms.CharField(
+        required=False,
+        max_length=516,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter information about you",
+                "rows": 3,
+            }
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -142,7 +153,7 @@ class ProfileForm(auth_forms.UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "image")
+        fields = ("username", "first_name", "last_name", "about", "image")
 
 
 class PasswordChangeForm(auth_forms.PasswordChangeForm):
@@ -247,13 +258,13 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     )
 
     def send_mail(
-        self,
-        subject_template_name,
-        email_template_name,
-        context,
-        from_email,
-        to_email,
-        html_email_template_name=None,
+            self,
+            subject_template_name,
+            email_template_name,
+            context,
+            from_email,
+            to_email,
+            html_email_template_name=None,
     ):
         context["user"] = context["user"].id
         send_password_reset_email.delay(

@@ -15,6 +15,7 @@ from utils.static import get_static_file
 class User(SlugifyMixin, AbstractUser):
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to="users", null=True, blank=True)
+    about = models.TextField(max_length=516, null=True, blank=True)
     slug = models.SlugField(unique=True)
     comparisons = models.ManyToManyField(
         "products.Product", through="comparisons.Comparison", blank=True
