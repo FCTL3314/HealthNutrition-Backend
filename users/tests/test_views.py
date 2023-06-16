@@ -205,5 +205,28 @@ def test_profile_settings_email_view_post(client, new_email, is_old_password_inc
         assert user.email == new_email
 
 
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'is_verified',
+    (
+            False,
+            True,
+    )
+)
+def test_send_verification_email_view(client, is_verified):
+    user = mixer.blend('users.User', is_verified=is_verified)
+    client.force_login(user)
+
+    path = reverse('users:send-verification-email', args=(user.email,))
+
+    response = client.get(path)
+
+    assert response.status_code == HTTPStatus.OK
+    if is_verified:
+        assert not user.emailverification_set.all()
+    else:
+        assert user.emailverification_set.all()
+
+
 if __name__ == "__main__":
     pytest.main()

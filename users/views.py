@@ -120,9 +120,7 @@ class ProfileSettingsEmailView(
         return reverse_lazy("users:profile-email", args={self.request.user.slug})
 
 
-class BaseEmailVerificationView(
-    common_views.TitleMixin, LoginRequiredMixin, TemplateView
-):
+class BaseEmailVerificationView(common_views.TitleMixin, LoginRequiredMixin, TemplateView):
     user: User = None
 
     def dispatch(self, request, *args, **kwargs):

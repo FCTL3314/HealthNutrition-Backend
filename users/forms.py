@@ -5,6 +5,10 @@ from django.core.exceptions import ValidationError
 from users.models import User
 from users.tasks import send_password_reset_email
 
+COMMON_ERROR_MESSAGES = {
+    "new_password_same_as_old": "The new password must be different from the old one."
+}
+
 
 class RegistrationForm(auth_forms.UserCreationForm):
     username = forms.CharField(
@@ -159,9 +163,7 @@ class ProfileForm(auth_forms.UserChangeForm):
 class PasswordChangeForm(auth_forms.PasswordChangeForm):
     error_messages = {
         **auth_forms.PasswordChangeForm.error_messages,
-        "new_password_same_as_old": (
-            "The new password must be different from the old one."
-        ),
+        **COMMON_ERROR_MESSAGES,
     }
 
     old_password = forms.CharField(
@@ -292,6 +294,11 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
 
 
 class SetPasswordForm(auth_forms.SetPasswordForm):
+    error_messages = {
+        **auth_forms.SetPasswordForm.error_messages,
+        **COMMON_ERROR_MESSAGES
+    }
+
     new_password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -316,9 +323,7 @@ class SetPasswordForm(auth_forms.SetPasswordForm):
     def clean_new_password2(self):
         new_password = self.cleaned_data["new_password1"]
         if self.user.check_password(new_password):
-            raise forms.ValidationError(
-                "The new password must be different from the old one."
-            )
+            raise forms.ValidationError(self.error_messages['new_password_same_as_old'])
         return super().clean_new_password2()
 
     class Meta:
