@@ -140,23 +140,22 @@ def test_profile_settings_account_view_post(client, user):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'invalid_old_password, new_password, error_expected',
+    "is_old_password_incorrect, new_password, error_expected",
     (
             [False, faker.password(), False],
             [False, '123', True],
             [True, faker.password(), True],
-            [True, '123', True],
     )
 )
-def test_profile_settings_password_view_post(client, invalid_old_password, new_password, error_expected):
+def test_profile_settings_password_view_post(client, is_old_password_incorrect, new_password, error_expected):
     old_password = faker.password()
-    user = mixer.blend('users.User', password=make_password(old_password))
+    user = mixer.blend("users.User", password=make_password(old_password))
     client.force_login(user)
 
     path = reverse("users:profile-password", args=(user.slug,))
 
     data = {
-        "old_password": faker.password() if invalid_old_password else old_password,
+        "old_password": faker.password() if is_old_password_incorrect else old_password,
         "new_password1": new_password,
         "new_password2": new_password,
     }
@@ -171,6 +170,39 @@ def test_profile_settings_password_view_post(client, invalid_old_password, new_p
     else:
         assert response.status_code == HTTPStatus.FOUND
         assert user.check_password(new_password)
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "new_email, is_old_password_incorrect, error_expected",
+    (
+            [faker.email(), False, False],
+            [faker.email(), True, True],
+            ['not-email', False, True],
+    )
+)
+def test_profile_settings_email_view_post(client, new_email, is_old_password_incorrect, error_expected):
+    old_password = faker.password()
+    user = mixer.blend("users.User", password=make_password(old_password))
+    client.force_login(user)
+
+    path = reverse("users:profile-email", args=(user.slug,))
+
+    data = {
+        "email": new_email,
+        "old_password": faker.password() if is_old_password_incorrect else old_password,
+    }
+
+    response = client.post(path, data=data)
+
+    user.refresh_from_db()
+
+    if error_expected:
+        assert response.status_code == HTTPStatus.OK
+        assert not user.email == new_email
+    else:
+        assert response.status_code == HTTPStatus.FOUND
+        assert user.email == new_email
 
 
 if __name__ == "__main__":

@@ -157,6 +157,13 @@ class ProfileForm(auth_forms.UserChangeForm):
 
 
 class PasswordChangeForm(auth_forms.PasswordChangeForm):
+    error_messages = {
+        **auth_forms.PasswordChangeForm.error_messages,
+        "new_password_same_as_old": (
+            "The new password must be different from the old one."
+        ),
+    }
+
     old_password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -190,17 +197,25 @@ class PasswordChangeForm(auth_forms.PasswordChangeForm):
         super().clean()
         new_password1 = self.data["new_password1"]
         if self.user.check_password(new_password1):
-            raise forms.ValidationError(
-                "The new password must be different from the old one."
-            )
+            raise forms.ValidationError(self.error_messages["new_password_same_as_old"])
 
     class Meta:
         model = User
         fields = ("old_password", "new_password1", "new_password2")
 
 
-class EmailChangeForm(forms.Form):
-    new_email = forms.CharField(
+class EmailChangeForm(forms.ModelForm):
+    error_messages = {
+        **auth_forms.PasswordChangeForm.error_messages,
+        "email_already_used": (
+            "You're already using this email address."
+        ),
+        "email_taken": (
+            "This email address is already in use. Please use a different email address."
+        ),
+    }
+
+    email = forms.CharField(
         widget=forms.EmailInput(
             attrs={
                 "class": "form-control",
@@ -224,27 +239,27 @@ class EmailChangeForm(forms.Form):
     def clean_old_password(self):
         old_password = self.cleaned_data["old_password"]
         if not self.user.check_password(old_password):
-            raise ValidationError(
-                "Your old password was entered incorrectly. Please try again."
-            )
+            raise ValidationError(self.error_messages["password_incorrect"])
         return old_password
 
     def clean_new_email(self):
-        new_email = self.cleaned_data.get("new_email")
-        if self.user.email == new_email:
-            raise forms.ValidationError("You're already using this email address.")
-        if User.objects.filter(email=new_email).exists():
-            raise forms.ValidationError(
-                "This email address is already in use. Please use a different email address."
-            )
-        return new_email
+        email = self.cleaned_data.get("email")
+        if self.user.email == email:
+            raise forms.ValidationError(self.error_messages["email_already_used"])
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError(self.error_messages["email_taken"])
+        return email
 
     def save(self, commit=True):
-        self.user.email = self.cleaned_data["new_email"]
+        self.user.email = self.cleaned_data["email"]
         self.user.is_verified = False
         if commit:
             self.user.save()
         return self.user
+
+    class Meta:
+        model = User
+        fields = ("email",)
 
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
