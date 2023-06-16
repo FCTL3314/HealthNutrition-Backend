@@ -3,7 +3,7 @@ from django.contrib.auth import forms as auth_forms
 from django.core.exceptions import ValidationError
 
 from users.models import User
-from users.tasks import send_password_reset_email
+from users.tasks import send_email
 
 COMMON_ERROR_MESSAGES = {
     "new_password_same_as_old": "The new password must be different from the old one."
@@ -283,10 +283,9 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             to_email,
             html_email_template_name=None,
     ):
-        context["user"] = context["user"].id
-        send_password_reset_email.delay(
-            subject_template_name, email_template_name, to_email, context
-        )
+        user = context.pop("user")
+        context["username"] = user.username
+        send_email.delay(subject_template_name, email_template_name, to_email, context)
 
     class Meta:
         model = User

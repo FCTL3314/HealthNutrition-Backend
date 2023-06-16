@@ -16,12 +16,6 @@ def send_verification_email(object_id):
 
 
 @shared_task
-def send_password_reset_email(
-    subject_template_name, email_template_name, to_email, context=None
-):
-    context["user"] = User.objects.get(id=context["user"])
-
-    msg = convert_html_to_email_message(
-        subject_template_name, email_template_name, [to_email], context
-    )
+def send_email(subject_template_name, email_template_name, to_email, context=None):
+    msg = convert_html_to_email_message(subject_template_name, email_template_name, [to_email], context)
     msg.send()
