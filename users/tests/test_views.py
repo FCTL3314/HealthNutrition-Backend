@@ -1,9 +1,11 @@
 from http import HTTPStatus
 
 import pytest
+from django.contrib.auth.hashers import make_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from faker import Faker
+from mixer.backend.django import mixer
 
 from users.forms import LoginForm, RegistrationForm
 from users.models import User
@@ -134,6 +136,41 @@ def test_profile_settings_account_view_post(client, user):
     assert user.first_name == first_name
     assert user.last_name == last_name
     assert user.image
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'invalid_old_password, new_password, error_expected',
+    (
+            [False, faker.password(), False],
+            [False, '123', True],
+            [True, faker.password(), True],
+            [True, '123', True],
+    )
+)
+def test_profile_settings_password_view_post(client, invalid_old_password, new_password, error_expected):
+    old_password = faker.password()
+    user = mixer.blend('users.User', password=make_password(old_password))
+    client.force_login(user)
+
+    path = reverse("users:profile-password", args=(user.slug,))
+
+    data = {
+        "old_password": faker.password() if invalid_old_password else old_password,
+        "new_password1": new_password,
+        "new_password2": new_password,
+    }
+
+    response = client.post(path, data=data)
+
+    user.refresh_from_db()
+
+    if error_expected:
+        assert response.status_code == HTTPStatus.OK
+        assert not user.check_password(new_password)
+    else:
+        assert response.status_code == HTTPStatus.FOUND
+        assert user.check_password(new_password)
 
 
 if __name__ == "__main__":
