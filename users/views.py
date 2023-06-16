@@ -136,19 +136,13 @@ class SendVerificationEmailView(BaseEmailVerificationView):
     title = "Send Verification"
 
     def get(self, request, *args, **kwargs):
-        seconds_since_last_sending = (
-            self.user.seconds_since_last_email_verification_sending()
-        )
+        seconds_since_last_sending = self.user.seconds_since_last_email_verification_sending()
 
         if self.user.is_verified:
             messages.warning(request, "You have already verified your email.")
         elif seconds_since_last_sending < settings.EMAIL_SEND_INTERVAL_SECONDS:
-            seconds_left = (
-                settings.EMAIL_SEND_INTERVAL_SECONDS - seconds_since_last_sending
-            )
-            messages.warning(
-                request, f"Please wait {seconds_left} to resend the confirmation email."
-            )
+            seconds_left = settings.EMAIL_SEND_INTERVAL_SECONDS - seconds_since_last_sending
+            messages.warning(request, f"Please wait {seconds_left} to resend the confirmation email.")
         else:
             verification = self.user.create_email_verification()
             send_verification_email.delay(object_id=verification.id)
