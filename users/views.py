@@ -76,7 +76,7 @@ class ProfileView(common_views.TitleMixin, DetailView):
         return f"{self.object.username}'s Profile"
 
 
-class ProfileAccountView(
+class ProfileSettingsAccountView(
     ProfileMixin, SuccessMessageMixin, common_views.TitleMixin, UpdateView
 ):
     model = User
@@ -85,14 +85,14 @@ class ProfileAccountView(
     success_message = "Profile updated successfully!"
 
     def get_success_url(self):
-        return reverse_lazy("users:profile", args=(self.object.slug,))
+        return reverse_lazy("users:profile-account", args=(self.object.slug,))
 
     def form_invalid(self, form):
         self.object.refresh_from_db()
         return super().form_invalid(form)
 
 
-class ProfilePasswordView(
+class ProfileSettingsPasswordView(
     ProfileMixin,
     SuccessMessageMixin,
     common_views.TitleMixin,
@@ -106,7 +106,7 @@ class ProfilePasswordView(
         return reverse_lazy("users:profile-password", args={self.request.user.slug})
 
 
-class ProfileEmailView(
+class ProfileSettingsEmailView(
     ProfileMixin,
     SuccessMessageMixin,
     common_views.TitleMixin,

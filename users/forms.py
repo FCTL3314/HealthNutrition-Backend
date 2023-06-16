@@ -117,6 +117,7 @@ class ProfileForm(auth_forms.UserChangeForm):
         ),
     )
     email = forms.EmailField(
+        required=False,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",

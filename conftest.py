@@ -9,6 +9,11 @@ def user():
 
 
 @pytest.fixture()
+def users():
+    return mixer.cycle(5).blend("users.User")
+
+
+@pytest.fixture()
 def product_type():
     return mixer.blend("products.ProductType")
 

@@ -1,14 +1,16 @@
-import pytest
-from django.urls import reverse
 from http import HTTPStatus
+
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
 from faker import Faker
 
-from users.forms import RegistrationForm, LoginForm
+from users.forms import LoginForm, RegistrationForm
 from users.models import User
 
 faker = Faker()
 
-REMEMBER_ME_AGE = ((60 * 60) * 24) * 14
+REMEMBER_ME_SESSION_AGE = ((60 * 60) * 24) * 14
 
 
 @pytest.mark.django_db
@@ -53,8 +55,14 @@ def test_login_view_get(client):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("remember_me", (True, False))
-def test_login_view_post(client, remember_me):
+@pytest.mark.parametrize(
+    "remember_me, session_age",
+    (
+            [True, REMEMBER_ME_SESSION_AGE],
+            [False, ''],
+    ),
+)
+def test_login_view_post(client, remember_me, session_age):
     password = faker.password()
     user = User.objects.create_user(username=faker.user_name(), email=faker.email(), password=password)
 
@@ -67,10 +75,65 @@ def test_login_view_post(client, remember_me):
     response = client.post(reverse("users:login"), data=data)
 
     assert response.status_code == HTTPStatus.FOUND
-    if remember_me:
-        assert response.cookies['sessionid']['max-age'] == REMEMBER_ME_AGE
-    else:
-        assert not response.cookies['sessionid']['max-age']
+    assert response.cookies['sessionid']['max-age'] == session_age
+
+
+@pytest.mark.django_db
+def test_profile_view(client, user):
+    response = client.get(reverse("users:profile", args=(user.slug,)))
+
+    assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "url_pattern",
+    (
+            "users:profile-account",
+            "users:profile-password",
+            "users:profile-email",
+    ),
+)
+def test_profile_settings_access(client, users, url_pattern):
+    profile_owner = users[0]
+    other_user = users[1]
+
+    path = reverse(url_pattern, args=(profile_owner.slug,))
+
+    client.force_login(profile_owner)
+    assert client.get(path).status_code == HTTPStatus.OK
+
+    client.force_login(other_user)
+    assert client.get(path).status_code == HTTPStatus.FORBIDDEN
+
+
+@pytest.mark.django_db
+def test_profile_settings_account_view_post(client, user):
+    client.force_login(user)
+
+    path = reverse("users:profile-account", args=(user.slug,))
+
+    username = faker.user_name()
+    first_name = faker.first_name()
+    last_name = faker.last_name()
+    image = SimpleUploadedFile("test_generated_image.jpg", faker.image(), content_type="image/jpg")
+
+    data = {
+        "username": username,
+        "first_name": first_name,
+        "last_name": last_name,
+        "image": image,
+    }
+
+    response = client.post(path, data=data)
+
+    user.refresh_from_db()
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert user.username == username
+    assert user.first_name == first_name
+    assert user.last_name == last_name
+    assert user.image
 
 
 if __name__ == "__main__":

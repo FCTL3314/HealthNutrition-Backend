@@ -17,7 +17,7 @@ urlpatterns = [
 
     path("<slug:slug>/", views.ProfileView.as_view(), name="profile"),
 
-    path("<slug:slug>/account/", views.ProfileAccountView.as_view(), name="profile-account"),
-    path("<slug:slug>/password/", views.ProfilePasswordView.as_view(), name="profile-password"),
-    path("<slug:slug>/email/", views.ProfileEmailView.as_view(), name="profile-email"),
+    path("<slug:slug>/account/", views.ProfileSettingsAccountView.as_view(), name="profile-account"),
+    path("<slug:slug>/password/", views.ProfileSettingsPasswordView.as_view(), name="profile-password"),
+    path("<slug:slug>/email/", views.ProfileSettingsEmailView.as_view(), name="profile-email"),
 ]
