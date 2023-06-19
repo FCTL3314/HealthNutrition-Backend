@@ -133,8 +133,8 @@ class ProductTypeSearchListView(BaseSearchView):
 
     def get_queryset(self):
         initial_queryset = ProductType.objects.search(self.search_query)
-        queryset = initial_queryset.product_price_annotation().order_by(*self.ordering)
-        return queryset
+        queryset = initial_queryset.product_price_annotation()
+        return queryset.order_by(*self.ordering)
 
 
 class ProductSearchListView(BaseSearchView):

@@ -12,8 +12,8 @@ from common import views as common_views
 from users import forms
 from users.mixins import ProfileMixin
 from users.models import User
-from users.services.mailing import (handle_email_verification,
-                                    send_email_verification)
+from users.services import (handle_email_verification,
+                            send_email_verification)
 from utils.urls import get_referer_or_default
 
 
