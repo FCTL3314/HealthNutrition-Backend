@@ -207,17 +207,17 @@ def test_profile_settings_email_view_post(client, new_email, is_old_password_inc
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'is_verified',
+    "is_verified",
     (
             False,
             True,
     )
 )
 def test_send_verification_email_view(client, is_verified):
-    user = mixer.blend('users.User', is_verified=is_verified)
+    user = mixer.blend("users.User", is_verified=is_verified)
     client.force_login(user)
 
-    path = reverse('users:send-verification-email', args=(user.email,))
+    path = reverse("users:send-verification-email", args=(user.email,))
 
     response = client.get(path)
 
@@ -226,6 +226,35 @@ def test_send_verification_email_view(client, is_verified):
         assert not user.emailverification_set.all()
     else:
         assert user.emailverification_set.all()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "is_verified",
+    (
+            False,
+            True,
+            True,
+    )
+)
+def test_email_verification_view(client, is_verified):
+    user = mixer.blend("users.User", is_verified=is_verified)
+    verification = mixer.blend("users.EmailVerification", user=user)
+
+    client.force_login(user)
+
+    path = reverse(
+        "users:email-verification",
+        kwargs={"email": verification.user.email, "code": verification.code}
+    )
+
+    response = client.get(path)
+
+    user.refresh_from_db()
+
+    assert response.status_code == HTTPStatus.OK
+    if not is_verified:
+        assert user.is_verified
 
 
 if __name__ == "__main__":

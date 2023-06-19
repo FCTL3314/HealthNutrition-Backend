@@ -136,7 +136,7 @@ class SendVerificationEmailView(BaseEmailVerificationView):
     title = "Send Verification"
 
     def get(self, request, *args, **kwargs):
-        send_email_verification(self.user, request)
+        send_email_verification(user=self.user, request=request)
         return super().get(request, *args, **kwargs)
 
 
@@ -146,7 +146,7 @@ class EmailVerificationView(BaseEmailVerificationView):
 
     def get(self, request, *args, **kwargs):
         code = kwargs.get("code")
-        handle_email_verification(self.user, code, request)
+        handle_email_verification(user=self.user, code=code, request=request)
         return super().get(request, *args, **kwargs)
 
 

@@ -36,10 +36,9 @@ class User(SlugifyMixin, AbstractUser):
         return elapsed_time.seconds
 
     def create_email_verification(self):
-        code = uuid4()
-        while EmailVerification.objects.filter(code=code).exists():
-            self.create_email_verification()
-        return EmailVerification.objects.create(code=code, user=self)
+        verification = EmailVerification.objects.create(user=self)
+        verification.save()
+        return verification
 
     def valid_email_verifications(self):
         verifications = self.emailverification_set.filter(expiration__gt=now())
@@ -59,7 +58,7 @@ class User(SlugifyMixin, AbstractUser):
 
 
 class EmailVerification(models.Model):
-    code = models.UUIDField(unique=True)
+    code = models.UUIDField(null=True, unique=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     expiration = models.DateTimeField(default=now() + timedelta(hours=2))
@@ -67,8 +66,18 @@ class EmailVerification(models.Model):
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.code = self.generate_code()
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    def generate_code(self):  # TODO: Common function
+        code = uuid4()
+        if EmailVerification.objects.filter(code=code).exists():
+            return self.generate_code()
+        return code
+
     def send_verification_email(
-        self, subject_template_name, html_email_template_name, protocol, host
+            self, subject_template_name, html_email_template_name, protocol, host
     ):
         link = reverse(
             "users:email-verification",
