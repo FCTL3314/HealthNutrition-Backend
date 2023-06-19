@@ -20,8 +20,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 INTERNAL_IPS = env.list("INTERNAL_IPS")
 
-DOMAIN_NAME = env.str("DOMAIN_NAME")
-
 PROTOCOL = env.str("PROTOCOL")
 
 # Application definition
@@ -34,8 +32,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+
     "widget_tweaks",
     "django_cleanup",
+
     "users",
     "stores",
     "products",

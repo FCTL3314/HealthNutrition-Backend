@@ -281,7 +281,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             context,
             from_email,
             to_email,
-            html_email_template_name=None,
+            **kwargs,
     ):
         user = context.pop("user")
         context["username"] = user.username
@@ -322,7 +322,7 @@ class SetPasswordForm(auth_forms.SetPasswordForm):
     def clean_new_password2(self):
         new_password = self.cleaned_data["new_password1"]
         if self.user.check_password(new_password):
-            raise forms.ValidationError(self.error_messages['new_password_same_as_old'])
+            raise forms.ValidationError(self.error_messages["new_password_same_as_old"])
         return super().clean_new_password2()
 
     class Meta:

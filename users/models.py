@@ -68,7 +68,7 @@ class EmailVerification(models.Model):
         return f"{self.user.email} | {self.expiration}"
 
     def send_verification_email(
-        self, subject_template_name, html_email_template_name, protocol
+        self, subject_template_name, html_email_template_name, protocol, host
     ):
         link = reverse(
             "users:email-verification",
@@ -78,7 +78,7 @@ class EmailVerification(models.Model):
         context = {
             "user": self.user,
             "protocol": protocol,
-            "verification_link": settings.DOMAIN_NAME + link,
+            "verification_link": f'{protocol}://{host}/{link}',
         }
 
         msg = convert_html_to_email_message(
