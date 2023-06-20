@@ -7,28 +7,29 @@ services:
     volumes:
       - ../../data/redis/:/data/
 
-  django:
+  celery:
     build:
       context: ../../
       dockerfile: docker/local/Dockerfile
     volumes:
-      - ../../frontend/static/:/usr/src/StoreTracker/frontend/static/
-      - ../../media/:/usr/src/StoreTracker/media/
-    command: python manage.py runserver 0.0.0.0:8000
+      - ../../:/usr/src/StoreTracker/
+    command: celery -A core worker -l info -P eventlet
+    env_file:
+      - ../../.env
+    depends_on:
+      - redis
+
+  web:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/usr/src/StoreTracker/
+    command: python manage.py runserver 0.0.0.0:8000 --settings=core.settings.local
     env_file:
       - ../../.env
     ports:
       - "8000:8000"
     depends_on:
       - redis
-
-  celery:
-    build:
-      context: ../../
-      dockerfile: docker/local/Dockerfile
-    command: celery -A core worker -l info -P eventlet
-    env_file:
-      - ../../.env
-    depends_on:
-      - django
-      - redis
+      - celery
