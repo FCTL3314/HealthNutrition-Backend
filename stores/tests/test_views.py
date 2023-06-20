@@ -7,7 +7,7 @@ from mixer.backend.django import mixer
 
 @pytest.mark.django_db
 def test_store_detail_view(client, store):
-    products = mixer.cycle(5).blend('products.Product', store=store)
+    products = mixer.cycle(5).blend("products.Product", store=store)
 
     path = store.get_absolute_url()
 

@@ -17,8 +17,8 @@ def check_user_verified(func):
 
     @wraps(func)
     def wrapper(**kwargs):
-        user = kwargs.get('user')
-        request = kwargs.get('request')
+        user = kwargs.get("user")
+        request = kwargs.get("request")
         if not user.is_verified:
             func(**kwargs)
         else:
@@ -34,11 +34,15 @@ def send_email_verification(*, user, request):
 
     if seconds_since_last_sending < settings.EMAIL_SEND_INTERVAL_SECONDS:
         seconds_left = settings.EMAIL_SEND_INTERVAL_SECONDS - seconds_since_last_sending
-        messages.warning(request, f"Please wait {seconds_left} to resend the confirmation email.")
+        messages.warning(
+            request, f"Please wait {seconds_left} to resend the confirmation email."
+        )
     else:
         verification = user.create_email_verification()
         current_site = get_current_site(request)
-        send_verification_email.delay(object_id=verification.id, host=current_site.domain)
+        send_verification_email.delay(
+            object_id=verification.id, host=current_site.domain
+        )
 
 
 @check_user_verified

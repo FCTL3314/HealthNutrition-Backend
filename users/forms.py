@@ -6,7 +6,7 @@ from users.models import User
 from users.tasks import send_email
 
 COMMON_ERROR_MESSAGES = {
-    "new_password_same_as_old": "The new password must be different from the old one."
+    "new_password_same_as_old": "The new password must be different from the old one.",
 }
 
 
@@ -209,12 +209,8 @@ class PasswordChangeForm(auth_forms.PasswordChangeForm):
 class EmailChangeForm(forms.ModelForm):
     error_messages = {
         **auth_forms.PasswordChangeForm.error_messages,
-        "email_already_used": (
-            "You're already using this email address."
-        ),
-        "email_taken": (
-            "This email address is already in use. Please use a different email address."
-        ),
+        "email_already_used": "You're already using this email address.",
+        "email_taken": "This email address is already in use. Please use a different email address.",
     }
 
     email = forms.CharField(
@@ -275,13 +271,13 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     )
 
     def send_mail(
-            self,
-            subject_template_name,
-            email_template_name,
-            context,
-            from_email,
-            to_email,
-            **kwargs,
+        self,
+        subject_template_name,
+        email_template_name,
+        context,
+        from_email,
+        to_email,
+        **kwargs,
     ):
         user = context.pop("user")
         context["username"] = user.username
@@ -295,7 +291,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
 class SetPasswordForm(auth_forms.SetPasswordForm):
     error_messages = {
         **auth_forms.SetPasswordForm.error_messages,
-        **COMMON_ERROR_MESSAGES
+        **COMMON_ERROR_MESSAGES,
     }
 
     new_password1 = forms.CharField(

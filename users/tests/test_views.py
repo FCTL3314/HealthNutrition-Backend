@@ -1,14 +1,16 @@
+from datetime import timedelta
 from http import HTTPStatus
 
 import pytest
 from django.contrib.auth.hashers import make_password
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.utils.timezone import now
 from faker import Faker
 from mixer.backend.django import mixer
 
 from users.forms import LoginForm, RegistrationForm
 from users.models import User
+from utils.tests import generate_test_image
 
 faker = Faker()
 
@@ -33,7 +35,9 @@ def test_registration_create_view_get(client):
             [HTTPStatus.OK, faker.user_name(), faker.email(), "123456"],
     ),
 )
-def test_registration_create_view_post(client, expected_status, username, email, password):
+def test_registration_create_view_post(
+        client, expected_status, username, email, password
+):
     data = {
         "username": username,
         "email": email,
@@ -61,12 +65,14 @@ def test_login_view_get(client):
     "remember_me, session_age",
     (
             [True, REMEMBER_ME_SESSION_AGE],
-            [False, ''],
+            [False, ""],
     ),
 )
 def test_login_view_post(client, remember_me, session_age):
     password = faker.password()
-    user = User.objects.create_user(username=faker.user_name(), email=faker.email(), password=password)
+    user = User.objects.create_user(
+        username=faker.user_name(), email=faker.email(), password=password
+    )
 
     data = {
         "username": user.username,
@@ -77,7 +83,7 @@ def test_login_view_post(client, remember_me, session_age):
     response = client.post(reverse("users:login"), data=data)
 
     assert response.status_code == HTTPStatus.FOUND
-    assert response.cookies['sessionid']['max-age'] == session_age
+    assert response.cookies["sessionid"]["max-age"] == session_age
 
 
 @pytest.mark.django_db
@@ -118,7 +124,7 @@ def test_profile_settings_account_view_post(client, user):
     username = faker.user_name()
     first_name = faker.first_name()
     last_name = faker.last_name()
-    image = SimpleUploadedFile("test_generated_image.jpg", faker.image(), content_type="image/jpg")
+    image = generate_test_image()
 
     data = {
         "username": username,
@@ -143,11 +149,13 @@ def test_profile_settings_account_view_post(client, user):
     "is_old_password_incorrect, new_password, error_expected",
     (
             [False, faker.password(), False],
-            [False, '123', True],
+            [False, "123", True],
             [True, faker.password(), True],
-    )
+    ),
 )
-def test_profile_settings_password_view_post(client, is_old_password_incorrect, new_password, error_expected):
+def test_profile_settings_password_view_post(
+        client, is_old_password_incorrect, new_password, error_expected
+):
     old_password = faker.password()
     user = mixer.blend("users.User", password=make_password(old_password))
     client.force_login(user)
@@ -178,10 +186,12 @@ def test_profile_settings_password_view_post(client, is_old_password_incorrect, 
     (
             [faker.email(), False, False],
             [faker.email(), True, True],
-            ['not-email', False, True],
-    )
+            ["not-email", False, True],
+    ),
 )
-def test_profile_settings_email_view_post(client, new_email, is_old_password_incorrect, error_expected):
+def test_profile_settings_email_view_post(
+        client, new_email, is_old_password_incorrect, error_expected
+):
     old_password = faker.password()
     user = mixer.blend("users.User", password=make_password(old_password))
     client.force_login(user)
@@ -211,7 +221,7 @@ def test_profile_settings_email_view_post(client, new_email, is_old_password_inc
     (
             False,
             True,
-    )
+    ),
 )
 def test_send_verification_email_view(client, is_verified):
     user = mixer.blend("users.User", is_verified=is_verified)
@@ -230,22 +240,27 @@ def test_send_verification_email_view(client, is_verified):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "is_verified",
+    "is_verified, is_expired",
     (
-            False,
-            True,
-            True,
-    )
+            [False, False],
+            [True, False],
+            [False, True],
+    ),
 )
-def test_email_verification_view(client, is_verified):
+def test_email_verification_view(client, is_verified, is_expired):
     user = mixer.blend("users.User", is_verified=is_verified)
-    verification = mixer.blend("users.EmailVerification", user=user)
+    if not is_expired:
+        verification = mixer.blend("users.EmailVerification", user=user)
+    else:
+        verification = mixer.blend(
+            "users.EmailVerification", user=user, expiration=now() - timedelta(days=2)
+        )
 
     client.force_login(user)
 
     path = reverse(
         "users:email-verification",
-        kwargs={"email": verification.user.email, "code": verification.code}
+        kwargs={"email": verification.user.email, "code": verification.code},
     )
 
     response = client.get(path)
@@ -253,7 +268,9 @@ def test_email_verification_view(client, is_verified):
     user.refresh_from_db()
 
     assert response.status_code == HTTPStatus.OK
-    if not is_verified:
+    if is_expired:
+        assert not user.is_verified
+    elif not is_verified:
         assert user.is_verified
 
 

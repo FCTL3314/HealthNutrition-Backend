@@ -50,11 +50,7 @@ class User(SlugifyMixin, AbstractUser):
             self.save(update_fields=("is_verified",))
 
     def get_image_url(self):
-        return (
-            self.image.url
-            if self.image
-            else get_static_file("images/default_user_image.png")
-        )
+        return self.image.url if self.image else get_static_file("images/default_user_image.png")
 
 
 class EmailVerification(models.Model):
@@ -66,11 +62,18 @@ class EmailVerification(models.Model):
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(
+            self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         self.code = self.generate_code()
-        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
-    def generate_code(self):  # TODO: Common function
+    def generate_code(self):
         code = uuid4()
         if EmailVerification.objects.filter(code=code).exists():
             return self.generate_code()
@@ -87,7 +90,7 @@ class EmailVerification(models.Model):
         context = {
             "user": self.user,
             "protocol": protocol,
-            "verification_link": f'{protocol}://{host}/{link}',
+            "verification_link": f"{protocol}://{host}/{link}",
         }
 
         msg = convert_html_to_email_message(

@@ -18,5 +18,7 @@ def send_verification_email(object_id, host):
 
 @shared_task
 def send_email(subject_template_name, email_template_name, to_email, context=None):
-    msg = convert_html_to_email_message(subject_template_name, email_template_name, [to_email], context)
+    msg = convert_html_to_email_message(
+        subject_template_name, email_template_name, [to_email], context
+    )
     msg.send()
