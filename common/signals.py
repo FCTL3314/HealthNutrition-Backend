@@ -31,6 +31,8 @@ class BaseUpdateSlugSignal(ABC):
         Changes the slug if the object has just been created or
         if the field associated with the slug field has changed.
         """
+        if kwargs["raw"]:
+            return
         if not instance.id:
             instance.change_slug(self.slug_related_field, commit=False)
         else:
