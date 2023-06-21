@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - ../../data/redis/:/data/
+
+  celery:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/usr/src/StoreTracker/
+    command: celery -A core worker -l info -P eventlet
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.local
+    env_file:
+      - ../../.env
+    depends_on:
+      - redis
+
+  web:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/usr/src/StoreTracker/
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.local
+    env_file:
+      - ../../.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - celery
