@@ -9,6 +9,7 @@ urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("stores/", include("stores.urls", namespace="stores")),
     path("comparisons/", include("comparisons.urls", namespace="comparisons")),
+    path("api/", include("api.urls", namespace="api")),
 ]
 
 if settings.DEBUG:

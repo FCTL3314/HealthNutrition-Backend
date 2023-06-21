@@ -35,12 +35,14 @@ INSTALLED_APPS = [
 
     "widget_tweaks",
     "django_cleanup",
+    "rest_framework",
 
     "users",
     "stores",
     "products",
     "comparisons",
     "interactions",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -155,6 +157,7 @@ PRICE_ROUNDING = 2
 
 PRODUCTS_PAGINATE_BY = 24
 PRODUCT_TYPES_PAGINATE_BY = 12
+STORES_PAGINATE_BY = 12
 
 PRODUCT_TYPES_CACHE_KEY = "popular_product_types"
 PRODUCTS_CACHE_TEMPLATE = "products_product_type:{product_id:}"
