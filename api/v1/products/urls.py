@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from api.v1.products.views import ProductTypeModelViewSet, ProductModelViewSet
+from api.v1.products.views import ProductModelViewSet, ProductTypeModelViewSet
 
 app_name = "products"
 

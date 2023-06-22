@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
+from api.v1.stores.serializers import StoreModelSerializer
 from products.models import Product, ProductType
 from stores.models import Store
-from api.v1.stores.serializers import StoreModelSerializer
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
