@@ -14,8 +14,8 @@ from products.forms import SearchForm
 class TitleMixin:
     """Mixin to create and add a title variable to the context."""
 
-    title = None
-    context_title_name = "title"
+    title: str = None
+    context_title_name: str = "title"
 
     def get_title(self) -> str:
         return self.title
@@ -32,7 +32,7 @@ class TitleMixin:
 class PaginationUrlMixin:
     """Mixin to create and add a pagination_url variable to the context."""
 
-    context_pagination_url_name = "pagination_url"
+    context_pagination_url_name: str = "pagination_url"
 
     def get_pagination_url(self) -> str:
         params = self.request.GET.dict().copy()
@@ -80,8 +80,7 @@ class BaseVisitsTrackingMixin(ABC):
 
     def _has_visited(self) -> bool:
         """Checks if the user has visited this view, i.e. if its cache exists."""
-        is_exists = cache.get(self.visit_cache_key)
-        return bool(is_exists)
+        return bool(cache.get(self.visit_cache_key))
 
     def visited(self) -> None:
         """The logic if the view has been visited by a user before."""
@@ -125,8 +124,7 @@ class VisitsTrackingMixin(BaseVisitsTrackingMixin):
         creating a template cache string.
 
         Example:
-            kwargs = {'addr': '127.0.0.1', 'id': '4'}
-            return kwargs
+            return {'addr': '127.0.0.1', 'id': '4'}
         """
         pass
 
@@ -190,10 +188,10 @@ class CommentsMixin(FormMixin, ABC):
         pass
 
     @cached_property
-    def comments_count(self):
+    def comments_count(self) -> int:
         return self.comments.count()
 
-    def has_more_comments(self):
+    def has_more_comments(self) -> bool:
         return self.comments_count > settings.COMMENTS_PAGINATE_BY
 
     def get_context_data(self, **kwargs):
