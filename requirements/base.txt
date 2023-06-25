@@ -11,3 +11,4 @@ pillow==9.5.0
 pytest-django==4.5.2
 faker==12.0.1
 eventlet==0.33.3
+mixer==7.2.2
