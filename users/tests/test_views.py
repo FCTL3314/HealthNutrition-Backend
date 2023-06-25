@@ -193,7 +193,7 @@ def test_profile_settings_email_view_post(
         client, new_email, is_old_password_incorrect, error_expected
 ):
     old_password = faker.password()
-    user = mixer.blend("users.User", password=make_password(old_password))
+    user = mixer.blend("users.User", password=make_password(old_password), is_verified=True)
     client.force_login(user)
 
     path = reverse("users:profile-email", args=(user.slug,))
@@ -213,6 +213,7 @@ def test_profile_settings_email_view_post(
     else:
         assert response.status_code == HTTPStatus.FOUND
         assert user.email == new_email
+        assert user.is_verified is False
 
 
 @pytest.mark.django_db
