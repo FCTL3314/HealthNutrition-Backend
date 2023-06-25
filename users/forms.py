@@ -249,8 +249,7 @@ class EmailChangeForm(forms.ModelForm):
         return email
 
     def save(self, commit=True):
-        self.user.email = self.cleaned_data["email"]
-        self.user.is_verified = False
+        self.user.update_email(self.cleaned_data["email"])
         if commit:
             self.user.save()
         return self.user
