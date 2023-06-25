@@ -28,7 +28,7 @@ def check_user_verified(func):
 
 
 @check_user_verified
-def send_email_verification(*, user, request):
+def send_email_verification(*, user, request) -> None:
     """Sends an email verification message to the user's email."""
     seconds_since_last_sending = user.seconds_since_last_email_verification_sending()
 
@@ -46,7 +46,7 @@ def send_email_verification(*, user, request):
 
 
 @check_user_verified
-def handle_email_verification(*, user, code, request):
+def handle_email_verification(*, user, code, request) -> None:
     """
     Handles the email verification process for the user and verify their email
     when all conditions are met.
