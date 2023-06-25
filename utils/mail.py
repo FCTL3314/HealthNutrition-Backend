@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 def convert_html_to_email_message(
     subject_template_name: str,
     html_email_template_name: str,
-    emails_list: list,
+    emails_list: list | tuple,
     context: dict = None,
 ) -> EmailMultiAlternatives:
     """

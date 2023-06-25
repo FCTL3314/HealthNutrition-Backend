@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -25,10 +26,10 @@ class User(SlugifyMixin, AbstractUser):
     def __str__(self):
         return self.username
 
-    def is_request_user_matching(self, request):
+    def is_request_user_matching(self, request) -> bool:
         return self == request.user
 
-    def seconds_since_last_email_verification_sending(self):
+    def seconds_since_last_email_verification_sending(self) -> int:
         if valid_verifications := self.valid_email_verifications():
             elapsed_time = now() - valid_verifications.first().created_at
         else:
@@ -40,22 +41,28 @@ class User(SlugifyMixin, AbstractUser):
         verification.save()
         return verification
 
-    def valid_email_verifications(self):
+    def valid_email_verifications(self) -> QuerySet:
         verifications = self.emailverification_set.filter(expiration__gt=now())
         return verifications.order_by("-created_at")
 
-    def verify(self, commit=True):
+    def update_email(self, new_email: str) -> None:
+        self.is_verified = False
+        self.email = new_email
+
+    def verify(self, commit=True) -> None:
         self.is_verified = True
         if commit:
             self.save(update_fields=("is_verified",))
 
-    def get_image_url(self):
-        return self.image.url if self.image else get_static_file("images/default_user_image.png")
+    def get_image_url(self) -> str:
+        if self.image:
+            return self.image.url
+        return get_static_file("images/default_user_image.png")
 
 
 class EmailVerification(models.Model):
     code = models.UUIDField(null=True, unique=True)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     expiration = models.DateTimeField(default=now() + timedelta(hours=2))
 
@@ -73,15 +80,19 @@ class EmailVerification(models.Model):
             update_fields=update_fields,
         )
 
-    def generate_code(self):
+    def generate_code(self) -> uuid4:
         code = uuid4()
         if EmailVerification.objects.filter(code=code).exists():
             return self.generate_code()
         return code
 
     def send_verification_email(
-            self, subject_template_name, html_email_template_name, protocol, host
-    ):
+            self,
+            subject_template_name: str,
+            html_email_template_name: str,
+            protocol: str,
+            host: str,
+    ) -> None:
         link = reverse(
             "users:email-verification",
             kwargs={"email": self.user.email, "code": self.code},
@@ -101,5 +112,5 @@ class EmailVerification(models.Model):
         )
         msg.send()
 
-    def is_expired(self):
+    def is_expired(self) -> bool:
         return self.expiration < now()

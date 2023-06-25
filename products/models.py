@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 
 from common.models import IncrementMixin, SlugifyMixin
@@ -25,10 +26,10 @@ class Product(SlugifyMixin, IncrementMixin, models.Model):
     def __str__(self):
         return f"{self.name} | {self.store}"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("products:product-detail", args=(self.slug,))
 
-    def get_comments(self):
+    def get_comments(self) -> QuerySet:
         return self.productcomment_set.order_by("-created_at")
 
 
@@ -44,7 +45,7 @@ class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     def __str__(self):
         return self.name
 
-    def cached_products(self):
+    def cached_products(self) -> QuerySet:
         return get_cached_data_or_set_new(
             key=settings.PRODUCTS_CACHE_TEMPLATE.format(product_id=self.id),
             callback=self.product_set.all,

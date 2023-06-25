@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.db import models
-from django.db.models import Avg, Count, Max, Min, Q
+from django.db.models import Avg, Count, Max, Min, Q, QuerySet
 from django.db.models.functions import Round
 
 from utils.cache import get_cached_data_or_set_new
 
 
 class ProductQuerySet(models.QuerySet):
-    def price_aggregation(self):
+    def price_aggregation(self) -> dict:
         aggregations = self.aggregate(
             price__min=Round(Min("price"), settings.PRICE_ROUNDING),
             price__max=Round(Max("price"), settings.PRICE_ROUNDING),
@@ -19,14 +19,14 @@ class ProductQuerySet(models.QuerySet):
 class ProductManager(models.Manager):
     _queryset_class = ProductQuerySet
 
-    def search(self, query):
+    def search(self, query: str) -> QuerySet:
         return self.filter(
             Q(name__icontains=query) | Q(card_description__icontains=query)
         )
 
 
 class ProductTypeQuerySet(models.QuerySet):
-    def product_price_annotation(self):
+    def product_price_annotation(self) -> QuerySet:
         return self.annotate(
             product__price__avg=Round(Avg("product__price"), settings.PRICE_ROUNDING),
             product__price__max=Round(Max("product__price"), settings.PRICE_ROUNDING),
@@ -38,12 +38,12 @@ class ProductTypeQuerySet(models.QuerySet):
 class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
 
-    def cached(self):
+    def cached(self) -> QuerySet:
         return get_cached_data_or_set_new(
             key=settings.PRODUCT_TYPES_CACHE_KEY,
             callback=self.all,
             timeout=settings.PRODUCT_TYPES_CACHE_TIME,
         )
 
-    def search(self, query):
+    def search(self, query: str) -> QuerySet:
         return self.filter(Q(name__icontains=query) | Q(description__icontains=query))

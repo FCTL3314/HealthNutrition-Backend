@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 
 from common.models import IncrementMixin, SlugifyMixin
@@ -15,11 +16,11 @@ class Store(SlugifyMixin, IncrementMixin, models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("stores:store-detail", args=(self.slug,))
 
-    def get_comments(self):
+    def get_comments(self) -> QuerySet:
         return self.storecomment_set.order_by("-created_at")
 
-    def popular_products(self):
+    def popular_products(self) -> QuerySet:
         return self.product_set.order_by("-views")
