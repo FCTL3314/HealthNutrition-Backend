@@ -20,6 +20,7 @@ savings while shopping across different stores for a wide range of products.
 
 # 🔥 Features
 
+* REST API
 * Postponed Tasks / Celery
 * Authentication / Authorization
 * Profile editing
