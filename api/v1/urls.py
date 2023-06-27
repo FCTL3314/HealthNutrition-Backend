@@ -5,4 +5,5 @@ app_name = "v1"
 urlpatterns = [
     path("stores/", include("api.v1.stores.urls", namespace="stores")),
     path("products/", include("api.v1.products.urls", namespace="products")),
+    path("comparisons/", include("api.v1.comparisons.urls", namespace="comparisons")),
 ]
