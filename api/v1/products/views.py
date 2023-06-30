@@ -9,11 +9,14 @@ from products.models import Product, ProductType
 
 
 class ProductTypeModelViewSet(ModelViewSet):
-    queryset = ProductType.objects.cached()
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductTypeModelSerializer
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
+
+    def get_queryset(self):
+        initial_queryset = ProductType.objects.cached()
+        return initial_queryset.product_price_annotation()
 
 
 class ProductModelViewSet(ModelViewSet):
