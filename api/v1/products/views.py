@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
@@ -16,11 +17,12 @@ class ProductTypeModelViewSet(ModelViewSet):
 
     def get_queryset(self):
         initial_queryset = ProductType.objects.cached()
-        return initial_queryset.product_price_annotation()
+        queryset = initial_queryset.product_price_annotation()
+        return queryset.order_by(*settings.PRODUCT_TYPES_ORDERING)
 
 
 class ProductModelViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by(*settings.PRODUCTS_ORDERING)
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductModelSerializer
     pagination_class = ProductPageNumberPagination
