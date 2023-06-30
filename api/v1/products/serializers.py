@@ -6,10 +6,24 @@ from stores.models import Store
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
+    product_price_max = serializers.FloatField(source='product__price__max')
+    product_price_avg = serializers.FloatField(source='product__price__avg')
+    product_price_min = serializers.FloatField(source='product__price__min')
+
     class Meta:
         model = ProductType
-        fields = ("id", "name", "description", "image", "views", "slug")
-        read_only_fields = ("views", "slug")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "image",
+            "views",
+            "slug",
+            "product_price_max",
+            "product_price_avg",
+            "product_price_min",
+        )
+        read_only_fields = ("views", "slug", "product_price_max", "product_price_avg", "product_price_min")
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
@@ -18,18 +32,30 @@ class ProductModelSerializer(serializers.ModelSerializer):
     product_type_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=ProductType.objects.all(),
-        source='product_type',
+        source="product_type",
     )
     store_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Store.objects.all(),
-        source='store',
+        source="store",
     )
 
     class Meta:
         model = Product
         fields = (
-            "id", "name", "price", "card_description", "description", "image", "created_at", "updated_at", "store",
-            "store_id", "product_type", "product_type_id", "views", "slug"
+            "id",
+            "name",
+            "price",
+            "card_description",
+            "description",
+            "image",
+            "created_at",
+            "updated_at",
+            "store",
+            "store_id",
+            "product_type",
+            "product_type_id",
+            "views",
+            "slug",
         )
         read_only_fields = ("created_at", "updated_at", "views", "slug")
