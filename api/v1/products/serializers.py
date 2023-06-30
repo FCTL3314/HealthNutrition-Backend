@@ -6,9 +6,9 @@ from stores.models import Store
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
-    product_price_max = serializers.FloatField(source='product__price__max')
-    product_price_avg = serializers.FloatField(source='product__price__avg')
-    product_price_min = serializers.FloatField(source='product__price__min')
+    product_price_max = serializers.FloatField(source='product__price__max', required=False)
+    product_price_avg = serializers.FloatField(source='product__price__avg', required=False)
+    product_price_min = serializers.FloatField(source='product__price__min', required=False)
 
     class Meta:
         model = ProductType
