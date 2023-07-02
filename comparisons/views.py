@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
 from common import views as common_views
+from common.decorators import order_queryset
 from products.models import ProductType
 
 
@@ -32,10 +33,10 @@ class ComparisonProductTypeListView(BaseComparisonView):
     paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
     template_name = "products/product_types.html"
 
+    @order_queryset(*ordering)
     def get_queryset(self):
         product_types = self.request.user.comparison_set.product_types()
-        queryset = product_types.product_price_annotation()
-        return queryset.order_by(*self.ordering)
+        return product_types.product_price_annotation()
 
 
 class ComparisonProductListView(BaseComparisonView):
@@ -43,12 +44,12 @@ class ComparisonProductListView(BaseComparisonView):
     paginate_by = settings.PRODUCTS_PAGINATE_BY
     template_name = "products/products.html"
 
+    @order_queryset(*ordering)
     def get_queryset(self):
         slug = self.kwargs.get("slug")
         product_type = get_object_or_404(ProductType, slug=slug)
         products = product_type.cached_products()
-        queryset = products.filter(user=self.request.user)
-        return queryset.order_by(*self.ordering)
+        return products.filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

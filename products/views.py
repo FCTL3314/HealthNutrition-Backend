@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
 from common import views as common_views
+from common.decorators import order_queryset
 from interactions.forms import ProductCommentForm
 from products.models import Product, ProductType
 
@@ -30,10 +31,10 @@ class ProductTypeListView(BaseProductsView):
         "among users."
     )
 
+    @order_queryset(*ordering)
     def get_queryset(self):
-        initial_queryset = ProductType.objects.cached()
-        queryset = initial_queryset.product_price_annotation()
-        return queryset.order_by(*self.ordering)
+        queryset = ProductType.objects.cached()
+        return queryset.product_price_annotation()
 
 
 class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
@@ -53,10 +54,10 @@ class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
         self._product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
+    @order_queryset(*ordering)
     def get_queryset(self):
-        initial_queryset = self._product_type.cached_products()
-        queryset = initial_queryset.prefetch_related("store")
-        return queryset.order_by(*self.ordering)
+        queryset = self._product_type.cached_products()
+        return queryset.prefetch_related("store")
 
     def get_visit_cache_template_kwargs(self):
         remote_addr = self.request.META.get("REMOTE_ADDR")
@@ -131,10 +132,10 @@ class ProductTypeSearchListView(BaseSearchView):
     template_name = "products/product_types.html"
     title = "Category Search"
 
+    @order_queryset(*ordering)
     def get_queryset(self):
-        initial_queryset = ProductType.objects.search(self.search_query)
-        queryset = initial_queryset.product_price_annotation()
-        return queryset.order_by(*self.ordering)
+        queryset = ProductType.objects.search(self.search_query)
+        return queryset.product_price_annotation()
 
 
 class ProductSearchListView(BaseSearchView):
@@ -143,10 +144,10 @@ class ProductSearchListView(BaseSearchView):
     template_name = "products/products.html"
     title = "Product Search"
 
+    @order_queryset(*ordering)
     def get_queryset(self):
-        initial_queryset = Product.objects.search(self.search_query)
-        queryset = initial_queryset.prefetch_related("store")
-        return queryset.order_by(*self.ordering)
+        queryset = Product.objects.search(self.search_query)
+        return queryset.prefetch_related("store")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

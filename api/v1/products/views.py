@@ -6,6 +6,7 @@ from api.v1.products.paginators import (ProductPageNumberPagination,
                                         ProductTypePageNumberPagination)
 from api.v1.products.serializers import (ProductModelSerializer,
                                          ProductTypeModelSerializer)
+from common.decorators import order_queryset
 from products.models import Product, ProductType
 
 
@@ -15,10 +16,10 @@ class ProductTypeModelViewSet(ModelViewSet):
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
+    @order_queryset(*settings.PRODUCT_TYPES_ORDERING)
     def get_queryset(self):
         initial_queryset = ProductType.objects.cached()
-        queryset = initial_queryset.product_price_annotation()
-        return queryset.order_by(*settings.PRODUCT_TYPES_ORDERING)
+        return initial_queryset.product_price_annotation()
 
 
 class ProductModelViewSet(ModelViewSet):
