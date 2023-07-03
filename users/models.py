@@ -70,7 +70,7 @@ class EmailVerification(models.Model):
         return f"{self.user.email} | {self.expiration}"
 
     def save(
-            self, force_insert=False, force_update=False, using=None, update_fields=None
+        self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.code = self.generate_code()
         super().save(
@@ -87,11 +87,11 @@ class EmailVerification(models.Model):
         return code
 
     def send_verification_email(
-            self,
-            subject_template_name: str,
-            html_email_template_name: str,
-            protocol: str,
-            host: str,
+        self,
+        subject_template_name: str,
+        html_email_template_name: str,
+        protocol: str,
+        host: str,
     ) -> None:
         link = reverse(
             "users:email-verification",

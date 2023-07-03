@@ -5,6 +5,7 @@ def order_queryset(*ordering):
     """
     Sorts the queryset returned by the function using the ordering parameter.
     """
+
     def outer(func):
         @wraps(func)
         def wrapper(*args, **kwargs):

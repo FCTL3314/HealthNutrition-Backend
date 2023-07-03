@@ -8,10 +8,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from api.v1.comparisons.serializers import ComparisonModelSerializer
-from api.v1.products.paginators import (ProductPageNumberPagination,
-                                        ProductTypePageNumberPagination)
-from api.v1.products.serializers import (ProductModelSerializer,
-                                         ProductTypeModelSerializer)
+from api.v1.products.paginators import (
+    ProductPageNumberPagination,
+    ProductTypePageNumberPagination,
+)
+from api.v1.products.serializers import (
+    ProductModelSerializer,
+    ProductTypeModelSerializer,
+)
 from common.decorators import order_queryset
 from comparisons.models import Comparison
 from products.models import ProductType, Product
