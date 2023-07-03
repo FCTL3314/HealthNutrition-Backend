@@ -6,7 +6,6 @@ from api.v1.stores.views import StoreModelViewSet
 app_name = "stores"
 
 router = routers.DefaultRouter()
-
 router.register("stores", StoreModelViewSet, basename="stores")
 
 urlpatterns = [
