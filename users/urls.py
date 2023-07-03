@@ -1,8 +1,14 @@
-from django.urls import path
+from django.urls import path, include
 
 from users import views
 
 app_name = "users"
+
+settings_paths = [
+    path("account/", views.AccountSettingsView.as_view(), name="profile-account"),
+    path("password/", views.PasswordSettingsView.as_view(), name="profile-password"),
+    path("email/", views.EmailSettingsView.as_view(), name="profile-email"),
+]
 
 urlpatterns = [
     path("registration/", views.RegistrationCreateView.as_view(), name="registration"),
@@ -16,7 +22,5 @@ urlpatterns = [
     path("reset/<uidb64>/<token>/", views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
 
     path("<slug:slug>/", views.ProfileView.as_view(), name="profile"),
-    path("<slug:slug>/account/", views.ProfileSettingsAccountView.as_view(), name="profile-account"),
-    path("<slug:slug>/password/", views.ProfileSettingsPasswordView.as_view(), name="profile-password"),
-    path("<slug:slug>/email/", views.ProfileSettingsEmailView.as_view(), name="profile-email"),
+    path("settings/", include(settings_paths)),
 ]
