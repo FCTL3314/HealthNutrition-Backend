@@ -19,3 +19,4 @@ class UserModelSerializer(serializers.ModelSerializer):
             "date_joined",
             "last_login",
         )
+        read_only_fields = ("slug", "date_joined", "last_login", "is_verified")

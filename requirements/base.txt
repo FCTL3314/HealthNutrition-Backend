@@ -1,6 +1,7 @@
 django==4.2.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
+djoser==2.2.0
 django-environ==0.10.0
 django-filter==23.2
 django-cleanup==7.0.0
