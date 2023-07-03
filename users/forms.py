@@ -89,7 +89,7 @@ class LoginForm(auth_forms.AuthenticationForm):
         fields = ("username", "password", "remember_me")
 
 
-class ProfileForm(auth_forms.UserChangeForm):
+class UserChangeForm(auth_forms.UserChangeForm):
     username = forms.CharField(
         min_length=4,
         max_length=32,

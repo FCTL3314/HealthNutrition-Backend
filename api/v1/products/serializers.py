@@ -6,9 +6,9 @@ from stores.models import Store
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
-    product_price_max = serializers.FloatField(source='product__price__max', required=False)
-    product_price_avg = serializers.FloatField(source='product__price__avg', required=False)
-    product_price_min = serializers.FloatField(source='product__price__min', required=False)
+    product_price_max = serializers.FloatField(source="product__price__max", required=False)
+    product_price_avg = serializers.FloatField(source="product__price__avg", required=False)
+    product_price_min = serializers.FloatField(source="product__price__min", required=False)
 
     class Meta:
         model = ProductType
@@ -27,17 +27,15 @@ class ProductTypeModelSerializer(serializers.ModelSerializer):
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
-    store = StoreModelSerializer(read_only=True)
     product_type = ProductTypeModelSerializer(read_only=True)
     product_type_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=ProductType.objects.all(),
-        source="product_type",
     )
+    store = StoreModelSerializer(read_only=True)
     store_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Store.objects.all(),
-        source="store",
     )
 
     class Meta:

@@ -16,7 +16,7 @@
           <a class="list-group-item list-group-item-action {% if current_url_name == 'profile-account' %}
                                                                list-group-item-primary pe-none
                                                              {% endif %}"
-             href="{% url 'users:profile-account' user.slug %}">
+             href="{% url 'users:profile-account' %}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-house-fill mb-1" viewBox="0 0 16 16">
               <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646
@@ -30,7 +30,7 @@
           <a class="list-group-item list-group-item-action {% if current_url_name == 'profile-email' %}
                                                                list-group-item-primary pe-none
                                                              {% endif %}"
-             href="{% url 'users:profile-email' user.slug %}">
+             href="{% url 'users:profile-email' %}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-envelope-fill mb-1" viewBox="0 0 16 16">
               <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0
@@ -42,7 +42,7 @@
           <a class="list-group-item list-group-item-action {% if current_url_name == 'profile-password' %}
                                                                list-group-item-primary pe-none
                                                              {% endif %}"
-             href="{% url 'users:profile-password' user.slug %}">
+             href="{% url 'users:profile-password' %}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-key-fill mb-1" viewBox="0 0 16 16">
               <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1

@@ -102,24 +102,18 @@ def test_profile_view(client, user):
             "users:profile-email",
     ),
 )
-def test_profile_settings_access(client, users, url_pattern):
-    profile_owner = users[0]
-    other_user = users[1]
+def test_profile_settings_access(client, user, url_pattern):
+    path = reverse(url_pattern)
 
-    path = reverse(url_pattern, args=(profile_owner.slug,))
-
-    client.force_login(profile_owner)
+    client.force_login(user)
     assert client.get(path).status_code == HTTPStatus.OK
-
-    client.force_login(other_user)
-    assert client.get(path).status_code == HTTPStatus.FORBIDDEN
 
 
 @pytest.mark.django_db
 def test_profile_settings_account_view_post(client, user):
     client.force_login(user)
 
-    path = reverse("users:profile-account", args=(user.slug,))
+    path = reverse("users:profile-account")
 
     username = faker.user_name()
     first_name = faker.first_name()
@@ -160,7 +154,7 @@ def test_profile_settings_password_view_post(
     user = mixer.blend("users.User", password=make_password(old_password))
     client.force_login(user)
 
-    path = reverse("users:profile-password", args=(user.slug,))
+    path = reverse("users:profile-password")
 
     data = {
         "old_password": faker.password() if is_old_password_incorrect else old_password,
@@ -196,7 +190,7 @@ def test_profile_settings_email_view_post(
     user = mixer.blend("users.User", password=make_password(old_password), is_verified=True)
     client.force_login(user)
 
-    path = reverse("users:profile-email", args=(user.slug,))
+    path = reverse("users:profile-email")
 
     data = {
         "email": new_email,
