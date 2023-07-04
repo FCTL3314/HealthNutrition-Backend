@@ -61,7 +61,7 @@
               <hr class="dropdown-divider">
             </li>
             <li>
-              <a href="{% url 'users:profile' request.user.slug %}" class="dropdown-item">
+              <a href="{{ request.user.get_absolute_url }}" class="dropdown-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-house-fill mb-1" viewBox="0 0 16 16">
                   <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0

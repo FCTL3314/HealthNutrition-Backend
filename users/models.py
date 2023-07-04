@@ -8,6 +8,7 @@ from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils.timezone import now
 
+from common.decorators import order_queryset
 from common.models import SlugifyMixin
 from utils.mail import convert_html_to_email_message
 from utils.static import get_static_file
@@ -26,28 +27,32 @@ class User(SlugifyMixin, AbstractUser):
     def __str__(self):
         return self.username
 
+    def get_absolute_url(self):
+        return reverse("users:profile", args=(self.slug,))
+
     def is_request_user_matching(self, request) -> bool:
         return self == request.user
 
     def seconds_since_last_email_verification_sending(self) -> int:
         if valid_verifications := self.valid_email_verifications():
-            elapsed_time = now() - valid_verifications.first().created_at
-        else:
-            elapsed_time = timedelta(seconds=settings.EMAIL_SEND_INTERVAL_SECONDS)
-        return elapsed_time.seconds
+            last_verification = valid_verifications.first()
+            elapsed_time = now() - last_verification.created_at
+            return elapsed_time.seconds
+        return settings.EMAIL_SEND_INTERVAL_SECONDS + 1
 
     def create_email_verification(self):
         verification = EmailVerification.objects.create(user=self)
         verification.save()
         return verification
 
+    @order_queryset("-created_at")
     def valid_email_verifications(self) -> QuerySet:
-        verifications = self.emailverification_set.filter(expiration__gt=now())
-        return verifications.order_by("-created_at")
+        return self.emailverification_set.filter(expiration__gt=now())
 
     def update_email(self, new_email: str) -> None:
-        self.is_verified = False
         self.email = new_email
+        self.is_verified = False
+        self.save()
 
     def verify(self, commit=True) -> None:
         self.is_verified = True
@@ -68,6 +73,12 @@ class EmailVerification(models.Model):
 
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
+
+    def get_absolute_url(self):
+        return reverse(
+            "users:email-verification",
+            kwargs={"email": self.user.email, "code": self.code},
+        )
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -93,15 +104,10 @@ class EmailVerification(models.Model):
         protocol: str,
         host: str,
     ) -> None:
-        link = reverse(
-            "users:email-verification",
-            kwargs={"email": self.user.email, "code": self.code},
-        )
-
         context = {
             "user": self.user,
             "protocol": protocol,
-            "verification_link": f"{protocol}://{host}/{link}",
+            "verification_link": f"{protocol}://{host}/{self.get_absolute_url()}",
         }
 
         msg = convert_html_to_email_message(
