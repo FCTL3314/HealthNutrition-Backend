@@ -40,7 +40,7 @@ class User(SlugifyMixin, AbstractUser):
             return elapsed_time.seconds
         return settings.EMAIL_SENDING_SECONDS_INTERVAL + 1
 
-    def can_send_email_verification(self) -> bool:
+    def is_verification_sending_interval_passed(self) -> bool:
         seconds_since_last_sending = self.seconds_since_last_email_verification_sending()
         return seconds_since_last_sending > settings.EMAIL_SENDING_SECONDS_INTERVAL
 
