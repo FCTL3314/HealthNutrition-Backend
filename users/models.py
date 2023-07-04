@@ -38,7 +38,11 @@ class User(SlugifyMixin, AbstractUser):
             last_verification = valid_verifications.first()
             elapsed_time = now() - last_verification.created_at
             return elapsed_time.seconds
-        return settings.EMAIL_SEND_INTERVAL_SECONDS + 1
+        return settings.EMAIL_SENDING_SECONDS_INTERVAL + 1
+
+    def can_send_email_verification(self) -> bool:
+        seconds_since_last_sending = self.seconds_since_last_email_verification_sending()
+        return seconds_since_last_sending > settings.EMAIL_SENDING_SECONDS_INTERVAL
 
     def create_email_verification(self):
         verification = EmailVerification.objects.create(user=self)
@@ -74,21 +78,14 @@ class EmailVerification(models.Model):
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
 
+    def save(self, *args, **kwargs):
+        self.code = self.generate_code()
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse(
             "users:email-verification",
             kwargs={"email": self.user.email, "code": self.code},
-        )
-
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-        self.code = self.generate_code()
-        super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
         )
 
     def generate_code(self) -> uuid4:
