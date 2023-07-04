@@ -9,9 +9,9 @@ from users.models import EmailVerification
 from users.tasks import send_verification_email
 
 
-def check_user_verified(func):
+def validate_user_not_verified(func):
     """
-    Executes a function if the user is not verified, otherwise generates
+    Calls a function if the user is not verified, otherwise generates
     an info message for user.
     """
 
@@ -27,13 +27,13 @@ def check_user_verified(func):
     return wrapper
 
 
-@check_user_verified
+@validate_user_not_verified
 def send_email_verification(*, user, request) -> None:
     """Sends an email verification message to the user's email."""
     seconds_since_last_sending = user.seconds_since_last_email_verification_sending()
 
-    if seconds_since_last_sending < settings.EMAIL_SEND_INTERVAL_SECONDS:
-        seconds_left = settings.EMAIL_SEND_INTERVAL_SECONDS - seconds_since_last_sending
+    if seconds_since_last_sending < settings.EMAIL_SENDING_SECONDS_INTERVAL:
+        seconds_left = settings.EMAIL_SENDING_SECONDS_INTERVAL - seconds_since_last_sending
         messages.warning(
             request, f"Please wait {seconds_left} to resend the confirmation email."
         )
@@ -45,7 +45,7 @@ def send_email_verification(*, user, request) -> None:
         )
 
 
-@check_user_verified
+@validate_user_not_verified
 def handle_email_verification(*, user, code, request) -> None:
     """
     Handles the email verification process for the user and verify their email

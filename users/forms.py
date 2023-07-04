@@ -250,8 +250,6 @@ class EmailChangeForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.user.update_email(self.cleaned_data["email"])
-        if commit:
-            self.user.save()
         return self.user
 
     class Meta:

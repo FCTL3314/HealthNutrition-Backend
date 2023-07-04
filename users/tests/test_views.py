@@ -29,14 +29,14 @@ def test_registration_create_view_get(client):
 @pytest.mark.parametrize(
     "expected_status, username, email, password",
     (
-            [HTTPStatus.FOUND, faker.user_name(), faker.email(), faker.password()],
-            [HTTPStatus.OK, "abc", faker.email(), faker.password()],
-            [HTTPStatus.OK, faker.user_name(), "not_email", faker.password()],
-            [HTTPStatus.OK, faker.user_name(), faker.email(), "123456"],
+        [HTTPStatus.FOUND, faker.user_name(), faker.email(), faker.password()],
+        [HTTPStatus.OK, "abc", faker.email(), faker.password()],
+        [HTTPStatus.OK, faker.user_name(), "not_email", faker.password()],
+        [HTTPStatus.OK, faker.user_name(), faker.email(), "123456"],
     ),
 )
 def test_registration_create_view_post(
-        client, expected_status, username, email, password
+    client, expected_status, username, email, password
 ):
     data = {
         "username": username,
@@ -64,8 +64,8 @@ def test_login_view_get(client):
 @pytest.mark.parametrize(
     "remember_me, session_age",
     (
-            [True, REMEMBER_ME_SESSION_AGE],
-            [False, ""],
+        [True, REMEMBER_ME_SESSION_AGE],
+        [False, ""],
     ),
 )
 def test_login_view_post(client, remember_me, session_age):
@@ -97,9 +97,9 @@ def test_profile_view(client, user):
 @pytest.mark.parametrize(
     "url_pattern",
     (
-            "users:profile-account",
-            "users:profile-password",
-            "users:profile-email",
+        "users:profile-account",
+        "users:profile-password",
+        "users:profile-email",
     ),
 )
 def test_profile_settings_access(client, user, url_pattern):
@@ -142,13 +142,13 @@ def test_profile_settings_account_view_post(client, user):
 @pytest.mark.parametrize(
     "is_old_password_incorrect, new_password, error_expected",
     (
-            [False, faker.password(), False],
-            [False, "123", True],
-            [True, faker.password(), True],
+        [False, faker.password(), False],
+        [False, "123", True],
+        [True, faker.password(), True],
     ),
 )
 def test_profile_settings_password_view_post(
-        client, is_old_password_incorrect, new_password, error_expected
+    client, is_old_password_incorrect, new_password, error_expected
 ):
     old_password = faker.password()
     user = mixer.blend("users.User", password=make_password(old_password))
@@ -178,16 +178,18 @@ def test_profile_settings_password_view_post(
 @pytest.mark.parametrize(
     "new_email, is_old_password_incorrect, error_expected",
     (
-            [faker.email(), False, False],
-            [faker.email(), True, True],
-            ["not-email", False, True],
+        [faker.email(), False, False],
+        [faker.email(), True, True],
+        ["not-email", False, True],
     ),
 )
 def test_profile_settings_email_view_post(
-        client, new_email, is_old_password_incorrect, error_expected
+    client, new_email, is_old_password_incorrect, error_expected
 ):
     old_password = faker.password()
-    user = mixer.blend("users.User", password=make_password(old_password), is_verified=True)
+    user = mixer.blend(
+        "users.User", password=make_password(old_password), is_verified=True
+    )
     client.force_login(user)
 
     path = reverse("users:profile-email")
@@ -214,8 +216,8 @@ def test_profile_settings_email_view_post(
 @pytest.mark.parametrize(
     "is_verified",
     (
-            False,
-            True,
+        False,
+        True,
     ),
 )
 def test_send_verification_email_view(client, is_verified):
@@ -237,9 +239,9 @@ def test_send_verification_email_view(client, is_verified):
 @pytest.mark.parametrize(
     "is_verified, is_expired",
     (
-            [False, False],
-            [True, False],
-            [False, True],
+        [False, False],
+        [True, False],
+        [False, True],
     ),
 )
 def test_email_verification_view(client, is_verified, is_expired):

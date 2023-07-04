@@ -8,10 +8,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from api.v1.comparisons.serializers import ComparisonModelSerializer
-from api.v1.products.paginators import (ProductPageNumberPagination,
-                                        ProductTypePageNumberPagination)
-from api.v1.products.serializers import (ProductModelSerializer,
-                                         ProductTypeModelSerializer)
+from api.v1.products.paginators import (
+    ProductPageNumberPagination,
+    ProductTypePageNumberPagination,
+)
+from api.v1.products.serializers import (
+    ProductModelSerializer,
+    ProductTypeModelSerializer,
+)
 from common.decorators import order_queryset
 from comparisons.models import Comparison
 from products.models import ProductType, Product
@@ -49,17 +53,17 @@ class ComparisonGenericViewSet(GenericViewSet, CreateModelMixin, DestroyModelMix
     serializer_class = ComparisonModelSerializer
 
     def create(self, request, *args, **kwargs):
-        product = self.get_product(id=kwargs["product_id"])
+        product = self.get_product()
         request.user.comparisons.add(product, through_defaults=None)
-        comparison = get_object_or_404(Comparison, product=product, user=request.user)
-        serializer = self.get_serializer(comparison)
+        serializer = self.get_serializer(
+            get_object_or_404(Comparison, product=product, user=request.user),
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
-        product = self.get_product(id=kwargs["product_id"], user=request.user)
+        product = self.get_product(user=request.user)
         request.user.comparisons.remove(product)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @staticmethod
-    def get_product(**kwargs):
-        return get_object_or_404(Product, **kwargs)
+    def get_product(self, **kwargs):
+        return get_object_or_404(Product, pk=self.kwargs["product_id"], **kwargs)

@@ -26,7 +26,9 @@ def test_user_seconds_since_last_email_verification_sending(user):
 @pytest.mark.django_db
 def test_user_valid_email_verifications(user):
     def create_not_valid_verifications():
-        mixer.cycle(5).blend("users.EmailVerification", user=user, expiration=now() - timedelta(days=2))
+        mixer.cycle(5).blend(
+            "users.EmailVerification", user=user, expiration=now() - timedelta(days=2)
+        )
         mixer.cycle(5).blend("users.EmailVerification")
 
     valid_verifications = mixer.cycle(5).blend("users.EmailVerification", user=user)
@@ -47,9 +49,9 @@ def test_user_verify():
 @pytest.mark.parametrize(
     "has_image",
     (
-            False,
-            True,
-    )
+        False,
+        True,
+    ),
 )
 def test_user_get_image_url(has_image):
     if has_image:
@@ -62,20 +64,24 @@ def test_user_get_image_url(has_image):
     if has_image:
         assert image == user.image.url
     else:
-        assert image == os.path.join(settings.STATIC_URL, "images/default_user_image.png")
+        assert image == os.path.join(
+            settings.STATIC_URL, "images/default_user_image.png"
+        )
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "is_expired",
     (
-            True,
-            False,
-    )
+        True,
+        False,
+    ),
 )
 def test_email_verification_is_expired(is_expired):
     if is_expired:
-        verification = mixer.blend("users.EmailVerification", expiration=now() - timedelta(days=2))
+        verification = mixer.blend(
+            "users.EmailVerification", expiration=now() - timedelta(days=2)
+        )
         assert verification.is_expired()
     else:
         verification = mixer.blend("users.EmailVerification")
@@ -91,7 +97,9 @@ def test_send_verification_email(client, user):
     protocol = "https"
     host = "example.com"
 
-    verification.send_verification_email(subject_template_name, html_email_template_name, protocol, host)
+    verification.send_verification_email(
+        subject_template_name, html_email_template_name, protocol, host
+    )
 
     assert len(mail.outbox) == 1
     email = mail.outbox[0]

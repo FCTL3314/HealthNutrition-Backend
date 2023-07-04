@@ -43,11 +43,7 @@ class LoginView(
 
     def get_success_url(self):
         before_login_url = self.request.session.get("before_login_url")
-        return (
-            before_login_url
-            if before_login_url
-            else reverse_lazy("products:product-types")
-        )
+        return before_login_url or reverse_lazy("products:product-types")
 
     def form_valid(self, form):
         remember_me = form.cleaned_data.get("remember_me")
