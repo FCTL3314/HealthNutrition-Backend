@@ -50,7 +50,7 @@ class PaginationUrlMixin:
 class LogoutRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseRedirect(settings.LOGOUT_REQUIRED_REDIRECT_URL)
+            return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
         return super().dispatch(request, *args, **kwargs)
 
 
