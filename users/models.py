@@ -34,8 +34,8 @@ class User(SlugifyMixin, AbstractUser):
         return self == request.user
 
     def seconds_since_last_email_verification_sending(self) -> int:
-        if valid_verifications := self.valid_email_verifications():
-            last_verification = valid_verifications.first()
+        if self.valid_email_verifications():
+            last_verification = EmailVerification.objects.latest("created_at")
             elapsed_time = now() - last_verification.created_at
             return elapsed_time.seconds
         return settings.EMAIL_SENDING_SECONDS_INTERVAL + 1

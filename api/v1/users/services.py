@@ -93,7 +93,7 @@ class UserEmailVerifier(BaseEmailVerificationService):
 
     def __init__(self, user, request, code):
         super().__init__(user, request)
-        self.verification = get_object_or_404(EmailVerification, user=user, code=code)
+        self._verification = get_object_or_404(EmailVerification, user=user, code=code)
 
     @BaseEmailVerificationService._request_user_matching_or_404
     @BaseEmailVerificationService._user_not_verified_or_400
@@ -101,9 +101,9 @@ class UserEmailVerifier(BaseEmailVerificationService):
         """
         Makes the users email verified if verification is not expired.
         """
-        if self.verification.is_expired():
+        if self._verification.is_expired():
             return Response(
-                {"detail": "Verification link was expired."},
+                {"detail": "The verification link has expired."},
                 status=status.HTTP_410_GONE,
             )
         self._user.verify()
