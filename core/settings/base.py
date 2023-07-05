@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "products",
     "comparisons",
     "interactions",
+    "interactions.comments",
     "api",
 ]
 

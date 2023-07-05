@@ -2,7 +2,7 @@ from django.conf import settings
 from django.views.generic import DetailView
 
 from common import views as common_views
-from interactions.forms import StoreCommentForm
+from interactions.comments.forms import StoreCommentForm
 from stores.models import Store
 
 

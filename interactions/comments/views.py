@@ -5,8 +5,8 @@ from django.db.models import Model
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView
 
-from interactions.forms import ProductCommentForm, StoreCommentForm
-from interactions.models import ProductComment, StoreComment
+from interactions.comments.forms import ProductCommentForm, StoreCommentForm
+from interactions.comments.models import ProductComment, StoreComment
 from products.models import Product
 from stores.models import Store
 from utils.urls import get_referer_or_default
