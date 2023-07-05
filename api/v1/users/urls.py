@@ -1,8 +1,10 @@
 from django.conf import settings
-from django.urls import path, include
+from django.urls import include, path
 from djoser.views import UserViewSet
-from api.v1.users.views import EmailVerificationCreateAPIView, VerifyUserUpdateAPIView
 from rest_framework import routers
+
+from api.v1.users.views import (EmailVerificationCreateAPIView,
+                                VerifyUserUpdateAPIView)
 
 app_name = "users"
 

@@ -2,9 +2,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from api.v1.users.serializers import SendVerificationEmailSerializer, VerifyUserSerializer
-from users.models import EmailVerification, User
+from api.v1.users.serializers import (SendVerificationEmailSerializer,
+                                      VerifyUserSerializer)
 from api.v1.users.services import EmailVerificationSender, UserEmailVerifier
+from users.models import EmailVerification, User
 
 
 class EmailVerificationCreateAPIView(CreateAPIView):

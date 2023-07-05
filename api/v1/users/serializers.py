@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import User, EmailVerification
+from users.models import EmailVerification, User
 
 
 class UserModelSerializer(serializers.ModelSerializer):

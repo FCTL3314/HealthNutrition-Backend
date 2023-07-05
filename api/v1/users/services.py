@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 from django.conf import settings
@@ -8,7 +8,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.v1.users.serializers import EmailVerificationSerializer, UserModelSerializer
+from api.v1.users.serializers import (EmailVerificationSerializer,
+                                      UserModelSerializer)
 from users.models import EmailVerification
 from users.tasks import send_verification_email
 
