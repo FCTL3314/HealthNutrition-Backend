@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import User, EmailVerification
+from users.models import EmailVerification, User
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -23,8 +23,15 @@ class UserModelSerializer(serializers.ModelSerializer):
 
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
-    user = UserModelSerializer()
-
     class Meta:
         model = EmailVerification
-        fields = ("created_at", "expiration", "user")
+        fields = ("expiration", "created_at")
+
+
+class SendVerificationEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class VerifyUserSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.UUIDField()

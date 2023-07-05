@@ -2,34 +2,40 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from api.v1.users.serializers import EmailVerificationSerializer
+from api.v1.users.serializers import (SendVerificationEmailSerializer,
+                                      VerifyUserSerializer)
+from api.v1.users.services import EmailVerificationSender, UserEmailVerifier
 from users.models import EmailVerification, User
-from api.v1.users.services import EmailVerificationService
 
 
 class EmailVerificationCreateAPIView(CreateAPIView):
     queryset = EmailVerification.objects.all()
-    serializer_class = EmailVerificationSerializer
+    serializer_class = SendVerificationEmailSerializer
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        email = request.data.get("email")
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = request.data["email"]
         user = get_object_or_404(User, email__iexact=email)
 
-        verification_service = EmailVerificationService(user, request)
-        return verification_service.send_verification(
-            serializer_class=self.serializer_class
-        )
+        sender_service = EmailVerificationSender(user, request)
+        return sender_service.send()
 
 
 class VerifyUserUpdateAPIView(UpdateAPIView):
     queryset = User.objects.all()
+    serializer_class = VerifyUserSerializer
     permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
-        code = request.data.get('code')
-        email = request.data.get('email')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        code = request.data["code"]
+        email = request.data["email"]
         user = get_object_or_404(User, email__iexact=email)
 
-        verification_service = EmailVerificationService(user, request)
-        return verification_service.verify_user(code=code)
+        verifier_service = UserEmailVerifier(user, request, code)
+        return verifier_service.verify()

@@ -12,7 +12,7 @@ from common import views as common_views
 from users import forms
 from users.mixins import ProfileMixin
 from users.models import User
-from users.services import handle_email_verification, send_email_verification
+from users.services import EmailVerificationSender, UserEmailVerifier
 from utils.urls import get_referer_or_default
 
 
@@ -133,7 +133,8 @@ class SendVerificationEmailView(BaseEmailVerificationView):
     title = "Send Verification"
 
     def get(self, request, *args, **kwargs):
-        send_email_verification(user=self.user, request=request)
+        sender_service = EmailVerificationSender(request)
+        sender_service.send()
         return super().get(request, *args, **kwargs)
 
 
@@ -143,7 +144,8 @@ class EmailVerificationView(BaseEmailVerificationView):
 
     def get(self, request, *args, **kwargs):
         code = kwargs.get("code")
-        handle_email_verification(user=self.user, code=code, request=request)
+        verifier_service = UserEmailVerifier(request, code)
+        verifier_service.verify()
         return super().get(request, *args, **kwargs)
 
 

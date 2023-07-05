@@ -26,5 +26,6 @@ savings while shopping across different stores for a wide range of products.
 * Authentication / Authorization
 * Profile editing
 * Email verification
+* Docstrings
 * Tests (PyTest)
 

@@ -1,0 +1,10 @@
+{% extends 'interactions/inclusions/base_comment.html' %}
+
+{% block action %}
+  {% url 'interactions:comments:store-add' object.slug %}
+{% endblock %}
+
+{% block extra-data %}
+  data-store-slug="{{ object.slug }}"
+{% endblock %}
+

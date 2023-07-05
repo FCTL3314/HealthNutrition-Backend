@@ -44,7 +44,14 @@ INSTALLED_APPS = [
     "products",
     "comparisons",
     "interactions",
+    "interactions.comments",
     "api",
+    "api.v1.stores",
+    "api.v1.products",
+    "api.v1.comparisons",
+    "api.v1.interactions",
+    "api.v1.interactions.comments",
+    "api.v1.users",
 ]
 
 MIDDLEWARE = [
@@ -149,7 +156,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 LOGIN_URL = "/users/login/"
-LOGOUT_REQUIRED_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 VISITS_CACHE_TIME = (60 * 60) * 12
 

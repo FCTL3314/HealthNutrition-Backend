@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView, RedirectView
 
 from common import views as common_views
 from common.decorators import order_queryset
-from interactions.forms import ProductCommentForm
+from interactions.comments.forms import ProductCommentForm
 from products.models import Product, ProductType
 
 

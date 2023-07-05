@@ -1,6 +1,6 @@
 from django import forms
 
-from interactions.models import ProductComment, StoreComment
+from interactions.comments.models import ProductComment, StoreComment
 
 
 class BaseCommentForm(forms.ModelForm):
