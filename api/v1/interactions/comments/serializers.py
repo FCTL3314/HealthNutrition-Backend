@@ -3,7 +3,7 @@ from rest_framework import serializers
 from api.v1.products.serializers import ProductModelSerializer
 from api.v1.stores.serializers import StoreModelSerializer
 from api.v1.users.serializers import UserModelSerializer
-from interactions.comments.models import StoreComment, ProductComment
+from interactions.comments.models import ProductComment, StoreComment
 from products.models import Product
 from stores.models import Store
 

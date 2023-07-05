@@ -5,6 +5,6 @@ from interactions.comments import views
 app_name = "comments"
 
 urlpatterns = [
-    path("product/<slug:slug>/add", views.ProductCommentView.as_view(), name="product-add"),
-    path("store/<slug:slug>/add", views.StoreCommentView.as_view(), name="store-add"),
+    path("store/<slug:slug>/add", views.StoreCommentCreateView.as_view(), name="store-add"),
+    path("product/<slug:slug>/add", views.ProductCommentCreateView.as_view(), name="product-add"),
 ]
