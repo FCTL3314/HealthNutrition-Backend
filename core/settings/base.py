@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "api.v1.stores",
     "api.v1.products",
     "api.v1.comparisons",
+    "api.v1.interactions",
+    "api.v1.interactions.comments",
     "api.v1.users",
 ]
 
