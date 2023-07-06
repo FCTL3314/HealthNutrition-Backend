@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 
 from interactions.comments.forms import ProductCommentForm, StoreCommentForm
-from interactions.comments.models import ProductComment, StoreComment
 from interactions.comments.mixins import CommentCreateMixin
+from interactions.comments.models import ProductComment, StoreComment
 from products.models import Product
 from stores.models import Store
 from utils.urls import get_referer_or_default

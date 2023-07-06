@@ -1,41 +1,35 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, UpdateAPIView
-from rest_framework.permissions import IsAuthenticated
 
+from api.mixins import RequestDataValidationMixin
+from api.v1.users.mixins import EmailVerificationMixin
 from api.v1.users.serializers import (SendVerificationEmailSerializer,
                                       VerifyUserSerializer)
 from api.v1.users.services import EmailVerificationSender, UserEmailVerifier
-from users.models import EmailVerification, User
 
 
-class EmailVerificationCreateAPIView(CreateAPIView):
-    queryset = EmailVerification.objects.all()
+class EmailVerificationCreateAPIView(
+    RequestDataValidationMixin, EmailVerificationMixin, CreateAPIView
+):
     serializer_class = SendVerificationEmailSerializer
-    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        self.validate_request_data()
 
-        email = request.data["email"]
-        user = get_object_or_404(User, email__iexact=email)
-
-        sender_service = EmailVerificationSender(user, request)
-        return sender_service.send()
+        sender_service = EmailVerificationSender(self.get_user(), request)
+        response = sender_service.send()
+        return response
 
 
-class VerifyUserUpdateAPIView(UpdateAPIView):
-    queryset = User.objects.all()
+class VerifyUserUpdateAPIView(
+    RequestDataValidationMixin, EmailVerificationMixin, UpdateAPIView
+):
     serializer_class = VerifyUserSerializer
-    permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        self.validate_request_data()
 
-        code = request.data["code"]
-        email = request.data["email"]
-        user = get_object_or_404(User, email__iexact=email)
-
-        verifier_service = UserEmailVerifier(user, request, code)
-        return verifier_service.verify()
+        verifier_service = UserEmailVerifier(
+            self.get_user(), request, request.data["code"]
+        )
+        response = verifier_service.verify()
+        return response

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
-from common import views as common_views
+from common import mixins as common_views
 from common.decorators import order_queryset
 from interactions.comments.forms import ProductCommentForm
 from products.models import Product, ProductType
@@ -47,32 +47,32 @@ class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
     )
     visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
 
-    _product_type: ProductType = None
+    product_type: ProductType = None
 
     def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get("slug")
-        self._product_type = get_object_or_404(self.model, slug=slug)
+        self.product_type = get_object_or_404(self.model, slug=slug)
         return super().dispatch(request, *args, **kwargs)
 
     @order_queryset(*ordering)
     def get_queryset(self):
-        queryset = self._product_type.cached_products()
+        queryset = self.product_type.cached_products()
         return queryset.prefetch_related("store")
 
     def get_visit_cache_template_kwargs(self):
         remote_addr = self.request.META.get("REMOTE_ADDR")
-        kwargs = {"addr": remote_addr, "id": self._product_type.id}
+        kwargs = {"addr": remote_addr, "id": self.product_type.id}
         return kwargs
 
     def not_visited(self):
-        self._product_type.increase("views")
+        self.product_type.increase("views")
 
     def get_title(self):
-        return self._product_type.name
+        return self.product_type.name
 
     @property
     def object_list_title(self):
-        return f'Products in the category "{self._product_type.name}"'
+        return f'Products in the category "{self.product_type.name}"'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

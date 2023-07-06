@@ -5,8 +5,8 @@ from rest_framework.response import Response
 
 from api.v1.interactions.comments.serializers import (
     ProductCommentModelSerializer, StoreCommentModelSerializer)
-from interactions.comments.models import ProductComment, StoreComment
 from interactions.comments.mixins import CommentCreateMixin
+from interactions.comments.models import ProductComment, StoreComment
 from products.models import Product
 from stores.models import Store
 

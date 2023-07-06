@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common import views as common_views
+from common import mixins as common_views
 from common.decorators import order_queryset
 from products.models import ProductType
 

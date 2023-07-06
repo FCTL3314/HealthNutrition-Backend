@@ -2,13 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from common import views as common_views
+from common import mixins as common_views
 from users import forms
 from users.mixins import ProfileMixin
 from users.models import User
@@ -118,33 +117,29 @@ class EmailSettingsView(
 class BaseEmailVerificationView(
     common_views.TitleMixin, LoginRequiredMixin, TemplateView
 ):
-    user: User = None
 
-    def dispatch(self, request, *args, **kwargs):
-        email = kwargs.get("email")
-        self.user = get_object_or_404(User, email=email)
-        if not self.user.is_request_user_matching(request):
-            raise Http404
-        return super().dispatch(request, *args, **kwargs)
+    def get_user(self):
+        email = self.kwargs.get("email")
+        return get_object_or_404(User, email__iexact=email)
 
 
-class SendVerificationEmailView(BaseEmailVerificationView):
+class SendEmailVerificationView(BaseEmailVerificationView):
     template_name = "users/email/email_verification_done.html"
     title = "Send Verification"
 
     def get(self, request, *args, **kwargs):
-        sender_service = EmailVerificationSender(request)
+        sender_service = EmailVerificationSender(self.get_user(), request)
         sender_service.send()
         return super().get(request, *args, **kwargs)
 
 
-class EmailVerificationView(BaseEmailVerificationView):
+class VerifyUserEmailView(BaseEmailVerificationView):
     template_name = "users/email/email_verification_complete.html"
     title = "Verify"
 
     def get(self, request, *args, **kwargs):
         code = kwargs.get("code")
-        verifier_service = UserEmailVerifier(request, code)
+        verifier_service = UserEmailVerifier(self.get_user(), request, code)
         verifier_service.verify()
         return super().get(request, *args, **kwargs)
 
