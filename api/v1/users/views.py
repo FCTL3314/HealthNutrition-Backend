@@ -15,7 +15,7 @@ class EmailVerificationCreateAPIView(
     def create(self, request, *args, **kwargs):
         self.validate_request_data()
 
-        sender_service = EmailVerificationSender(self.get_user(), request)
+        sender_service = EmailVerificationSender(self.user, request)
         response = sender_service.send()
         return response
 
@@ -29,7 +29,7 @@ class VerifyUserUpdateAPIView(
         self.validate_request_data()
 
         verifier_service = UserEmailVerifier(
-            self.get_user(), request, request.data["code"]
+            self.user, request, request.data["code"]
         )
         response = verifier_service.verify()
         return response

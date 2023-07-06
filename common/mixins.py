@@ -54,85 +54,80 @@ class LogoutRequiredMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class BaseVisitsTrackingMixin(ABC):
+class BaseUserVisitsTrackingMixin(ABC):
     """
-    Mixin that checks if user (not necessarily a user, can be any object), has visited
-    this view, implements interfaces to determine the logic if the view
-    was visited or not visited by user.
+    Mixin that tracks if user, has visited this view, implements interfaces
+    to determine the logic if the view was visited or not visited by user.
     """
 
     @property
-    @abstractmethod
-    def visit_cache_key(self) -> str:
-        """
-        The unique cache key for the object visiting this view.
+    def visit_storage_time(self) -> int:
+        """The time that user's visit will be stored."""
+        return settings.VISITS_CACHE_TIME
 
-        Example:
-            'user_addr:127.0.0.1_product_id:4'
-            That is, a user with ip 127.0.0.1 visited the product object with id 4.
+    @abstractmethod
+    def _has_visited(self) -> bool:
+        """
+        Returns True or False based on whether the user visited
+        this view before
         """
         pass
 
-    @property
-    def visit_cache_time(self) -> int:
-        """The time that the cache(object visit) will be stored."""
-        return settings.VISITS_CACHE_TIME
-
-    def _has_visited(self) -> bool:
-        """Checks if the user has visited this view, i.e. if its cache exists."""
-        return bool(cache.get(self.visit_cache_key))
-
-    def visited(self) -> None:
+    def user_visited(self) -> None:
         """The logic if the view has been visited by a user before."""
         pass
 
-    def not_visited(self) -> None:
+    def user_not_visited(self) -> None:
         """The logic if the view has not been visited by a user before."""
+        pass
+
+    @abstractmethod
+    def _save_user_visit(self) -> None:
+        """A way to save the user's visit."""
         pass
 
     def get(self, *args, **kwargs):
         response = super().get(*args, **kwargs)
         if self._has_visited():
-            self.visited()
+            self.user_visited()
         else:
-            cache.set(self.visit_cache_key, True, self.visit_cache_time)
-            self.not_visited()
+            self._save_user_visit()
+            self.user_not_visited()
         return response
 
 
-class VisitsTrackingMixin(BaseVisitsTrackingMixin):
-    """
-    Wrapper for BaseVisitsTrackingMixin to use cache_template
-    instead of regular cache_key.
-    """
+class CachedUserVisitsTrackingMixin(BaseUserVisitsTrackingMixin):
 
     @property
     @abstractmethod
-    def visit_cache_template(self) -> str:
+    def visit_cache_identifier(self) -> str:
         """
-        Allows to use template strings to create a cache key.
+        The unique cache key for the object visiting this view.
 
         Example:
-            return 'addr:{addr:}_product:{id:}'
+            'user_addr:127.0.0.1_product_id:4'
+            A user with ip 127.0.0.1 visited the product object with id 4.
         """
         pass
 
-    @abstractmethod
-    def get_visit_cache_template_kwargs(self) -> dict:
+    def _has_visited(self) -> bool:
         """
-        Keyword arguments that will be passed to the .format() method when
-        creating a template cache string.
-
-        Example:
-            return {'addr': '127.0.0.1', 'id': '4'}
+        Returns True if user visit cache exists, otherwise False.
         """
-        pass
+        return bool(cache.get(self.visit_cache_identifier))
 
-    @property
-    def visit_cache_key(self) -> str:
-        key = self.visit_cache_template
-        kwargs = self.get_visit_cache_template_kwargs()
-        return key.format(**kwargs)
+    def _save_user_visit(self) -> None:
+        """Saves user visit to the cache."""
+        cache.set(self.visit_cache_identifier, True, self.visit_storage_time)
+
+    def get(self, *args, **kwargs):
+        response = super().get(*args, **kwargs)
+        if self._has_visited():
+            self.user_visited()
+        else:
+            self._save_user_visit()
+            self.user_not_visited()
+        return response
 
 
 class SearchFormMixin(FormMixin):
@@ -180,7 +175,9 @@ class SearchWithSearchTypeFormMixin(SearchFormMixin):
 
 
 class CommentsMixin(FormMixin, ABC):
-    """Mixin that provides comments and additional comments info for the context."""
+    """
+    Mixin that provides comments and additional comments info for the context.
+    """
 
     @property
     @abstractmethod

@@ -19,6 +19,10 @@ class AbstractEmailVerificationService(ABC):
 
 
 class BaseEmailVerificationSenderService(AbstractEmailVerificationService):
+    """
+    A base service for sending a verification email to the users.
+    """
+
     def __init__(self, user, request):
         super().__init__(user, request)
         self.domain = get_current_site(request).domain
@@ -38,6 +42,10 @@ class BaseEmailVerificationSenderService(AbstractEmailVerificationService):
 
 
 class BaseEmailVerifierService(AbstractEmailVerificationService):
+    """
+    A base service for verifying users email.
+    """
+
     def __init__(self, user, request, code):
         super().__init__(user, request)
         self._verification = get_object_or_404(

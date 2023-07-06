@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -118,7 +120,8 @@ class BaseEmailVerificationView(
     common_views.TitleMixin, LoginRequiredMixin, TemplateView
 ):
 
-    def get_user(self):
+    @cached_property
+    def user(self):
         email = self.kwargs.get("email")
         return get_object_or_404(User, email__iexact=email)
 
@@ -128,7 +131,7 @@ class SendEmailVerificationView(BaseEmailVerificationView):
     title = "Send Verification"
 
     def get(self, request, *args, **kwargs):
-        sender_service = EmailVerificationSender(self.get_user(), request)
+        sender_service = EmailVerificationSender(self.user, request)
         sender_service.send()
         return super().get(request, *args, **kwargs)
 
@@ -139,7 +142,7 @@ class VerifyUserEmailView(BaseEmailVerificationView):
 
     def get(self, request, *args, **kwargs):
         code = kwargs.get("code")
-        verifier_service = UserEmailVerifier(self.get_user(), request, code)
+        verifier_service = UserEmailVerifier(self.user, request, code)
         verifier_service.verify()
         return super().get(request, *args, **kwargs)
 
