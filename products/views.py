@@ -6,9 +6,11 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
+from products.mixins import SearchFormMixin
 from common import mixins as common_views
 from common.decorators import order_queryset
 from interactions.comments.forms import ProductCommentForm
+from products.forms import SearchForm
 from products.models import Product, ProductType
 
 
@@ -16,9 +18,10 @@ class BaseProductsView(
     common_views.PaginationUrlMixin,
     common_views.TitleMixin,
     common_views.ObjectListInfoMixin,
-    common_views.SearchWithSearchTypeFormMixin,
+    SearchFormMixin,
     ListView,
 ):
+    form_class = SearchForm
     """A base view for the 'products' application."""
 
 
@@ -107,7 +110,7 @@ class ProductDetailView(
         self.object.increase("views")
 
 
-class SearchRedirectView(common_views.SearchWithSearchTypeFormMixin, RedirectView):
+class SearchRedirectView(SearchFormMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         match self.search_type:
             case "product":

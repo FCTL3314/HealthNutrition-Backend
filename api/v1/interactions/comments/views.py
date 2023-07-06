@@ -3,6 +3,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from api.mixins import RequestDataValidationMixin
 from api.v1.interactions.comments.serializers import (
     ProductCommentModelSerializer, StoreCommentModelSerializer)
 from interactions.comments.mixins import CommentCreateMixin
@@ -11,11 +12,12 @@ from products.models import Product
 from stores.models import Store
 
 
-class BaseCommentCreateAPIView(CommentCreateMixin, CreateAPIView):
+class BaseCommentCreateAPIView(CommentCreateMixin, RequestDataValidationMixin, CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        self.get_serializer(data=request.data).is_valid(raise_exception=True)
+        self.validate_request_data()
+
         text = request.data["text"]
         comment = self.create_comment(text=text, author=request.user)
         serializer = self.get_serializer(comment)

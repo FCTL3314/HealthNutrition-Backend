@@ -8,8 +8,6 @@ from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormMixin
 
-from products.forms import SearchForm
-
 
 class TitleMixin:
     """Mixin to create and add a title variable to the context."""
@@ -128,50 +126,6 @@ class CachedUserVisitsTrackingMixin(BaseUserVisitsTrackingMixin):
             self._save_user_visit()
             self.user_not_visited()
         return response
-
-
-class SearchFormMixin(FormMixin):
-    """A mixin for finding and storing the search query and search type."""
-
-    form_class = SearchForm
-
-    def dispatch(self, request, *args, **kwargs):
-        self.search_query = self.request.GET.get("search_query", "")
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        """
-        Passes the search query and search type to the form initialization
-        so that the form will then set them as initial for its fields.
-        """
-        kwargs = super().get_form_kwargs()
-        kwargs["search_query"] = self.search_query
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["search_query"] = self.search_query
-        return context
-
-
-class SearchWithSearchTypeFormMixin(SearchFormMixin):
-    """A wrapper for SearchMixin that adds a search type."""
-
-    form_class = SearchForm
-
-    def dispatch(self, request, *args, **kwargs):
-        self.search_type = self.request.GET.get("search_type")
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["search_type"] = self.search_type
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["search_type"] = self.search_type
-        return context
 
 
 class CommentsMixin(FormMixin, ABC):
