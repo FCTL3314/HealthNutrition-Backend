@@ -1,12 +1,16 @@
+from functools import cached_property
+
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
-from common import views as common_views
+from products.mixins import SearchFormMixin
+from common import mixins as common_views
 from common.decorators import order_queryset
 from interactions.comments.forms import ProductCommentForm
+from products.forms import SearchForm
 from products.models import Product, ProductType
 
 
@@ -14,9 +18,10 @@ class BaseProductsView(
     common_views.PaginationUrlMixin,
     common_views.TitleMixin,
     common_views.ObjectListInfoMixin,
-    common_views.SearchWithSearchTypeFormMixin,
+    SearchFormMixin,
     ListView,
 ):
+    form_class = SearchForm
     """A base view for the 'products' application."""
 
 
@@ -37,7 +42,7 @@ class ProductTypeListView(BaseProductsView):
         return queryset.product_price_annotation()
 
 
-class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
+class ProductListView(common_views.CachedUserVisitsTrackingMixin, BaseProductsView):
     model = ProductType
     ordering = settings.PRODUCTS_ORDERING
     paginate_by = settings.PRODUCTS_PAGINATE_BY
@@ -45,34 +50,32 @@ class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
     object_list_description = (
         "Discover a wide range of products available in the selected category."
     )
-    visit_cache_template = settings.PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE
 
-    _product_type: ProductType = None
-
-    def dispatch(self, request, *args, **kwargs):
-        slug = kwargs.get("slug")
-        self._product_type = get_object_or_404(self.model, slug=slug)
-        return super().dispatch(request, *args, **kwargs)
+    @cached_property
+    def product_type(self):
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(self.model, slug=slug)
 
     @order_queryset(*ordering)
     def get_queryset(self):
-        queryset = self._product_type.cached_products()
+        queryset = self.product_type.cached_products()
         return queryset.prefetch_related("store")
 
-    def get_visit_cache_template_kwargs(self):
+    @property
+    def visit_cache_identifier(self) -> str:
         remote_addr = self.request.META.get("REMOTE_ADDR")
-        kwargs = {"addr": remote_addr, "id": self._product_type.id}
-        return kwargs
+        kwargs = {"addr": remote_addr, "id": self.product_type.id}
+        return settings.PRODUCT_TYPE_VISIT_CACHE_TEMPLATE.format(**kwargs)
 
-    def not_visited(self):
-        self._product_type.increase("views")
+    def user_not_visited(self):
+        self.product_type.increase("views")
 
     def get_title(self):
-        return self._product_type.name
+        return self.product_type.name
 
     @property
     def object_list_title(self):
-        return f'Products in the category "{self._product_type.name}"'
+        return f'Products in the category "{self.product_type.name}"'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -82,14 +85,13 @@ class ProductListView(common_views.VisitsTrackingMixin, BaseProductsView):
 
 class ProductDetailView(
     common_views.CommentsMixin,
-    common_views.VisitsTrackingMixin,
+    common_views.CachedUserVisitsTrackingMixin,
     common_views.TitleMixin,
     DetailView,
 ):
     model = Product
     template_name = "products/product_detail.html"
     form_class = ProductCommentForm
-    visit_cache_template = settings.PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE
 
     def get_title(self):
         return self.object.name
@@ -98,16 +100,17 @@ class ProductDetailView(
     def comments(self):
         return self.object.get_comments()
 
-    def get_visit_cache_template_kwargs(self):
+    @property
+    def visit_cache_identifier(self) -> str:
         remote_addr = self.request.META.get("REMOTE_ADDR")
         kwargs = {"addr": remote_addr, "id": self.object.id}
-        return kwargs
+        return settings.PRODUCT_VISIT_CACHE_TEMPLATE.format(**kwargs)
 
-    def not_visited(self):
+    def user_not_visited(self):
         self.object.increase("views")
 
 
-class SearchRedirectView(common_views.SearchWithSearchTypeFormMixin, RedirectView):
+class SearchRedirectView(SearchFormMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         match self.search_type:
             case "product":

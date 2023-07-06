@@ -177,14 +177,12 @@ PRODUCTS_CACHE_TIME = 60 * 60
 PRODUCTS_ORDERING = ("store__name", "price")
 PRODUCT_TYPES_ORDERING = ("-product__store__count", "-views")
 
-PRODUCT_TYPE_VIEW_TRACKING_CACHE_TEMPLATE = "address:{addr:}_product_type:{id:}"
-PRODUCT_VIEW_TRACKING_CACHE_TEMPLATE = "address:{addr:}_product:{id:}"
+PRODUCT_TYPE_VISIT_CACHE_TEMPLATE = "address:{addr:}_product_type:{id:}"
+PRODUCT_VISIT_CACHE_TEMPLATE = "address:{addr:}_product:{id:}"
 
 # Stores
 
-STORE_VIEW_TRACKING_CACHE_KEY = "address:{addr:}_store:{id:}"
-
-STORE_VIEW_TRACKING_CACHE_TIME = 60 * 30
+STORE_VISIT_CACHE_KEY = "address:{addr:}_store:{id:}"
 
 # Interactions
 

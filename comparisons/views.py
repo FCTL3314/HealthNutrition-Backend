@@ -3,7 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from common import views as common_views
+from products.forms import SearchForm
+from products.mixins import SearchFormMixin
+from common import mixins as common_views
 from common.decorators import order_queryset
 from products.models import ProductType
 
@@ -13,12 +15,13 @@ class BaseComparisonView(
     common_views.PaginationUrlMixin,
     common_views.TitleMixin,
     common_views.ObjectListInfoMixin,
-    common_views.SearchWithSearchTypeFormMixin,
+    SearchFormMixin,
     ListView,
 ):
     """A base view for the 'comparisons' application."""
 
     title = "Comparisons"
+    form_class = SearchForm
     object_list_title = "My Comparison"
     object_list_description = "Products you have saved for comparison."
 

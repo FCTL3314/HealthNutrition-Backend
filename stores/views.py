@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.views.generic import DetailView
 
-from common import views as common_views
+from common import mixins as common_views
 from interactions.comments.forms import StoreCommentForm
 from stores.models import Store
 
@@ -9,14 +9,12 @@ from stores.models import Store
 class StoreDetailView(
     common_views.TitleMixin,
     common_views.CommentsMixin,
-    common_views.VisitsTrackingMixin,
+    common_views.CachedUserVisitsTrackingMixin,
     DetailView,
 ):
     model = Store
     form_class = StoreCommentForm
     template_name = "stores/store_detail.html"
-
-    visit_cache_template = settings.STORE_VIEW_TRACKING_CACHE_KEY
 
     def get_title(self):
         return self.object.name
@@ -25,17 +23,17 @@ class StoreDetailView(
     def comments(self):
         return self.object.get_comments()
 
-    def get_visit_cache_template_kwargs(self):
+    @property
+    def visit_cache_identifier(self) -> str:
         remote_addr = self.request.META.get("REMOTE_ADDR")
         kwargs = {"addr": remote_addr, "id": self.object.id}
-        return kwargs
+        return settings.STORE_VISIT_CACHE_KEY.format(**kwargs)
 
-    def not_visited(self):
+    def user_not_visited(self):
         self.object.increase("views")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["popular_products"] = self.object.popular_products()[
-            : settings.PRODUCTS_PAGINATE_BY
-        ]
+        popular_products = self.object.popular_products()
+        context["popular_products"] = popular_products[:settings.PRODUCTS_PAGINATE_BY]
         return context

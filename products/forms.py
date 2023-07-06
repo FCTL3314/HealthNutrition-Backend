@@ -26,8 +26,3 @@ class SearchForm(forms.Form):
             }
         ),
     )
-
-    def __init__(self, search_query=None, search_type=None, *args, **kwargs):
-        super().__init__()
-        self.initial["search_query"] = search_query
-        self.initial["search_type"] = search_type

@@ -15,8 +15,8 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
 
-    path("verification/send/<str:email>/", views.SendVerificationEmailView.as_view(), name="send-verification-email"),
-    path("verify/<str:email>/<uuid:code>/", views.EmailVerificationView.as_view(), name="email-verification"),
+    path("verification/send/<str:email>/", views.SendEmailVerificationView.as_view(), name="send-verification-email"),
+    path("verify/<str:email>/<uuid:code>/", views.VerifyUserEmailView.as_view(), name="email-verification"),
 
     path("password_reset/", views.PasswordResetView.as_view(), name="reset_password"),
     path("reset/<uidb64>/<token>/", views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
