@@ -103,9 +103,25 @@ body {
     margin-top: 50px;
 }
 
+.search-wrapper {
+    width: 75%;
+}
+
 
 @media (max-width: 1550px) {
     .btn-up {
         display: none !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .search-wrapper {
+        width: 85%;
+    }
+}
+
+@media (max-width: 991px) {
+    .search-wrapper {
+        width: 95%;
     }
 }

@@ -6,9 +6,13 @@
 
       <div class="row">
         <div class="text-center">
-          <img class="rounded-circle object-fit-cover" src="{{ user.get_image_url }}" width="208" height="208"
+          <img class="rounded-circle object-fit-cover" src="{{ object.get_image_url }}" width="208" height="208"
                alt="user_image">
           <h1 class="my-3 text-truncate">{{ object.username }}</h1>
+          {% if request.user == object %}
+            <span>Want to change your information?</span>
+            <a class="text-main-light" href="{% url 'users:profile-account' %}">Edit profile</a>
+          {% endif %}
         </div>
       </div>
 
@@ -18,15 +22,15 @@
           <div>
             <h2>Information</h2>
             <hr class="mb-0">
-            <ul class="row mt-5 list-unstyled">
+            <ul class="row mt-4 list-unstyled">
               <li class="col-6 profile-list-item">
-                <h3 class="mb-4 fw-semibold">Username</h3>
+                <h4 class="mb-4 fw-semibold">Username</h4>
                 <h4 class="text-main-light text-truncate ps-1">{{ object.username }}</h4>
               </li>
               {% if  request.user == object %}
                 <li class="col-6 profile-list-item">
                   <div class="d-flex mb-4 align-items-start">
-                    <h3 class="mb-0 me-1 fw-semibold">Email</h3>
+                    <h4 class="mb-0 me-1 fw-semibold">Email</h4>
                     <span>[<small class="text-main-light">Private</small>]</span>
                   </div>
                   <h4 class="text-main-light text-truncate ps-1">{{ object.email }}</h4>
@@ -40,23 +44,23 @@
           </div>
 
           <div class="mt-5">
-            <h2>Personal</h2>
+            <h2>About</h2>
             <hr class="mb-0">
-            <ul class="row mt-5 list-unstyled">
+            <ul class="row mt-4 list-unstyled">
               <li class="col-6 profile-list-item">
-                <h3 class="mb-4 fw-semibold">First name</h3>
+                <h4 class="mb-4 fw-semibold">First name</h4>
                 <h4 class="text-main-light text-truncate ps-1">
                   {% if object.first_name %} {{ object.first_name }} {% else %} Not specified {% endif %}
                 </h4>
               </li>
               <li class="col-6 profile-list-item">
-                <h3 class="mb-4 fw-semibold">Last name</h3>
+                <h4 class="mb-4 fw-semibold">Last name</h4>
                 <h4 class="text-main-light text-truncate ps-1">
                   {% if object.last_name %} {{ object.last_name }} {% else %} Not specified {% endif %}
                 </h4>
               </li>
               <li class="col-12 profile-list-item">
-                <h3 class="mb-4 fw-semibold">About me</h3>
+                <h4 class="mb-4 fw-semibold">About me</h4>
                 <h4 class="text-main-light text-break ps-1">
                   {% if object.about %} {{ object.about }} {% else %} Not specified {% endif %}
                 </h4>
