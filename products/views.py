@@ -73,8 +73,7 @@ class ProductListView(common_views.CachedUserVisitsTrackingMixin, BaseProductsVi
     def get_title(self):
         return self.product_type.name
 
-    @property
-    def object_list_title(self):
+    def get_object_list_title(self):
         return f'Products in the category "{self.product_type.name}"'
 
     def get_context_data(self, **kwargs):
