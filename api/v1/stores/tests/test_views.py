@@ -7,13 +7,13 @@ from rest_framework.reverse import reverse
 from stores.models import Store
 from utils.tests import generate_test_image, get_access_token, get_authorization_header
 
-DETAIL_URL_PATTERN = "api:v1:stores:stores-detail"
-LIST_URL_PATTERN = "api:v1:stores:stores-list"
+STORE_DETAIL = "api:v1:stores:stores-detail"
+STORE_LIST = "api:v1:stores:stores-list"
 
 
 @pytest.mark.django_db
 def test_store_detail(client, store):
-    path = reverse(DETAIL_URL_PATTERN, args=(store.slug,))
+    path = reverse(STORE_DETAIL, args=(store.slug,))
 
     response = client.get(path)
 
@@ -23,7 +23,7 @@ def test_store_detail(client, store):
 
 @pytest.mark.django_db
 def test_store_list(client, stores):
-    path = reverse(LIST_URL_PATTERN)
+    path = reverse(STORE_LIST)
 
     response = client.get(path)
 
@@ -33,7 +33,7 @@ def test_store_list(client, stores):
 
 @pytest.mark.django_db
 def test_store_update(client, store, admin_user, faker):
-    path = reverse(DETAIL_URL_PATTERN, args=(store.slug,))
+    path = reverse(STORE_DETAIL, args=(store.slug,))
 
     data = {
         "name": faker.name(),
@@ -56,7 +56,7 @@ def test_store_update(client, store, admin_user, faker):
 
 @pytest.mark.django_db
 def test_store_create(client, faker, admin_user):
-    path = reverse(LIST_URL_PATTERN)
+    path = reverse(STORE_LIST)
 
     data = {
         "name": faker.name(),
@@ -78,7 +78,7 @@ def test_store_create(client, faker, admin_user):
 
 @pytest.mark.django_db
 def test_store_destroy(client, store, admin_user):
-    path = reverse(DETAIL_URL_PATTERN, args=(store.slug,))
+    path = reverse(STORE_DETAIL, args=(store.slug,))
 
     headers = get_authorization_header(
         get_access_token(admin_user)

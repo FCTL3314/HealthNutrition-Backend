@@ -16,16 +16,29 @@ choices**.
 Overall, this application provides a valuable tool for consumers to find the most favorable prices and maximize their 
 savings while shopping across different stores for a wide range of products.
 
-> The project was created for educational purposes, simulating fictitious products without real value.
+> **The project was created for educational purposes, simulating fictitious products without real value.**
 
 # 🔥 Features
 
-* REST API
-* JWT Authentication
-* Postponed Tasks / Celery
-* Authentication / Authorization
-* Profile editing
-* Email verification
-* Docstrings
-* Tests (PyTest)
+* **REST API**
+* **JWT Authentication**
+* **Postponed Tasks / Celery**
+* **Authentication / Authorization**
+* **Profile editing**
+* **Email verification**
+* **Docstrings**
+* **Tests (PyTest)**
 
+# 💽 Local installation
+1. **Clone or download the repository.**
+2. **Create an *.env* file or rename *.env.dist* in *.env* and populate it only with development variables:**
+   * SECRET_KEY
+   * ALLOWED_HOSTS
+   * INTERNAL_IPS
+   * PROTOCOL
+   * REDIS_HOST
+   * REDIS_PORT
+   * EMAIL_HOST_USER
+3. **Run docker services for local development**: `docker-compose -f docker/local/docker-compose.yml up`
+
+> **Django automatically detects code changes by using a docker volume that spans all the code.**
