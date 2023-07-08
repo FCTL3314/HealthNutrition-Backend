@@ -1,3 +1,12 @@
+# 📖 Table of contents
+
+<ul>
+  <li><a href="#-description">About</a></li>
+  <li><a href="#-demonstration">Demonstration</a></li>
+  <li><a href="#-features">Features</a></li>
+  <li><a href="#-local-installation">Local installation</a></li>
+</ul>
+
 # 📃 Description
 
 This Django application is designed for **comparing prices between different stores, helping users find the best 
