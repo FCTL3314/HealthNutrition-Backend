@@ -18,6 +18,34 @@ savings while shopping across different stores for a wide range of products.
 
 > **The project was created for educational purposes, simulating fictitious products without real value.**
 
+# 🌄 Demonstration
+
+### Product categories
+
+![firefox_pX9TIczsd0](https://github.com/FCTL3314/StoreTracker/assets/97694131/0a317d57-0ede-492e-96f6-ec11aa65ab57)
+
+### Products
+
+![firefox_bqUjAA9ide](https://github.com/FCTL3314/StoreTracker/assets/97694131/fd7127c4-67b4-4e47-9255-484a135c6564)
+![firefox_2dl7DEif7Y](https://github.com/FCTL3314/StoreTracker/assets/97694131/b65f226a-31af-4d84-8cf9-cc7682174a99)
+![firefox_WxEaOrMs8h](https://github.com/FCTL3314/StoreTracker/assets/97694131/6f451ff2-662e-4295-a82e-ab3cdaad8be5)
+
+<hr/>
+
+![firefox_layhXd2u7v](https://github.com/FCTL3314/StoreTracker/assets/97694131/5d1de7aa-ec12-445a-a29d-1d27108d793d)
+![firefox_Bgqw3rnQv3](https://github.com/FCTL3314/StoreTracker/assets/97694131/cd68ed5b-86fd-484e-b8ad-aadef8fd6136)
+
+### Store detail
+
+![firefox_SGbt1I9nCi](https://github.com/FCTL3314/StoreTracker/assets/97694131/f31c0e2f-2ebb-422a-943a-55072dab0530)
+![firefox_Qw2Pyi34hz](https://github.com/FCTL3314/StoreTracker/assets/97694131/7ee295c8-fcf6-489f-ad57-68a55a298030)
+
+### Profile
+
+![firefox_4HtesbsbBG](https://github.com/FCTL3314/StoreTracker/assets/97694131/7e404765-9adf-4505-b8d2-302eb7952e53)
+![firefox_IRjbXLaWtk](https://github.com/FCTL3314/StoreTracker/assets/97694131/99094345-4b41-4acc-b5c4-247e17031c0b)
+
+
 # 🔥 Features
 
 * **REST API**
