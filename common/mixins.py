@@ -159,19 +159,17 @@ class CommentsMixin(FormMixin, ABC):
 class ObjectListInfoMixin:
     """Mixin that provides object list title and description for the context."""
 
-    _object_list_title: str = ""
-    _object_list_description: str = ""
+    object_list_title: str = ""
+    object_list_description: str = ""
 
-    @property
-    def object_list_title(self) -> str:
-        return self._object_list_title
+    def get_object_list_title(self) -> str:
+        return self.object_list_title
 
-    @property
-    def object_list_description(self) -> str:
-        return self._object_list_description
+    def get_object_list_description(self) -> str:
+        return self.object_list_description
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["object_list_title"] = self.object_list_title
-        context["object_list_description"] = self.object_list_description
+        context["object_list_title"] = self.get_object_list_title()
+        context["object_list_description"] = self.get_object_list_description()
         return context

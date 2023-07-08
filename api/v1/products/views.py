@@ -23,7 +23,7 @@ class ProductTypeModelViewSet(ModelViewSet):
 
 
 class ProductModelViewSet(ModelViewSet):
-    queryset = Product.objects.all().order_by(*settings.PRODUCTS_ORDERING)
+    queryset = Product.objects.order_by(*settings.PRODUCTS_ORDERING)
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductModelSerializer
     pagination_class = ProductPageNumberPagination

@@ -73,13 +73,14 @@ class EmailVerification(models.Model):
     code = models.UUIDField(null=True, unique=True)
     user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    expiration = models.DateTimeField(default=now() + timedelta(hours=2))
+    expiration = models.DateTimeField()
 
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
 
     def save(self, *args, **kwargs):
         self.code = self.generate_code()
+        self.expiration = now() + timedelta(hours=2)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

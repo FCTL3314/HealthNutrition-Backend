@@ -12,7 +12,7 @@ services:
       context: ../../
       dockerfile: docker/local/Dockerfile
     volumes:
-      - ../../:/usr/src/StoreTracker/
+      - ../../:/opt/StoreTracker/
     command: celery -A core worker -l info -P eventlet
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.local
@@ -26,8 +26,8 @@ services:
       context: ../../
       dockerfile: docker/local/Dockerfile
     volumes:
-      - ../../:/usr/src/StoreTracker/
-    command: python manage.py runserver 0.0.0.0:8000
+      - ../../:/opt/StoreTracker/
+    entrypoint: docker/local/entrypoint.sh
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.local
     env_file:

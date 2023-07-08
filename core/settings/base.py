@@ -166,7 +166,6 @@ PRICE_ROUNDING = 2
 
 PRODUCTS_PAGINATE_BY = 24
 PRODUCT_TYPES_PAGINATE_BY = 12
-STORES_PAGINATE_BY = 12
 
 PRODUCT_TYPES_CACHE_KEY = "popular_product_types"
 PRODUCTS_CACHE_TEMPLATE = "products_product_type:{product_id:}"
@@ -175,14 +174,18 @@ PRODUCT_TYPES_CACHE_TIME = 60 * 60
 PRODUCTS_CACHE_TIME = 60 * 60
 
 PRODUCTS_ORDERING = ("store__name", "price")
-PRODUCT_TYPES_ORDERING = ("-product__store__count", "-views")
+PRODUCT_TYPES_ORDERING = ("-views",)
 
 PRODUCT_TYPE_VISIT_CACHE_TEMPLATE = "address:{addr:}_product_type:{id:}"
 PRODUCT_VISIT_CACHE_TEMPLATE = "address:{addr:}_product:{id:}"
 
 # Stores
 
+STORES_PAGINATE_BY = 12
+
 STORE_VISIT_CACHE_KEY = "address:{addr:}_store:{id:}"
+
+STORES_ORDERING = ("name",)
 
 # Interactions
 

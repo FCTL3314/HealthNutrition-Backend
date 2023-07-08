@@ -72,7 +72,7 @@
                1.828-2.2 1.939V8.73l.348.086z"></path>
       </svg>
       <span class="fw-semibold">{{ object.price }}$</span>
-      {% if price_avg %}
+      {% if price__avg %}
         {% with object.price|price_subtract:price__avg as price_difference %}
           {% if price_difference < 0 %}
             <span class="text-success fw-semibold">

@@ -138,7 +138,7 @@ class SendEmailVerificationView(BaseEmailVerificationView):
 
 class VerifyUserEmailView(BaseEmailVerificationView):
     template_name = "users/email/email_verification_complete.html"
-    title = "Verify"
+    title = "Verify email"
 
     def get(self, request, *args, **kwargs):
         code = kwargs.get("code")
