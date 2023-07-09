@@ -99,12 +99,23 @@ DATABASES = {
 REDIS_HOST = env.str("REDIS_HOST")
 REDIS_PORT = env.str("REDIS_PORT")
 
+REDIS_URI = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+
+# RabbitMQ
+
+RABBITMQ_HOST = env.str("RABBITMQ_HOST")
+RABBITMQ_PORT = env.str("RABBITMQ_PORT")
+
+BASE_RABBITMQ_URI = f"://guest:guest@{RABBITMQ_HOST}:{RABBITMQ_PORT}"
+RABBITMQ_AMQP_URI = f"amqp{BASE_RABBITMQ_URI}"
+RABBITMQ_RPC_URI = f"rpc{BASE_RABBITMQ_URI}"
+
 # Cache
 
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}",
+        "LOCATION": REDIS_URI,
         "OPTIONS": {
             "db": "1",
         },
@@ -200,8 +211,8 @@ EMAIL_EXPIRATION_HOURS = (60 * 60) * 2
 
 # Celery
 
-CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
-CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+CELERY_BROKER_URL = RABBITMQ_AMQP_URI
+CELERY_RESULT_BACKEND = RABBITMQ_RPC_URI
 
 CELERY_TASK_TIME_LIMIT = 60 * 5
 

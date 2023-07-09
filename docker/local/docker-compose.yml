@@ -7,6 +7,11 @@ services:
     volumes:
       - ../../data/redis/:/data/
 
+  rabbitmq:
+    image: rabbitmq:alpine
+    volumes:
+      - ../../data/rabbitmq/:/var/lib/rabbitmq
+
   celery:
     build:
       context: ../../
@@ -19,7 +24,7 @@ services:
     env_file:
       - ../../.env
     depends_on:
-      - redis
+      - rabbitmq
 
   web:
     build:
