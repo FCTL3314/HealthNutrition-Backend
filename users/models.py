@@ -99,13 +99,12 @@ class EmailVerification(models.Model):
         self,
         subject_template_name: str,
         html_email_template_name: str,
-        protocol: str,
-        host: str,
+        domain: str,
     ) -> None:
         context = {
             "user": self.user,
-            "protocol": protocol,
-            "verification_link": f"{protocol}://{host}/{self.get_absolute_url()}",
+            "protocol": settings.PROTOCOL,
+            "verification_link": f"{settings.PROTOCOL}://{domain}/{self.get_absolute_url()}",
         }
 
         msg = convert_html_to_email_message(

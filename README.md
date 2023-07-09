@@ -75,6 +75,8 @@ savings while shopping across different stores for a wide range of products.
    * PROTOCOL
    * REDIS_HOST
    * REDIS_PORT
+   * RABBITMQ_HOST
+   * RABBITMQ_PORT
    * EMAIL_HOST_USER
 3. **Run docker services for local development**: `docker-compose -f docker/local/docker-compose.yml up`
 

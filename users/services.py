@@ -30,7 +30,7 @@ class BaseEmailVerificationSenderService(AbstractEmailVerificationService):
     def send(self):
         if self._user.is_verification_sending_interval_passed():
             verification = self._user.create_email_verification()
-            send_verification_email.delay(object_id=verification.id, host=self.domain)
+            send_verification_email.delay(object_id=verification.id, domain=self.domain)
             return self.successfully_sent(verification)
         return self.sending_interval_not_passed()
 
