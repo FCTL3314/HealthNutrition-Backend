@@ -1,4 +1,12 @@
+import socket
 from core.settings.base import *
+
+# Security
+
+# Way to have debug toolbar when developing with docker
+ip = socket.gethostbyname(socket.gethostname())
+
+INTERNAL_IPS += (ip[:-1] + "1",)
 
 # Application definition
 
