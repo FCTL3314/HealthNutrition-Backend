@@ -4,9 +4,9 @@ from core.settings.base import *
 # Security
 
 # Way to have debug toolbar when developing with docker
-ip = socket.gethostbyname(socket.gethostname())
-
-INTERNAL_IPS += (ip[:-1] + "1",)
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
 
 # Application definition
 

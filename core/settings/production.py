@@ -4,6 +4,8 @@ from core.settings.base import *
 
 DEBUG = False
 
+INTERNAL_IPS = env.list("INTERNAL_IPS")
+
 # Database
 
 DATABASES = {
