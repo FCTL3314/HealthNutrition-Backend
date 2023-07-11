@@ -19,8 +19,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
-INTERNAL_IPS = env.list("INTERNAL_IPS")
-
 PROTOCOL = env.str("PROTOCOL")
 
 # Application definition
@@ -194,7 +192,7 @@ PRODUCT_VISIT_CACHE_TEMPLATE = "address:{addr:}_product:{id:}"
 
 STORES_PAGINATE_BY = 12
 
-STORE_VISIT_CACHE_KEY = "address:{addr:}_store:{id:}"
+STORE_VISIT_CACHE_TEMPLATE = "address:{addr:}_store:{id:}"
 
 STORES_ORDERING = ("name",)
 

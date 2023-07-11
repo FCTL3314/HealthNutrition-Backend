@@ -3,5 +3,5 @@ from django.urls import include, path
 app_name = "interactions"
 
 urlpatterns = [
-    path("comment/", include("interactions.comments.urls")),
+    path("comments/", include("interactions.comments.urls", namespace="comments")),
 ]

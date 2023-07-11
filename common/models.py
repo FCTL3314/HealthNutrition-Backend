@@ -3,8 +3,8 @@ from django.utils.text import slugify
 
 class SlugifyMixin:
     def change_slug(self, field_to_slugify: str, commit=True) -> None:
-        slugify_string = getattr(self, field_to_slugify)
-        self.slug = slugify(slugify_string)
+        string_to_slugify = getattr(self, field_to_slugify)
+        self.slug = slugify(string_to_slugify)
         if commit:
             self.save(update_fields=("slug",))
 
