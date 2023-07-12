@@ -27,7 +27,7 @@ class StoreDetailView(
     def visit_cache_identifier(self) -> str:
         remote_addr = self.request.META.get("REMOTE_ADDR")
         kwargs = {"addr": remote_addr, "id": self.object.id}
-        return settings.STORE_VISIT_CACHE_KEY.format(**kwargs)
+        return settings.STORE_VISIT_CACHE_TEMPLATE.format(**kwargs)
 
     def user_not_visited(self):
         self.object.increase("views")
