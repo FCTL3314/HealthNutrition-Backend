@@ -19,7 +19,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
-PROTOCOL = env.str("PROTOCOL")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     "django_cleanup",
     "rest_framework",
     "rest_framework_simplejwt",
+    "corsheaders",
 
     "users",
     "stores",
@@ -60,6 +62,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
