@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
+from api.v1.products.filters import ProductFilter
 from api.v1.products.paginators import (ProductPageNumberPagination,
                                         ProductTypePageNumberPagination)
 from api.v1.products.serializers import (ProductModelSerializer,
@@ -24,6 +25,7 @@ class ProductTypeModelViewSet(ModelViewSet):
 
 class ProductModelViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*settings.PRODUCTS_ORDERING)
+    filterset_class = ProductFilter
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductModelSerializer
     pagination_class = ProductPageNumberPagination
