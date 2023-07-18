@@ -15,6 +15,9 @@ class ProductTypeModelSerializer(serializers.ModelSerializer):
     product_price_min = serializers.FloatField(
         source="product__price__min", required=False
     )
+    product_stores_count = serializers.IntegerField(
+        source="product__store__count", required=False
+    )
 
     class Meta:
         model = ProductType
@@ -28,6 +31,7 @@ class ProductTypeModelSerializer(serializers.ModelSerializer):
             "product_price_max",
             "product_price_avg",
             "product_price_min",
+            "product_stores_count",
         )
         read_only_fields = (
             "views",
@@ -35,6 +39,7 @@ class ProductTypeModelSerializer(serializers.ModelSerializer):
             "product_price_max",
             "product_price_avg",
             "product_price_min",
+            "product_stores_count",
         )
 
 
