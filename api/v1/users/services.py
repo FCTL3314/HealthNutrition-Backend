@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.v1.users.serializers import EmailVerificationSerializer, UserModelSerializer
+from api.v1.users.serializers import EmailVerificationSerializer, CurrentUserSerializer
 from users.models import EmailVerification
 from users.services import BaseEmailVerificationSenderService, BaseEmailVerifierService
 
@@ -31,7 +31,7 @@ class EmailVerificationSender(BaseEmailVerificationSenderService):
 
 
 class UserEmailVerifier(BaseEmailVerifierService):
-    serializer = UserModelSerializer
+    serializer = CurrentUserSerializer
 
     def successfully_verified(self) -> Response:
         serializer = self.serializer(self._user)
