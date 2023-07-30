@@ -32,14 +32,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-
     "widget_tweaks",
     "django_cleanup",
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "corsheaders",
-
     "users",
     "stores",
     "products",
@@ -63,7 +61,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "corsheaders.middleware.CorsMiddleware",
 ]
 
@@ -178,8 +175,8 @@ VISITS_CACHE_TIME = (60 * 60) * 12
 
 PRICE_ROUNDING = 2
 
-PRODUCTS_PAGINATE_BY = 24
-PRODUCT_TYPES_PAGINATE_BY = 12
+PRODUCTS_PAGINATE_BY = 1
+PRODUCT_TYPES_PAGINATE_BY = 1
 
 PRODUCT_TYPES_CACHE_KEY = "popular_product_types"
 PRODUCTS_CACHE_TEMPLATE = "products_product_type:{product_id:}"
@@ -225,9 +222,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_FILTER_BACKENDS": (
-        "django_filters.rest_framework.DjangoFilterBackend",
-    ),
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
 # Simple JWT
@@ -239,8 +234,6 @@ SIMPLE_JWT = {
 
 # Djoser
 
-USER_SERIALIZER = "api.v1.users.serializers.UserModelSerializer"
-
 DJOSER = {
     "HIDE_USERS": False,
     "USER_ID_FIELD": "slug",
@@ -248,9 +241,9 @@ DJOSER = {
         "user": ("djoser.permissions.CurrentUserOrAdminOrReadOnly",),
     },
     "SERIALIZERS": {
-        "user": USER_SERIALIZER,
-        "current_user": USER_SERIALIZER,
-        "user_create": USER_SERIALIZER,
+        "user": "api.v1.users.serializers.UserSerializer",
+        "current_user": "api.v1.users.serializers.CurrentUserSerializer",
+        "user_create": "api.v1.users.serializers.UserCreateSerializer",
     },
 }
 
