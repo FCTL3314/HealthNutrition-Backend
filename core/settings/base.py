@@ -38,11 +38,13 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
 
-    "users",
-    "stores",
-    "products",
-    "comparisons",
-    "comments",
+    "api",
+    "api.v1",
+    "api.v1.users",
+    "api.v1.stores",
+    "api.v1.products",
+    "api.v1.comparisons",
+    "api.v1.comments",
 ]
 
 MIDDLEWARE = [
@@ -228,9 +230,9 @@ DJOSER = {
         "user": ("djoser.permissions.CurrentUserOrAdminOrReadOnly",),
     },
     "SERIALIZERS": {
-        "user": "users.serializers.UserSerializer",
-        "current_user": "users.serializers.CurrentUserSerializer",
-        "user_create": "users.serializers.UserCreateSerializer",
+        "user": "api.v1.users.serializers.UserSerializer",
+        "current_user": "api.v1.users.serializers.CurrentUserSerializer",
+        "user_create": "api.v1.users.serializers.UserCreateSerializer",
     },
 }
 
