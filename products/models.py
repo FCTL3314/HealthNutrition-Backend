@@ -1,11 +1,8 @@
-from django.conf import settings
 from django.db import models
-from django.db.models import QuerySet
 from django.urls import reverse
 
 from common.models import IncrementMixin, SlugifyMixin
 from products.managers import ProductManager, ProductTypeManager
-from utils.cache import get_cached_data_or_set_new
 
 
 class Product(SlugifyMixin, IncrementMixin, models.Model):
@@ -43,11 +40,3 @@ class ProductType(SlugifyMixin, IncrementMixin, models.Model):
 
     def __str__(self):
         return self.name
-
-    # TODO: Remove
-    def cached_products(self) -> QuerySet:
-        return get_cached_data_or_set_new(
-            key=settings.PRODUCTS_CACHE_TEMPLATE.format(product_id=self.id),
-            callback=self.product_set.all,
-            timeout=settings.PRODUCTS_CACHE_TIME,
-        )

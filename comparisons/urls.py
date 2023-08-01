@@ -7,12 +7,12 @@ app_name = "comparisons"
 urlpatterns = [
     path(
         "product-types/",
-        views.ComparisonProductTypeListAPIView.as_view(),
+        views.ComparedProductTypesListAPIView.as_view(),
         name="product-types",
     ),
     path(
         "products/<slug:slug>/",
-        views.ComparisonProductListAPIView.as_view(),
+        views.ComparedProductsListApiView.as_view(),
         name="products",
     ),
     path(
