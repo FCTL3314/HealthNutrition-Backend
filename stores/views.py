@@ -1,4 +1,4 @@
-from api.permissions import IsAdminOrReadOnly
+from common.permissions import IsAdminOrReadOnly
 from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 

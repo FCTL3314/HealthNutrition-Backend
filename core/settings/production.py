@@ -19,10 +19,6 @@ DATABASES = {
     }
 }
 
-# Static files (CSS, JavaScript, Images)
-
-STATIC_ROOT = BASE_DIR / "frontend/static"
-
 # Email
 
 EMAIL_HOST = env.str("EMAIL_HOST")

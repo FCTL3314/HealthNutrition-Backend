@@ -47,30 +47,6 @@ def test_user_verify():
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "has_image",
-    (
-        False,
-        True,
-    ),
-)
-def test_user_get_image_url(has_image):
-    if has_image:
-        user = mixer.blend("users.User", image=generate_test_image())
-    else:
-        user = mixer.blend("users.User", image=None)
-
-    image = user.get_image_url()
-
-    if has_image:
-        assert image == user.image.url
-    else:
-        assert image == os.path.join(
-            settings.STATIC_URL, "images/default_user_image.png"
-        )
-
-
-@pytest.mark.django_db
-@pytest.mark.parametrize(
     "is_expired",
     (
         True,

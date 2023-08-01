@@ -11,7 +11,6 @@ from django.utils.timezone import now
 from common.decorators import order_queryset
 from common.models import SlugifyMixin
 from utils.mail import convert_html_to_email_message
-from utils.static import get_static_file
 
 
 class User(SlugifyMixin, AbstractUser):
@@ -64,11 +63,6 @@ class User(SlugifyMixin, AbstractUser):
         self.is_verified = True
         if commit:
             self.save(update_fields=("is_verified",))
-
-    def get_image_url(self) -> str:  # TODO: Remove
-        if self.image:
-            return self.image.url
-        return get_static_file("images/default_user_image.png")
 
 
 class EmailVerification(models.Model):
