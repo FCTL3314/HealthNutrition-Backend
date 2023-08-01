@@ -31,9 +31,6 @@ class Product(SlugifyMixin, IncrementMixin, models.Model):
     def get_absolute_url(self) -> str:
         return reverse("products:product-detail", args=(self.slug,))
 
-    def get_comments(self) -> QuerySet:
-        return self.productcomment_set.order_by("-created_at")
-
 
 class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     name = models.CharField(max_length=64)
@@ -47,6 +44,7 @@ class ProductType(SlugifyMixin, IncrementMixin, models.Model):
     def __str__(self):
         return self.name
 
+    # TODO: Remove
     def cached_products(self) -> QuerySet:
         return get_cached_data_or_set_new(
             key=settings.PRODUCTS_CACHE_TEMPLATE.format(product_id=self.id),

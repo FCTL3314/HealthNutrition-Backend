@@ -6,6 +6,20 @@ from stores.serializers import StoreModelSerializer
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductType
+        fields = (
+            "id",
+            "name",
+            "description",
+            "image",
+            "views",
+            "slug",
+        )
+        read_only_fields = ("views", "slug")
+
+
+class ProductTypeAggregatedSerializer(ProductTypeModelSerializer):
     product_price_max = serializers.FloatField(
         source="product__price__max", required=False
     )
@@ -19,23 +33,14 @@ class ProductTypeModelSerializer(serializers.ModelSerializer):
         source="product__store__count", required=False
     )
 
-    class Meta:
-        model = ProductType
-        fields = (
-            "id",
-            "name",
-            "description",
-            "image",
-            "views",
-            "slug",
+    class Meta(ProductTypeModelSerializer.Meta):
+        fields = ProductTypeModelSerializer.Meta.fields + (
             "product_price_max",
             "product_price_avg",
             "product_price_min",
             "product_stores_count",
         )
-        read_only_fields = (
-            "views",
-            "slug",
+        read_only_fields = ProductTypeModelSerializer.Meta.read_only_fields + (
             "product_price_max",
             "product_price_avg",
             "product_price_min",

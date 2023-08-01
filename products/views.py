@@ -8,12 +8,12 @@ from products.models import Product, ProductType
 from products.paginators import (ProductPageNumberPagination,
                                  ProductTypePageNumberPagination)
 from products.serializers import (ProductModelSerializer,
-                                  ProductTypeModelSerializer)
+                                  ProductTypeAggregatedSerializer)
 
 
 class ProductTypeModelViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = ProductTypeModelSerializer
+    serializer_class = ProductTypeAggregatedSerializer
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
