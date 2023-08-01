@@ -30,27 +30,19 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "widget_tweaks",
+
     "django_cleanup",
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "corsheaders",
+
     "users",
     "stores",
     "products",
     "comparisons",
-    "interactions",
-    "interactions.comments",
-    "api",
-    "api.v1.stores",
-    "api.v1.products",
-    "api.v1.comparisons",
-    "api.v1.interactions",
-    "api.v1.interactions.comments",
-    "api.v1.users",
+    "comments",
 ]
 
 MIDDLEWARE = [
@@ -69,7 +61,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "frontend/templates"],
+        "DIRS": [BASE_DIR / ""],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -77,7 +69,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "common.context_processors.current_url_name",
             ],
         },
     },
@@ -148,10 +139,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-
-STATIC_URL = "static/"
 
 # Media files
 
@@ -228,7 +215,7 @@ REST_FRAMEWORK = {
 # Simple JWT
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
@@ -241,9 +228,9 @@ DJOSER = {
         "user": ("djoser.permissions.CurrentUserOrAdminOrReadOnly",),
     },
     "SERIALIZERS": {
-        "user": "api.v1.users.serializers.UserSerializer",
-        "current_user": "api.v1.users.serializers.CurrentUserSerializer",
-        "user_create": "api.v1.users.serializers.UserCreateSerializer",
+        "user": "users.serializers.UserSerializer",
+        "current_user": "users.serializers.CurrentUserSerializer",
+        "user_create": "users.serializers.UserCreateSerializer",
     },
 }
 

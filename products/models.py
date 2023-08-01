@@ -16,9 +16,7 @@ class Product(SlugifyMixin, IncrementMixin, models.Model):
     image = models.ImageField(upload_to="products/products")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    store = models.ForeignKey(
-        to="stores.Store", on_delete=models.CASCADE
-    )
+    store = models.ForeignKey(to="stores.Store", on_delete=models.CASCADE)
     product_type = models.ForeignKey(
         to="products.ProductType", on_delete=models.CASCADE
     )

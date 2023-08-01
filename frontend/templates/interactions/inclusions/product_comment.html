@@ -1,9 +1,0 @@
-{% extends 'interactions/inclusions/base_comment.html' %}
-
-{% block action %}
-  {% url 'interactions:comments:product-add' object.slug %}
-{% endblock %}
-
-{% block extra-data %}
-  data-product-slug="{{ object.slug }}"
-{% endblock %}

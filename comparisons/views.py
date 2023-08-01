@@ -1,40 +1,27 @@
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
+from rest_framework import status
+from rest_framework.generics import ListAPIView
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
-from products.forms import SearchForm
-from products.mixins import SearchFormMixin
-from common import mixins as common_views
 from common.decorators import order_queryset
-from products.models import ProductType
+from comparisons.models import Comparison
+from comparisons.serializers import ComparisonModelSerializer
+from products.models import Product, ProductType
+from products.paginators import (ProductPageNumberPagination,
+                                 ProductTypePageNumberPagination)
+from products.serializers import (ProductModelSerializer,
+                                  ProductTypeModelSerializer)
 
 
-class BaseComparisonView(
-    LoginRequiredMixin,
-    common_views.PaginationUrlMixin,
-    common_views.TitleMixin,
-    common_views.ObjectListInfoMixin,
-    SearchFormMixin,
-    ListView,
-):
-    """A base view for the 'comparisons' application."""
-
-    title = "Comparisons"
-    form_class = SearchForm
-    object_list_title = "My Comparison"
-    object_list_description = "Products you have saved for comparison."
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["comparison"] = True
-        return context
-
-
-class ComparisonProductTypeListView(BaseComparisonView):
+class ComparisonProductTypeListAPIView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductTypeModelSerializer
+    pagination_class = ProductTypePageNumberPagination
     ordering = settings.PRODUCT_TYPES_ORDERING
-    paginate_by = settings.PRODUCT_TYPES_PAGINATE_BY
-    template_name = "products/product_types.html"
 
     @order_queryset(*ordering)
     def get_queryset(self):
@@ -42,10 +29,11 @@ class ComparisonProductTypeListView(BaseComparisonView):
         return product_types.product_price_annotation()
 
 
-class ComparisonProductListView(BaseComparisonView):
+class ComparisonProductListAPIView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductModelSerializer
+    pagination_class = ProductPageNumberPagination
     ordering = settings.PRODUCTS_ORDERING
-    paginate_by = settings.PRODUCTS_PAGINATE_BY
-    template_name = "products/products.html"
 
     @order_queryset(*ordering)
     def get_queryset(self):
@@ -54,7 +42,24 @@ class ComparisonProductListView(BaseComparisonView):
         products = product_type.cached_products()
         return products.filter(user=self.request.user)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(self.object_list.price_aggregation())
-        return context
+
+class ComparisonGenericViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin):
+    model = Comparison
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ComparisonModelSerializer
+
+    def create(self, request, *args, **kwargs):
+        product = self.get_product()
+        request.user.comparisons.add(product, through_defaults=None)
+        serializer = self.get_serializer(
+            get_object_or_404(self.model, product=product, user=request.user),
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        product = self.get_product(user=request.user)
+        request.user.comparisons.remove(product)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_product(self, **kwargs):
+        return get_object_or_404(Product, pk=self.kwargs["product_id"], **kwargs)

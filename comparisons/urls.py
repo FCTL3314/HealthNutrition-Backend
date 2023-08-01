@@ -5,6 +5,24 @@ from comparisons import views
 app_name = "comparisons"
 
 urlpatterns = [
-    path("", views.ComparisonProductTypeListView.as_view(), name="product-type-comparisons"),
-    path("<slug:slug>/", views.ComparisonProductListView.as_view(), name="product-comparisons"),
+    path(
+        "product-types/",
+        views.ComparisonProductTypeListAPIView.as_view(),
+        name="product-types",
+    ),
+    path(
+        "products/<slug:slug>/",
+        views.ComparisonProductListAPIView.as_view(),
+        name="products",
+    ),
+    path(
+        "add/<int:product_id>/",
+        views.ComparisonGenericViewSet.as_view({"post": "create"}),
+        name="add",
+    ),
+    path(
+        "remove/<int:product_id>/",
+        views.ComparisonGenericViewSet.as_view({"delete": "destroy"}),
+        name="remove",
+    ),
 ]

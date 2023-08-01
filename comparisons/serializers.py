@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from api.v1.products.serializers import ProductModelSerializer
-from api.v1.users.serializers import UserSerializer
 from comparisons.models import Comparison
+from products.serializers import ProductModelSerializer
+from users.serializers import UserSerializer
 
 
 class ComparisonModelSerializer(serializers.ModelSerializer):

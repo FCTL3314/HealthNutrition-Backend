@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from interactions.comments.models import ProductComment, StoreComment
+from comments.models import ProductComment, StoreComment
 
 
 class BaseCommentAdmin(admin.TabularInline):

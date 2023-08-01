@@ -41,7 +41,9 @@ class User(SlugifyMixin, AbstractUser):
         return settings.EMAIL_SENDING_SECONDS_INTERVAL + 1
 
     def is_verification_sending_interval_passed(self) -> bool:
-        seconds_since_last_sending = self.seconds_since_last_email_verification_sending()
+        seconds_since_last_sending = (
+            self.seconds_since_last_email_verification_sending()
+        )
         return seconds_since_last_sending > settings.EMAIL_SENDING_SECONDS_INTERVAL
 
     def create_email_verification(self):
@@ -63,7 +65,7 @@ class User(SlugifyMixin, AbstractUser):
         if commit:
             self.save(update_fields=("is_verified",))
 
-    def get_image_url(self) -> str:
+    def get_image_url(self) -> str:  # TODO: Remove
         if self.image:
             return self.image.url
         return get_static_file("images/default_user_image.png")

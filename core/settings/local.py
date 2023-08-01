@@ -1,11 +1,12 @@
 import socket
+
 from core.settings.base import *
 
 # Security
 
 # Way to have debug toolbar when developing with docker
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }
 
 # Application definition

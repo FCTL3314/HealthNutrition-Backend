@@ -1,7 +1,6 @@
-from djoser.serializers import (
-    UserSerializer as DjoserUserSerializer,
-    UserCreateSerializer as DjoserUserCreateSerializer,
-)
+from djoser.serializers import \
+    UserCreateSerializer as DjoserUserCreateSerializer
+from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
 from users.models import EmailVerification, User
@@ -38,7 +37,6 @@ class CurrentUserSerializer(UserSerializer):
 
 
 class UserCreateSerializer(DjoserUserCreateSerializer):
-
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + DjoserUserCreateSerializer.Meta.fields
 

@@ -17,6 +17,4 @@ def get_access_token(user) -> AccessToken:
 
 
 def get_authorization_header(token: Token) -> dict:
-    return {
-        "HTTP_AUTHORIZATION": f"Bearer {token}"
-    }
+    return {"HTTP_AUTHORIZATION": f"Bearer {token}"}

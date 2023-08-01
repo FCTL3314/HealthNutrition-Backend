@@ -1,15 +1,14 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from products import views
+from products.views import ProductModelViewSet, ProductTypeModelViewSet
 
 app_name = "products"
 
-urlpatterns = [
-    path("", views.ProductTypeListView.as_view(), name="product-types"),
-    path("products/<slug:slug>/", views.ProductListView.as_view(), name="products"),
-    path("product/<slug:slug>/", views.ProductDetailView.as_view(), name="product-detail"),
+router = routers.DefaultRouter()
+router.register("product-types", ProductTypeModelViewSet, basename="product-types")
+router.register("products", ProductModelViewSet, basename="products")
 
-    path("search/redirect/", views.SearchRedirectView.as_view(), name="search-redirect"),
-    path("search/products/", views.ProductSearchListView.as_view(), name="product-search"),
-    path("search/product-types/", views.ProductTypeSearchListView.as_view(), name="product-type-search"),
+urlpatterns = [
+    path("", include(router.urls)),
 ]

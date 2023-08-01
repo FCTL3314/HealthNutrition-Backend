@@ -1,12 +1,16 @@
 from abc import ABC
+from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from rest_framework import status
+from rest_framework.response import Response
 
 from users.models import EmailVerification
+from users.serializers import (CurrentUserSerializer,
+                               EmailVerificationSerializer)
 from users.tasks import send_verification_email
 
 
@@ -71,22 +75,41 @@ class BaseEmailVerifierService(AbstractEmailVerificationService):
 
 
 class EmailVerificationSender(BaseEmailVerificationSenderService):
-    def sending_interval_not_passed(self) -> None:
-        seconds_since_last_sending = (
-            self._user.seconds_since_last_email_verification_sending()
-        )
-        seconds_left = (
-            settings.EMAIL_SENDING_SECONDS_INTERVAL - seconds_since_last_sending
-        )
-        messages.warning(
-            self._request,
-            f"Please wait {seconds_left} seconds to resend the verification email.",
-        )
+    serializer = EmailVerificationSerializer
+
+    def successfully_sent(self, verification: EmailVerification) -> Response:
+        serializer = self.serializer(verification)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @staticmethod
+    def _get_next_available_sending_datetime() -> datetime:
+        latest_verification = EmailVerification.objects.latest("created_at")
+        sending_interval = timedelta(seconds=settings.EMAIL_SENDING_SECONDS_INTERVAL)
+        return latest_verification.created_at + sending_interval
+
+    def sending_interval_not_passed(self) -> Response:
+        response = {
+            "detail": "Sending limit reached.",
+            "retry_after": self._get_next_available_sending_datetime(),
+        }
+        return Response(response, status=status.HTTP_429_TOO_MANY_REQUESTS)
 
 
 class UserEmailVerifier(BaseEmailVerifierService):
-    def verification_expired(self) -> None:
-        messages.warning(self._request, "The verification link has expired.")
+    serializer = CurrentUserSerializer
 
-    def email_already_verified(self) -> None:
-        messages.warning(self._request, "Your email has already been verified.")
+    def successfully_verified(self) -> Response:
+        serializer = self.serializer(self._user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def verification_expired(self) -> Response:
+        return Response(
+            {"detail": "The verification link has expired."},
+            status=status.HTTP_410_GONE,
+        )
+
+    def email_already_verified(self) -> Response:
+        return Response(
+            {"detail": "Your email is already verified."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )

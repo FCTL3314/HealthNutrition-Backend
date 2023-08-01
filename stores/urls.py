@@ -1,9 +1,13 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from stores import views
+from stores.views import StoreModelViewSet
 
 app_name = "stores"
 
+router = routers.DefaultRouter()
+router.register("stores", StoreModelViewSet, basename="stores")
+
 urlpatterns = [
-    path("<slug:slug>/", views.StoreDetailView.as_view(), name="store-detail"),
+    path("", include(router.urls)),
 ]
