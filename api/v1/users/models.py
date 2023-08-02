@@ -6,14 +6,17 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.timezone import now
 
 from common.decorators import order_queryset
-from common.models import SlugifyMixin
 from utils.mail import convert_html_to_email_message
 
 
-class User(SlugifyMixin, AbstractUser):
+USER_SLUG_RELATED_FIELD = "username"
+
+
+class User(AbstractUser):
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to="users", null=True, blank=True)
     about = models.TextField(max_length=516, null=True, blank=True)
@@ -63,6 +66,11 @@ class User(SlugifyMixin, AbstractUser):
         self.is_verified = True
         if commit:
             self.save(update_fields=("is_verified",))
+
+    def change_slug(self, commit=True) -> None:
+        self.slug = slugify(getattr(self, USER_SLUG_RELATED_FIELD))
+        if commit:
+            self.save(update_fields=("slug",))
 
 
 class EmailVerification(models.Model):

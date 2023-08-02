@@ -8,7 +8,7 @@ from api.v1.products.paginators import (ProductPageNumberPagination,
 from api.v1.products.serializers import (ProductModelSerializer,
                                          ProductTypeAggregatedSerializer)
 from common.decorators import order_queryset
-from common.permissions import IsAdminOrReadOnly
+from api.permissions import IsAdminOrReadOnly
 
 
 class ProductTypeModelViewSet(ModelViewSet):

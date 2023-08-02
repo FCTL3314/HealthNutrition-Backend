@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 from mixer.backend.django import mixer
 
-from products.models import Product, ProductType
+from api.v1.products.models import Product, ProductType
 
 
 @pytest.mark.django_db
