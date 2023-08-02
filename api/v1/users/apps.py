@@ -8,4 +8,5 @@ class UsersConfig(AppConfig):
 
     def ready(self):
         from api.v1.users import signals
+
         pre_save.connect(signals.update_slug_signal, sender="users.User")

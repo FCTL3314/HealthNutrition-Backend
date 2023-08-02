@@ -1,6 +1,6 @@
 from django.contrib import admin
-from api.v1.comments.admin import ProductCommentAdmin
 
+from api.v1.comments.admin import ProductCommentAdmin
 from api.v1.products.models import Product, ProductType
 
 

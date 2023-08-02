@@ -1,6 +1,6 @@
 from django.contrib import admin
-from api.v1.comments.admin import StoreCommentAdmin
 
+from api.v1.comments.admin import StoreCommentAdmin
 from api.v1.stores.models import Store
 
 

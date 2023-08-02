@@ -3,7 +3,8 @@ from django.urls import include, path
 from djoser.views import UserViewSet
 from rest_framework import routers
 
-from api.v1.users.views import EmailVerificationCreateAPIView, VerifyUserUpdateAPIView
+from api.v1.users.views import (EmailVerificationCreateAPIView,
+                                VerifyUserUpdateAPIView)
 
 app_name = "users"
 

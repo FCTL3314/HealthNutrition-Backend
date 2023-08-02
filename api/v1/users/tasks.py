@@ -1,7 +1,7 @@
 from celery import shared_task
 
+from api.utils.mail import convert_html_to_email_message
 from api.v1.users.models import EmailVerification
-from utils.mail import convert_html_to_email_message
 
 
 @shared_task

@@ -1,6 +1,7 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 
-from api.v1.users.services import EmailVerificationSenderService, UserEmailVerifierService
+from api.v1.users.services import (EmailVerificationSenderService,
+                                   UserEmailVerifierService)
 
 
 class EmailVerificationCreateAPIView(CreateAPIView):

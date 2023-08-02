@@ -1,7 +1,7 @@
-from api.permissions import IsAdminOrReadOnly
 from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
+from api.permissions import IsAdminOrReadOnly
 from api.v1.stores.models import Store
 from api.v1.stores.paginators import StorePageNumberPagination
 from api.v1.stores.serializers import StoreModelSerializer

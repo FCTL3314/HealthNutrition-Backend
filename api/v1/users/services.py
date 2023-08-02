@@ -6,11 +6,9 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from api.v1.users.models import EmailVerification
-from api.v1.users.serializers import (
-    EmailVerificationSerializer,
-    CurrentUserSerializer,
-    VerifyUserSerializer,
-)
+from api.v1.users.serializers import (CurrentUserSerializer,
+                                      EmailVerificationSerializer,
+                                      VerifyUserSerializer)
 from api.v1.users.tasks import send_verification_email
 
 

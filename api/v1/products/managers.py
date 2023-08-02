@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import Avg, Count, Max, Min, Q, QuerySet
 from django.db.models.functions import Round
 
-from utils.cache import get_cached_data_or_set_new
+from api.utils.cache import get_cached_data_or_set_new
 
 
 class ProductQuerySet(models.QuerySet):

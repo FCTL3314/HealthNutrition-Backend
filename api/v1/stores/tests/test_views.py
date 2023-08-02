@@ -4,9 +4,9 @@ import pytest
 from django.conf import settings
 from rest_framework.reverse import reverse
 
-from stores.models import Store
-from utils.tests import (generate_test_image, get_access_token,
-                         get_authorization_header)
+from api.utils.tests import (generate_test_image, get_access_token,
+                             get_authorization_header)
+from api.v1.stores.models import Store
 
 STORE_DETAIL = "api:v1:stores:stores-detail"
 STORE_LIST = "api:v1:stores:stores-list"

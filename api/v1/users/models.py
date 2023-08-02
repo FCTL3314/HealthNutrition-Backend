@@ -9,9 +9,8 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.timezone import now
 
-from common.decorators import order_queryset
-from utils.mail import convert_html_to_email_message
-
+from api.decorators import order_queryset
+from api.utils.mail import convert_html_to_email_message
 
 USER_SLUG_RELATED_FIELD = "username"
 

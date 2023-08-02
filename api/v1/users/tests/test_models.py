@@ -1,14 +1,11 @@
-import os
 from datetime import timedelta
 
 import pytest
-from django.conf import settings
 from django.core import mail
 from django.utils.timezone import now
 from mixer.backend.django import mixer
 
-from users.models import EmailVerification
-from utils.tests import generate_test_image
+from api.v1.users.models import EmailVerification
 
 
 @pytest.mark.django_db
@@ -25,9 +22,10 @@ def test_user_seconds_since_last_email_verification_sending(user):
 
 @pytest.mark.django_db
 def test_user_valid_email_verifications(user):
+
     def create_not_valid_verifications():
         mixer.cycle(5).blend(
-            "users.EmailVerification", user=user, expiration=now() - timedelta(days=2)
+            "users.EmailVerification", expiration=now() - timedelta(days=2)
         )
         mixer.cycle(5).blend("users.EmailVerification")
 
@@ -46,35 +44,23 @@ def test_user_verify():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "is_expired",
-    (
-        True,
-        False,
-    ),
-)
-def test_email_verification_is_expired(is_expired):
-    if is_expired:
-        verification = mixer.blend(
-            "users.EmailVerification", expiration=now() - timedelta(days=2)
-        )
-        assert verification.is_expired()
-    else:
-        verification = mixer.blend("users.EmailVerification")
-        assert not verification.is_expired()
+def test_email_verification_is_expired():
+    valid_verification = mixer.blend("users.EmailVerification")
+    expired_verification = mixer.blend("users.EmailVerification")
+    expired_verification.expiration = now() - timedelta(days=2)
+    assert valid_verification.is_expired() is False
+    assert expired_verification.is_expired() is True
 
 
 @pytest.mark.django_db
-def test_send_verification_email(client, user):
+def test_send_verification_email(user):
     verification = user.create_email_verification()
 
-    subject_template_name = "users/email/email_verification_subject.html"
-    html_email_template_name = "users/email/email_verification_content.html"
-    protocol = "https"
-    host = "example.com"
+    subject_template_name = "email/email_verification_subject.html"
+    html_email_template_name = "email/email_verification.html"
 
     verification.send_verification_email(
-        subject_template_name, html_email_template_name, protocol, host
+        subject_template_name, html_email_template_name
     )
 
     assert len(mail.outbox) == 1

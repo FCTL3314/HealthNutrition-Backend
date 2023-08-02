@@ -1,14 +1,14 @@
 from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
+from api.decorators import order_queryset
+from api.permissions import IsAdminOrReadOnly
 from api.v1.products.filters import ProductFilter
 from api.v1.products.models import Product, ProductType
 from api.v1.products.paginators import (ProductPageNumberPagination,
                                         ProductTypePageNumberPagination)
 from api.v1.products.serializers import (ProductModelSerializer,
                                          ProductTypeAggregatedSerializer)
-from common.decorators import order_queryset
-from api.permissions import IsAdminOrReadOnly
 
 
 class ProductTypeModelViewSet(ModelViewSet):
