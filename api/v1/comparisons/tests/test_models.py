@@ -1,6 +1,6 @@
 import pytest
 
-from comparisons.models import Comparison
+from api.v1.comparisons.models import Comparison
 
 
 @pytest.mark.django_db
