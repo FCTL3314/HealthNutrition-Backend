@@ -1,85 +1,39 @@
-from abc import ABC
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
 from api.v1.users.models import EmailVerification
-from api.v1.users.serializers import (CurrentUserSerializer,
-                                      EmailVerificationSerializer)
+from api.v1.users.serializers import (
+    EmailVerificationSerializer,
+    CurrentUserSerializer,
+    VerifyUserSerializer,
+)
 from api.v1.users.tasks import send_verification_email
 
 
-class AbstractEmailVerificationService(ABC):
-    def __init__(self, user, request):
-        self._user = user
-        self._request = request
-        if not self._user.is_request_user_matching(request):
-            raise Http404
+class EmailVerificationSenderService:
+    serializer_class = EmailVerificationSerializer
 
+    def __init__(self, request):
+        self.user = request.user
 
-class BaseEmailVerificationSenderService(AbstractEmailVerificationService):
-    """
-    A base service for sending a verification email to the users.
-    """
+    def send(self) -> Response:
+        if self.user.is_verification_sending_interval_passed():
+            verification = self.user.create_email_verification()
+            send_verification_email.delay(object_id=verification.id)
+            serializer = self.serializer_class(verification)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self._sending_limit_reached_response()
 
-    def __init__(self, user, request):
-        super().__init__(user, request)
-        self.domain = get_current_site(request).domain
-
-    def send(self):
-        if self._user.is_verification_sending_interval_passed():
-            verification = self._user.create_email_verification()
-            send_verification_email.delay(object_id=verification.id, domain=self.domain)
-            return self.successfully_sent(verification)
-        return self.sending_interval_not_passed()
-
-    def successfully_sent(self, verification):
-        pass
-
-    def sending_interval_not_passed(self):
-        pass
-
-
-class BaseEmailVerifierService(AbstractEmailVerificationService):
-    """
-    A base service for verifying users email.
-    """
-
-    def __init__(self, user, request, code):
-        super().__init__(user, request)
-        self._verification = get_object_or_404(
-            EmailVerification, user=self._user, code=code
-        )
-
-    def verify(self):
-        if not self._verification.is_expired():
-            if not self._user.is_verified:
-                self._user.verify()
-                return self.successfully_verified()
-            return self.email_already_verified()
-        return self.verification_expired()
-
-    def successfully_verified(self):
-        pass
-
-    def verification_expired(self):
-        pass
-
-    def email_already_verified(self):
-        pass
-
-
-class EmailVerificationSender(BaseEmailVerificationSenderService):
-    serializer = EmailVerificationSerializer
-
-    def successfully_sent(self, verification: EmailVerification) -> Response:
-        serializer = self.serializer(verification)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def _sending_limit_reached_response(self) -> Response:
+        response = {
+            "detail": "Sending limit reached.",
+            "retry_after": self._get_next_available_sending_datetime(),
+        }
+        return Response(response, status=status.HTTP_429_TOO_MANY_REQUESTS)
 
     @staticmethod
     def _get_next_available_sending_datetime() -> datetime:
@@ -87,28 +41,39 @@ class EmailVerificationSender(BaseEmailVerificationSenderService):
         sending_interval = timedelta(seconds=settings.EMAIL_SENDING_SECONDS_INTERVAL)
         return latest_verification.created_at + sending_interval
 
-    def sending_interval_not_passed(self) -> Response:
-        response = {
-            "detail": "Sending limit reached.",
-            "retry_after": self._get_next_available_sending_datetime(),
-        }
-        return Response(response, status=status.HTTP_429_TOO_MANY_REQUESTS)
 
+class UserEmailVerifierService:
+    serializer_class = CurrentUserSerializer
 
-class UserEmailVerifier(BaseEmailVerifierService):
-    serializer = CurrentUserSerializer
+    def __init__(self, request):
+        VerifyUserSerializer(data=request.data).is_valid(raise_exception=True)
+        self.user = request.user
+        self._code = request.data["code"]
+
+    def verify(self) -> Response:
+        verification = get_object_or_404(
+            EmailVerification, user=self.user, code=self._code
+        )
+        if not verification.is_expired():
+            if not self.user.is_verified:
+                self.user.verify()
+                return self.successfully_verified()
+            return self.email_already_verified_response()
+        return self.verification_expired_response()
 
     def successfully_verified(self) -> Response:
-        serializer = self.serializer(self._user)
+        serializer = self.serializer_class(self.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def verification_expired(self) -> Response:
+    @staticmethod
+    def verification_expired_response() -> Response:
         return Response(
             {"detail": "The verification link has expired."},
             status=status.HTTP_410_GONE,
         )
 
-    def email_already_verified(self) -> Response:
+    @staticmethod
+    def email_already_verified_response() -> Response:
         return Response(
             {"detail": "Your email is already verified."},
             status=status.HTTP_400_BAD_REQUEST,

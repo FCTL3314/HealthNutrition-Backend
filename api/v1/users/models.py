@@ -32,9 +32,6 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("users:profile", args=(self.slug,))
 
-    def is_request_user_matching(self, request) -> bool:
-        return self == request.user
-
     def seconds_since_last_email_verification_sending(self) -> int:
         if self.valid_email_verifications():
             last_verification = EmailVerification.objects.latest("created_at")
@@ -87,12 +84,6 @@ class EmailVerification(models.Model):
         self.expiration = now() + timedelta(hours=2)
         super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse(
-            "users:email-verification",
-            kwargs={"email": self.user.email, "code": self.code},
-        )
-
     def generate_code(self) -> uuid4:
         code = uuid4()
         if EmailVerification.objects.filter(code=code).exists():
@@ -103,11 +94,10 @@ class EmailVerification(models.Model):
         self,
         subject_template_name: str,
         html_email_template_name: str,
-        domain: str,
     ) -> None:
         context = {
             "user": self.user,
-            "verification_link": f"https://{domain}/{self.get_absolute_url()}",
+            "verification_code": self.code,
         }
 
         msg = convert_html_to_email_message(

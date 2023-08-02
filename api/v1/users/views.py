@@ -1,25 +1,13 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 
-from common.mixins import RequestDataValidationMixin
-from api.v1.users.serializers import VerifyUserSerializer
-from api.v1.users.services import EmailVerificationSender, UserEmailVerifier
+from api.v1.users.services import EmailVerificationSenderService, UserEmailVerifierService
 
 
 class EmailVerificationCreateAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
-        sender_service = EmailVerificationSender(self.request.user, request)
-        response = sender_service.send()
-        return response
+        return EmailVerificationSenderService(request).send()
 
 
-class VerifyUserUpdateAPIView(RequestDataValidationMixin, UpdateAPIView):
-    serializer_class = VerifyUserSerializer
-
+class VerifyUserUpdateAPIView(UpdateAPIView):
     def update(self, request, *args, **kwargs):
-        self.validate_request_data()
-
-        verifier_service = UserEmailVerifier(
-            self.request.user, request, request.data["code"]
-        )
-        response = verifier_service.verify()
-        return response
+        return UserEmailVerifierService(request).verify()

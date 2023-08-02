@@ -17,15 +17,10 @@ from api.v1.products.serializers import (
 
 class ComparisonGenericViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ComparisonModelSerializer
 
     @property
     def comparison_modify_service(self):
-        return ComparisonModifyService(
-            self.kwargs["product_id"],
-            self.request.user,
-            self.serializer_class,
-        )
+        return ComparisonModifyService(self.kwargs["product_id"], self.request.user)
 
     def create(self, request, *args, **kwargs):
         return self.comparison_modify_service.add()
