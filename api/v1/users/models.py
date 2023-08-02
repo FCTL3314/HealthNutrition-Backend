@@ -1,16 +1,15 @@
 from datetime import timedelta
 from uuid import uuid4
 
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import QuerySet
-from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
+from api.v1.users.constraints import EMAIL_SENDING_SECONDS_INTERVAL
 
 USER_SLUG_RELATED_FIELD = "username"
 
@@ -28,21 +27,18 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def get_absolute_url(self):
-        return reverse("users:profile", args=(self.slug,))
-
     def seconds_since_last_email_verification_sending(self) -> int:
         if self.valid_email_verifications():
             last_verification = EmailVerification.objects.latest("created_at")
             elapsed_time = now() - last_verification.created_at
             return elapsed_time.seconds
-        return settings.EMAIL_SENDING_SECONDS_INTERVAL + 1
+        return EMAIL_SENDING_SECONDS_INTERVAL + 1
 
     def is_verification_sending_interval_passed(self) -> bool:
         seconds_since_last_sending = (
             self.seconds_since_last_email_verification_sending()
         )
-        return seconds_since_last_sending > settings.EMAIL_SENDING_SECONDS_INTERVAL
+        return seconds_since_last_sending > EMAIL_SENDING_SECONDS_INTERVAL
 
     def create_email_verification(self):
         verification = EmailVerification.objects.create(user=self)

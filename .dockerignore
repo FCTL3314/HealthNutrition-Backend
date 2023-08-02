@@ -3,4 +3,3 @@ __pycache__/
 .gitignore
 LICENSE
 README.md
-.env.dist

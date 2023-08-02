@@ -1,17 +1,19 @@
-from django.conf import settings
 from django.db import models
 from django.db.models import Avg, Count, Max, Min, Q, QuerySet
 from django.db.models.functions import Round
 
 from api.utils.cache import get_cached_data_or_set_new
+from api.v1.products.constraints import (PRICE_ROUNDING,
+                                         PRODUCT_TYPES_CACHE_KEY,
+                                         PRODUCT_TYPES_CACHE_TIME)
 
 
 class ProductQuerySet(models.QuerySet):
     def price_aggregation(self) -> dict:
         aggregations = self.aggregate(
-            price__min=Round(Min("price"), settings.PRICE_ROUNDING),
-            price__max=Round(Max("price"), settings.PRICE_ROUNDING),
-            price__avg=Round(Avg("price"), settings.PRICE_ROUNDING),
+            price__min=Round(Min("price"), PRICE_ROUNDING),
+            price__max=Round(Max("price"), PRICE_ROUNDING),
+            price__avg=Round(Avg("price"), PRICE_ROUNDING),
         )
         return aggregations
 
@@ -28,9 +30,9 @@ class ProductManager(models.Manager):
 class ProductTypeQuerySet(models.QuerySet):
     def product_price_annotation(self) -> QuerySet:
         return self.annotate(
-            product__price__avg=Round(Avg("product__price"), settings.PRICE_ROUNDING),
-            product__price__max=Round(Max("product__price"), settings.PRICE_ROUNDING),
-            product__price__min=Round(Min("product__price"), settings.PRICE_ROUNDING),
+            product__price__avg=Round(Avg("product__price"), PRICE_ROUNDING),
+            product__price__max=Round(Max("product__price"), PRICE_ROUNDING),
+            product__price__min=Round(Min("product__price"), PRICE_ROUNDING),
             product__store__count=Count("product__store", distinct=True),
         )
 
@@ -40,9 +42,9 @@ class ProductTypeManager(models.Manager):
 
     def cached(self) -> QuerySet:
         return get_cached_data_or_set_new(
-            key=settings.PRODUCT_TYPES_CACHE_KEY,
+            key=PRODUCT_TYPES_CACHE_KEY,
             callback=self.all,
-            timeout=settings.PRODUCT_TYPES_CACHE_TIME,
+            timeout=PRODUCT_TYPES_CACHE_TIME,
         )
 
     def search(self, query: str) -> QuerySet:

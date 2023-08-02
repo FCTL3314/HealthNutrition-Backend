@@ -158,45 +158,9 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_URL = "/users/login/"
 LOGOUT_REDIRECT_URL = "/"
 
-VISITS_CACHE_TIME = (60 * 60) * 12
-
-# Products
-
-PRICE_ROUNDING = 2
-
-PRODUCTS_PAGINATE_BY = 1
-PRODUCT_TYPES_PAGINATE_BY = 1
-
-PRODUCT_TYPES_CACHE_KEY = "popular_product_types"
-PRODUCTS_CACHE_TEMPLATE = "products_product_type:{product_id:}"
-
-PRODUCT_TYPES_CACHE_TIME = 60 * 60
-PRODUCTS_CACHE_TIME = 60 * 60
-
-PRODUCTS_ORDERING = ("store__name", "price")
-PRODUCT_TYPES_ORDERING = ("-views",)
-
-PRODUCT_TYPE_VISIT_CACHE_TEMPLATE = "address:{addr:}_product_type:{id:}"
-PRODUCT_VISIT_CACHE_TEMPLATE = "address:{addr:}_product:{id:}"
-
-# Stores
-
-STORES_PAGINATE_BY = 12
-
-STORE_VISIT_CACHE_TEMPLATE = "address:{addr:}_store:{id:}"
-
-STORES_ORDERING = ("name",)
-
-# Interactions
-
-COMMENTS_PAGINATE_BY = 3
-
 # Email
 
 EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
-
-EMAIL_SENDING_SECONDS_INTERVAL = 60
-EMAIL_EXPIRATION_HOURS = (60 * 60) * 2
 
 # Celery
 

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
+from api.v1.users.constraints import EMAIL_SENDING_SECONDS_INTERVAL
 from api.v1.users.models import EmailVerification
 from api.v1.users.serializers import (CurrentUserSerializer,
                                       EmailVerificationSerializer,
@@ -36,7 +37,7 @@ class EmailVerificationSenderService:
     @staticmethod
     def _get_next_available_sending_datetime() -> datetime:
         latest_verification = EmailVerification.objects.latest("created_at")
-        sending_interval = timedelta(seconds=settings.EMAIL_SENDING_SECONDS_INTERVAL)
+        sending_interval = timedelta(seconds=EMAIL_SENDING_SECONDS_INTERVAL)
         return latest_verification.created_at + sending_interval
 
 

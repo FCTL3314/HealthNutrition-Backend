@@ -22,7 +22,6 @@ def test_user_seconds_since_last_email_verification_sending(user):
 
 @pytest.mark.django_db
 def test_user_valid_email_verifications(user):
-
     def create_not_valid_verifications():
         mixer.cycle(5).blend(
             "users.EmailVerification", expiration=now() - timedelta(days=2)

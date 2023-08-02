@@ -1,8 +1,9 @@
-from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
 from api.decorators import order_queryset
 from api.permissions import IsAdminOrReadOnly
+from api.v1.products.constraints import (PRODUCT_TYPES_ORDERING,
+                                         PRODUCTS_ORDERING)
 from api.v1.products.filters import ProductFilter
 from api.v1.products.models import Product, ProductType
 from api.v1.products.paginators import (ProductPageNumberPagination,
@@ -17,14 +18,14 @@ class ProductTypeModelViewSet(ModelViewSet):
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
-    @order_queryset(*settings.PRODUCT_TYPES_ORDERING)
+    @order_queryset(*PRODUCT_TYPES_ORDERING)
     def get_queryset(self):
         initial_queryset = ProductType.objects.cached()
         return initial_queryset.product_price_annotation()
 
 
 class ProductModelViewSet(ModelViewSet):
-    queryset = Product.objects.order_by(*settings.PRODUCTS_ORDERING)
+    queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductModelSerializer

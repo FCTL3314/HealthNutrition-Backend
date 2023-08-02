@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -6,6 +5,8 @@ from rest_framework.response import Response
 from api.decorators import order_queryset
 from api.v1.comparisons.models import Comparison
 from api.v1.comparisons.serializers import ComparisonModelSerializer
+from api.v1.products.constraints import (PRODUCT_TYPES_ORDERING,
+                                         PRODUCTS_ORDERING)
 from api.v1.products.models import Product, ProductType
 from api.v1.users.models import User
 
@@ -35,12 +36,12 @@ class ComparisonListService:
     def __init__(self, user: User):
         self.user = user
 
-    @order_queryset(*settings.PRODUCT_TYPES_ORDERING)
+    @order_queryset(*PRODUCT_TYPES_ORDERING)
     def product_types_list(self):
         product_types = Comparison.objects.product_types(self.user)
         return product_types.product_price_annotation()
 
-    @order_queryset(*settings.PRODUCTS_ORDERING)
+    @order_queryset(*PRODUCTS_ORDERING)
     def products_list(self, product_type_slug: str):
         product_type = get_object_or_404(ProductType, slug=product_type_slug)
         return Comparison.objects.products(product_type, self.user)
