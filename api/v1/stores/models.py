@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 class Store(models.Model):
@@ -13,5 +14,10 @@ class Store(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = slugify(self.name)
+
     def get_absolute_url(self) -> str:
-        return reverse("stores:store-detail", args=(self.slug,))
+        return reverse("api:v1:stores:stores-detail", args=(self.slug,))

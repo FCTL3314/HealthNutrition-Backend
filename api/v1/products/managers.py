@@ -2,10 +2,7 @@ from django.db import models
 from django.db.models import Avg, Count, Max, Min, Q, QuerySet
 from django.db.models.functions import Round
 
-from api.utils.cache import get_cached_data_or_set_new
-from api.v1.products.constraints import (PRICE_ROUNDING,
-                                         PRODUCT_TYPES_CACHE_KEY,
-                                         PRODUCT_TYPES_CACHE_TIME)
+from api.v1.products.constraints import PRICE_ROUNDING
 
 
 class ProductQuerySet(models.QuerySet):
@@ -39,13 +36,6 @@ class ProductTypeQuerySet(models.QuerySet):
 
 class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
-
-    def cached(self) -> QuerySet:
-        return get_cached_data_or_set_new(
-            key=PRODUCT_TYPES_CACHE_KEY,
-            callback=self.all,
-            timeout=PRODUCT_TYPES_CACHE_TIME,
-        )
 
     def search(self, query: str) -> QuerySet:
         return self.filter(Q(name__icontains=query) | Q(description__icontains=query))

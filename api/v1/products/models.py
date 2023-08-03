@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 from api.v1.products.managers import ProductManager, ProductTypeManager
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     price = models.FloatField()
     card_description = models.CharField(max_length=128)
     description = models.TextField()
@@ -24,12 +25,17 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} | {self.store}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = slugify(self.name)
+
     def get_absolute_url(self) -> str:
-        return reverse("products:product-detail", args=(self.slug,))
+        return reverse("api:v1:products:product-detail", args=(self.slug,))
 
 
 class ProductType(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
     image = models.ImageField(upload_to="products/product_types")
     views = models.PositiveIntegerField(default=0)
@@ -39,3 +45,8 @@ class ProductType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = slugify(self.name)
