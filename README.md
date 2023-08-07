@@ -1,31 +1,47 @@
 # 📖 Table of contents
 
 <ul>
-  <li><a href="#-description">Description</a></li>
-  <li><a href="#-demonstration">Demonstration</a></li>
-  <li><a href="#-features">Features</a></li>
-  <li><a href="#-local-installation">Local installation</a></li>
+  <li>
+    <b>
+      <a href="#-description">Description</a>
+    </b>
+  </li>
+  <li>
+    <b>
+      <a href="#-demonstration">Demonstration</a>
+    </b>
+  </li>
+  <li>
+    <b>
+      <a href="#-features">Features</a>
+    </b>
+  </li>
+  <li>
+    <b>
+      <a href="#-local-installation">Local installation</a>
+    </b>
+  </li>
 </ul>
 
 # 📃 Description
 
-This Django application is designed for **comparing prices between different stores, helping users find the best 
-deals on various products**. The project provides a **user-friendly interface** to browse products across different 
-categories and view price variations among stores. 
+This Django application is designed for **comparing prices between different stores, helping users find the best
+deals on various products**. The project provides a **user-friendly interface** to browse products across different
+categories and view price variations among stores.
 
-Users can **search for specific products or explore product categories to compare prices and make informed purchasing 
-decisions**. The application also **allows users to view detailed information about each product**, including store 
+Users can **search for specific products or explore product categories to compare prices and make informed purchasing
+decisions**. The application also **allows users to view detailed information about each product**, including store
 details, enabling them to choose the most convenient or preferred store for their purchase.
 
-**The project aims to simplify the process of comparing prices across multiple stores, saving users time and effort in 
-finding the best price for their desired products**. With the ability to browse by category and access detailed product 
-and store information, **users can easily identify the most competitive prices and make cost-effective purchasing 
+**The project aims to simplify the process of comparing prices across multiple stores, saving users time and effort in
+finding the best price for their desired products**. With the ability to browse by category and access detailed product
+and store information, **users can easily identify the most competitive prices and make cost-effective purchasing
 choices**.
 
-Overall, this application provides a valuable tool for consumers to find the most favorable prices and maximize their 
+Overall, this application provides a valuable tool for consumers to find the most favorable prices and maximize their
 savings while shopping across different stores for a wide range of products.
 
-> **The project was created for educational purposes, simulating fictitious products without real value.**
+> #### The project was created for educational purposes, simulating fictitious products without real value.
 
 # 🌄 Demonstration
 
@@ -67,8 +83,8 @@ savings while shopping across different stores for a wide range of products.
 * **Tests (PyTest)**
 
 # 💽 Local installation
-1. **Clone or download the repository.**
-2. **Create an *.env* file or rename *.env.dist* in *.env* and populate it only with development variables:**
+1. #### Clone or download the repository.
+2. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
    * SECRET_KEY
    * ALLOWED_HOSTS
    * PROTOCOL
@@ -77,6 +93,10 @@ savings while shopping across different stores for a wide range of products.
    * RABBITMQ_HOST
    * RABBITMQ_PORT
    * EMAIL_HOST_USER
-3. **Run docker services for local development**: `docker-compose -f docker/local/docker-compose.yml up`
+3. #### Run docker services for local development: `docker-compose -f docker/local/docker-compose.yml up`
 
-> **Django automatically detects code changes by using a docker volume that spans all the code.**
+> #### Django automatically detects code changes by using a docker volume that spans all the code.
+
+# 🪝 Pre-Commit hooks
+1. #### Install: `pre-commit install`
+2. #### Test run `pre-commit run --all-files`
