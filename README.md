@@ -87,7 +87,7 @@ savings while shopping across different stores for a wide range of products.
 2. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
    * SECRET_KEY
    * ALLOWED_HOSTS
-   * PROTOCOL
+   * CORS_ALLOWED_ORIGINS(Optional)
    * REDIS_HOST
    * REDIS_PORT
    * RABBITMQ_HOST
