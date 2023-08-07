@@ -1,5 +1,11 @@
 # 📖 Table of contents
 
+[![python](https://img.shields.io/badge/python-3.11.1-blue?style=flat-square)](https://www.python.org/)
+[![django](https://img.shields.io/badge/django-4.2.1-darkgreen?style=flat-square)](https://www.djangoproject.com/)
+[![rest-framework](https://img.shields.io/badge/rest--framework-3.14.0-red?style=flat-square)](https://www.django-rest-framework.org/)
+[![pytest](https://img.shields.io/badge/pytest-passed-forest)](https://docs.pytest.org/en/7.4.x/)
+[![black](https://img.shields.io/badge/Code_Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
+
 <ul>
   <li>
     <b>
