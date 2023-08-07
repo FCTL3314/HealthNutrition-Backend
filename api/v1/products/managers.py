@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Avg, Count, Max, Min, Q, QuerySet
 from django.db.models.functions import Round
 
-from api.v1.products.constraints import PRICE_ROUNDING
+from api.v1.products.constants import PRICE_ROUNDING
 
 
 class ProductQuerySet(models.QuerySet):

@@ -2,8 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.decorators import order_queryset
 from api.permissions import IsAdminOrReadOnly
-from api.v1.products.constraints import (PRODUCT_TYPES_ORDERING,
-                                         PRODUCTS_ORDERING)
+from api.v1.products.constants import (PRODUCT_TYPES_ORDERING,
+                                       PRODUCTS_ORDERING)
 from api.v1.products.filters import ProductFilter
 from api.v1.products.models import Product, ProductType
 from api.v1.products.paginators import (ProductPageNumberPagination,

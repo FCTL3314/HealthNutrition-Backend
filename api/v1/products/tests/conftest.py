@@ -1,6 +1,7 @@
 import pytest
-from django.conf import settings
 from mixer.backend.django import mixer
+
+from api.v1.products.constants import PRODUCT_TYPES_PAGINATE_BY
 
 
 @pytest.fixture()
@@ -10,7 +11,7 @@ def product_type():
 
 @pytest.fixture()
 def product_types():
-    return mixer.cycle(settings.PRODUCT_TYPES_PAGINATE_BY * 2).blend(
+    return mixer.cycle(PRODUCT_TYPES_PAGINATE_BY * 2).blend(
         "products.ProductType"
     )
 

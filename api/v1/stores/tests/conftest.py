@@ -1,6 +1,7 @@
 import pytest
-from django.conf import settings
 from mixer.backend.django import mixer
+
+from api.v1.stores.constants import STORES_PAGINATE_BY
 
 
 @pytest.fixture()
@@ -10,4 +11,4 @@ def store():
 
 @pytest.fixture()
 def stores():
-    return mixer.cycle(settings.STORES_PAGINATE_BY * 2).blend("stores.Store")
+    return mixer.cycle(STORES_PAGINATE_BY * 2).blend("stores.Store")

@@ -1,5 +1,5 @@
 from datetime import timedelta
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -9,7 +9,7 @@ from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
-from api.v1.users.constraints import EMAIL_SENDING_SECONDS_INTERVAL
+from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
 
 USER_SLUG_RELATED_FIELD = "username"
 
@@ -79,7 +79,7 @@ class EmailVerification(models.Model):
         self.expiration = now() + timedelta(hours=2)
         super().save(*args, **kwargs)
 
-    def generate_code(self) -> uuid4:
+    def generate_code(self) -> UUID:
         code = uuid4()
         if EmailVerification.objects.filter(code=code).exists():
             return self.generate_code()

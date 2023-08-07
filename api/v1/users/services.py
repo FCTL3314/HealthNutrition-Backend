@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.v1.users.constraints import EMAIL_SENDING_SECONDS_INTERVAL
+from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
 from api.v1.users.models import EmailVerification
 from api.v1.users.serializers import (CurrentUserSerializer,
                                       EmailVerificationSerializer,
@@ -17,11 +16,11 @@ class EmailVerificationSenderService:
     serializer_class = EmailVerificationSerializer
 
     def __init__(self, request):
-        self.user = request.user
+        self._user = request._user
 
     def send(self) -> Response:
-        if self.user.is_verification_sending_interval_passed():
-            verification = self.user.create_email_verification()
+        if self._user.is_verification_sending_interval_passed():
+            verification = self._user.create_email_verification()
             send_verification_email.delay(object_id=verification.id)
             serializer = self.serializer_class(verification)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -46,22 +45,22 @@ class UserEmailVerifierService:
 
     def __init__(self, request):
         VerifyUserSerializer(data=request.data).is_valid(raise_exception=True)
-        self.user = request.user
+        self._user = request._user
         self._code = request.data["code"]
 
     def verify(self) -> Response:
         verification = get_object_or_404(
-            EmailVerification, user=self.user, code=self._code
+            EmailVerification, user=self._user, code=self._code
         )
         if not verification.is_expired():
-            if not self.user.is_verified:
-                self.user.verify()
+            if not self._user.is_verified:
+                self._user.verify()
                 return self.successfully_verified()
             return self.email_already_verified_response()
         return self.verification_expired_response()
 
     def successfully_verified(self) -> Response:
-        serializer = self.serializer_class(self.user)
+        serializer = self.serializer_class(self._user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod

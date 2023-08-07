@@ -1,17 +1,19 @@
 from functools import wraps
 
+from django.db.models import QuerySet
 
-def order_queryset(*ordering):
+
+def order_queryset(*ordering: tuple[str]):
     """
     Sorts the queryset returned by the function using the ordering parameter.
     """
 
     def outer(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def inner(*args, **kwargs) -> QuerySet:
             queryset = func(*args, **kwargs)
             return queryset.order_by(*ordering)
 
-        return wrapper
+        return inner
 
     return outer

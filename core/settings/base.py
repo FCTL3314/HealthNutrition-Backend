@@ -192,6 +192,7 @@ DJOSER = {
     "USER_ID_FIELD": "slug",
     "PERMISSIONS": {
         "user": ("djoser.permissions.CurrentUserOrAdminOrReadOnly",),
+        "user_list": ("rest_framework.permissions.AllowAny",),
     },
     "SERIALIZERS": {
         "user": "api.v1.users.serializers.UserSerializer",

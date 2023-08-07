@@ -6,7 +6,7 @@ def convert_html_to_email_message(
     subject_template_name: str,
     html_email_template_name: str,
     emails_list: list | tuple,
-    context: dict = None,
+    context: dict | None = None,
 ) -> EmailMultiAlternatives:
     """
     Converts html templates into a string, attaching them to an
