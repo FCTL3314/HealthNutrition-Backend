@@ -19,10 +19,7 @@ django-redis = "5.2.0"
 django-cors-headers = "4.2.0"
 celery = "5.2.7"
 pillow = "9.5.0"
-pytest-django = "4.5.2"
-faker = "12.0.1"
 eventlet = "0.33.3"
-mixer = "7.2.2"
 psycopg2-binary = "2.9.5"
 gunicorn = "20.1.0"
 
@@ -30,6 +27,10 @@ gunicorn = "20.1.0"
 mypy = "1.4.1"
 django-stubs = {version = "4.2.3", extras = ["compatible-mypy"]}
 djangorestframework-stubs = {version = "3.14.2", extras = ["compatible-mypy"]}
+mixer = "7.2.2"
+faker = "12.0.1"
+pytest-django = "4.5.2"
+pre-commit = "^3.3.3"
 
 [build-system]
 requires = ["poetry-core"]
@@ -41,6 +42,7 @@ python_files = ["tests.py", "test_*.py", "*_tests.py"]
 filterwarnings = [
     "ignore::DeprecationWarning:kombu.*:0",
     "ignore::DeprecationWarning:celery.*:0",
+    "ignore::DeprecationWarning:rest_framework_simplejwt.*:0",
 ]
 
 [tool.mypy]
