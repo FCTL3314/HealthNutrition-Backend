@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
 import pytest
-from django.conf import settings
 from rest_framework.reverse import reverse
 
 from api.utils.tests import (generate_test_image, get_access_token,
                              get_authorization_header)
+from api.v1.stores.constants import STORES_PAGINATE_BY
 from api.v1.stores.models import Store
 
 STORE_DETAIL = "api:v1:stores:stores-detail"
@@ -29,7 +29,7 @@ def test_store_list(client, stores):
     response = client.get(path)
 
     assert response.status_code == HTTPStatus.OK
-    assert len(response.data.get("results")) == settings.STORES_PAGINATE_BY
+    assert len(response.data.get("results")) == STORES_PAGINATE_BY
 
 
 @pytest.mark.django_db

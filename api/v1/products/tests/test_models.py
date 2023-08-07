@@ -1,7 +1,8 @@
 import pytest
-from django.conf import settings
+
 from mixer.backend.django import mixer
 
+from api.v1.products.constants import PRICE_ROUNDING
 from api.v1.products.models import Product, ProductType
 
 
@@ -14,9 +15,9 @@ def test_product_manager_price_aggregation(products):
         ids.append(product.id)
         prices.append(product.price)
 
-    min_price = round(min(prices), settings.PRICE_ROUNDING)
-    max_price = round(max(prices), settings.PRICE_ROUNDING)
-    avg_price = round(sum(prices) / len(prices), settings.PRICE_ROUNDING)
+    min_price = round(min(prices), PRICE_ROUNDING)
+    max_price = round(max(prices), PRICE_ROUNDING)
+    avg_price = round(sum(prices) / len(prices), PRICE_ROUNDING)
 
     queryset = Product.objects.filter(id__in=ids)
     aggregations = queryset.price_aggregation()
