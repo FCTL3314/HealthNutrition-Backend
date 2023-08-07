@@ -6,9 +6,11 @@ from rest_framework.response import Response
 
 from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
 from api.v1.users.models import EmailVerification
-from api.v1.users.serializers import (CurrentUserSerializer,
-                                      EmailVerificationSerializer,
-                                      VerifyUserSerializer)
+from api.v1.users.serializers import (
+    CurrentUserSerializer,
+    EmailVerificationSerializer,
+    VerifyUserSerializer,
+)
 from api.v1.users.tasks import send_verification_email
 
 
@@ -16,7 +18,7 @@ class EmailVerificationSenderService:
     serializer_class = EmailVerificationSerializer
 
     def __init__(self, request):
-        self._user = request._user
+        self._user = request.user
 
     def send(self) -> Response:
         if self._user.is_verification_sending_interval_passed():
@@ -45,7 +47,7 @@ class UserEmailVerifierService:
 
     def __init__(self, request):
         VerifyUserSerializer(data=request.data).is_valid(raise_exception=True)
-        self._user = request._user
+        self._user = request.user
         self._code = request.data["code"]
 
     def verify(self) -> Response:

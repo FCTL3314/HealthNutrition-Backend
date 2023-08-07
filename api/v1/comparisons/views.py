@@ -3,12 +3,15 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
-from api.v1.comparisons.services import (ComparisonListService,
-                                         ComparisonModifyService)
-from api.v1.products.paginators import (ProductPageNumberPagination,
-                                        ProductTypePageNumberPagination)
-from api.v1.products.serializers import (ProductModelSerializer,
-                                         ProductTypeAggregatedSerializer)
+from api.v1.comparisons.services import ComparisonListService, ComparisonModifyService
+from api.v1.products.paginators import (
+    ProductPageNumberPagination,
+    ProductTypePageNumberPagination,
+)
+from api.v1.products.serializers import (
+    ProductModelSerializer,
+    ProductTypeAggregatedSerializer,
+)
 
 
 class ComparisonGenericViewSet(GenericViewSet, CreateModelMixin, DestroyModelMixin):

@@ -33,5 +33,5 @@ repos:
     rev: 6.0.0
     hooks:
     -   id: flake8
-        exclude: "(__init__.py)|(migrations)"
+        exclude: "(__init__.py)|(migrations)|(settings)"
         args: ["--ignore=E501,F821", "--max-line-length=120"]

@@ -3,7 +3,7 @@ from functools import wraps
 from django.db.models import QuerySet
 
 
-def order_queryset(*ordering: tuple[str]):
+def order_queryset(*ordering: str):
     """
     Sorts the queryset returned by the function using the ordering parameter.
     """

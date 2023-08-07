@@ -1,5 +1,4 @@
 import pytest
-
 from mixer.backend.django import mixer
 
 from api.v1.products.constants import PRICE_ROUNDING

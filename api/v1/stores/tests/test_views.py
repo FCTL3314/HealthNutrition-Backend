@@ -3,8 +3,11 @@ from http import HTTPStatus
 import pytest
 from rest_framework.reverse import reverse
 
-from api.utils.tests import (generate_test_image, get_access_token,
-                             get_authorization_header)
+from api.utils.tests import (
+    generate_test_image,
+    get_access_token,
+    get_authorization_header,
+)
 from api.v1.stores.constants import STORES_PAGINATE_BY
 from api.v1.stores.models import Store
 

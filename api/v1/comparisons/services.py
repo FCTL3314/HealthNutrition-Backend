@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from api.decorators import order_queryset
 from api.v1.comparisons.models import Comparison
 from api.v1.comparisons.serializers import ComparisonModelSerializer
-from api.v1.products.constants import (PRODUCT_TYPES_ORDERING,
-                                       PRODUCTS_ORDERING)
+from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.models import Product, ProductType
 from api.v1.users.models import User
 
