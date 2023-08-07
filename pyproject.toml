@@ -1,3 +1,40 @@
+[tool.poetry]
+name = "store-tracker"
+version = "0.1.0"
+description = "Django-based app for comparing prices between different stores."
+authors = ["Nikita Solouyou <solovev.nikita.05@gmail.com>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2.1"
+djangorestframework = "3.14.0"
+djangorestframework-simplejwt = "5.2.2"
+djoser = "2.2.0"
+django-environ = "0.10.0"
+django-filter = "23.2"
+django-cleanup = "7.0.0"
+django-redis = "5.2.0"
+django-cors-headers = "4.2.0"
+celery = "5.2.7"
+pillow = "9.5.0"
+pytest-django = "4.5.2"
+faker = "12.0.1"
+eventlet = "0.33.3"
+mixer = "7.2.2"
+psycopg2-binary = "2.9.5"
+gunicorn = "20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "1.4.1"
+django-stubs = {version = "4.2.3", extras = ["compatible-mypy"]}
+djangorestframework-stubs = {version = "3.14.2", extras = ["compatible-mypy"]}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings.test"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
