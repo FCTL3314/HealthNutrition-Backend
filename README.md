@@ -28,6 +28,11 @@
       <a href="#-local-installation">Local installation</a>
     </b>
   </li>
+  <li>
+    <b>
+      <a href="-pre-commit-hooks">Pre-Commit hooks</a>
+    </b>
+  </li>
 </ul>
 
 # 📃 Description
