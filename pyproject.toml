@@ -31,6 +31,9 @@ mixer = "7.2.2"
 faker = "12.0.1"
 pytest-django = "4.5.2"
 pre-commit = "^3.3.3"
+black = "^23.7.0"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -47,6 +50,8 @@ filterwarnings = [
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+
+ignore_missing_imports = "true"
 
 [tool.django-stubs]
 django_settings_module = "core.settings.local"

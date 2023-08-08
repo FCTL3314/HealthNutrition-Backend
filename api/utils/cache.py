@@ -5,9 +5,8 @@ from django.core.cache import cache
 
 def get_cached_data_or_set_new(key: str, callback: Callable, timeout: int) -> Any:
     """
-    Checks if the cache exists for the given key. If not present,
-    it caches the data obtained from calling the callback function
-    for timeout seconds.
+    Returns the cached data if it exists, otherwise calls the
+    callback function to get and cache the data.
     """
     data = cache.get(key)
     if data is None:

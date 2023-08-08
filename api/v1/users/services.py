@@ -9,7 +9,7 @@ from api.v1.users.models import EmailVerification
 from api.v1.users.serializers import (
     CurrentUserSerializer,
     EmailVerificationSerializer,
-    VerifyUserSerializer,
+    UserVerificationSerializer,
 )
 from api.v1.users.tasks import send_verification_email
 
@@ -17,8 +17,8 @@ from api.v1.users.tasks import send_verification_email
 class EmailVerificationSenderService:
     serializer_class = EmailVerificationSerializer
 
-    def __init__(self, request):
-        self._user = request.user
+    def __init__(self, user):
+        self._user = user
 
     def send(self) -> Response:
         if self._user.is_verification_sending_interval_passed():
@@ -46,7 +46,7 @@ class UserEmailVerifierService:
     serializer_class = CurrentUserSerializer
 
     def __init__(self, request):
-        VerifyUserSerializer(data=request.data).is_valid(raise_exception=True)
+        UserVerificationSerializer(data=request.data).is_valid(raise_exception=True)
         self._user = request.user
         self._code = request.data["code"]
 

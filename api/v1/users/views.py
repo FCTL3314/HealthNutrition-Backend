@@ -8,7 +8,7 @@ from api.v1.users.services import (
 
 class EmailVerificationCreateAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
-        return EmailVerificationSenderService(request).send()
+        return EmailVerificationSenderService(request.user).send()
 
 
 class VerifyUserUpdateAPIView(UpdateAPIView):

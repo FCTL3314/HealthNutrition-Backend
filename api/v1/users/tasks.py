@@ -5,7 +5,7 @@ from api.v1.users.models import EmailVerification
 
 
 @shared_task
-def send_verification_email(object_id):
+def send_verification_email(object_id: int) -> None:
     verification = EmailVerification.objects.get(id=object_id)
     verification.send_verification_email(
         subject_template_name="email/email_verification_subject.html",
@@ -14,7 +14,12 @@ def send_verification_email(object_id):
 
 
 @shared_task
-def send_email(subject_template_name, email_template_name, to_email, context=None):
+def send_email(
+    subject_template_name: str,
+    email_template_name: str,
+    to_email: list,
+    context: dict | None = None,
+) -> None:
     msg = convert_html_to_email_message(
         subject_template_name, email_template_name, [to_email], context
     )

@@ -46,6 +46,6 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         fields = ("expiration", "created_at")
 
 
-class VerifyUserSerializer(serializers.Serializer):
+class UserVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     code = serializers.UUIDField()

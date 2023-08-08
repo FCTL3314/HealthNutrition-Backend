@@ -7,13 +7,12 @@ from api.v1.comparisons.models import Comparison
 from api.v1.comparisons.serializers import ComparisonModelSerializer
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.models import Product, ProductType
-from api.v1.users.models import User
 
 
 class ComparisonModifyService:
     serializer_class = ComparisonModelSerializer
 
-    def __init__(self, product_id: int, user: User):
+    def __init__(self, product_id: int, user):
         self._product_id = product_id
         self._user = user
 
@@ -32,7 +31,7 @@ class ComparisonModifyService:
 
 
 class ComparisonListService:
-    def __init__(self, user: User):
+    def __init__(self, user):
         self._user = user
 
     @order_queryset(*PRODUCT_TYPES_ORDERING)
