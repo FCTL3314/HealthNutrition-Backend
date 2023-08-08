@@ -1,10 +1,10 @@
 # 📖 Table of contents
 
-[![python](https://img.shields.io/badge/python-3.11.1-blue?style=flat-square)](https://www.python.org/)
-[![django](https://img.shields.io/badge/django-4.2.1-darkgreen?style=flat-square)](https://www.djangoproject.com/)
-[![rest-framework](https://img.shields.io/badge/rest--framework-3.14.0-red?style=flat-square)](https://www.django-rest-framework.org/)
-[![pytest](https://img.shields.io/badge/pytest-passed-forest)](https://docs.pytest.org/en/7.4.x/)
-[![black](https://img.shields.io/badge/Code_Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
+[![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
+[![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
+[![Pytest](https://img.shields.io/badge/Pytest-Passed-39B54A?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
+[![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
 <ul>
   <li>
