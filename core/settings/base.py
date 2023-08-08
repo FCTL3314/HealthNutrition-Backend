@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.staticfiles",
     "django.contrib.humanize",
 
     "django_cleanup",
@@ -141,6 +142,10 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+# Static files
+
+STATIC_URL = "static/"
 
 # Media files
 

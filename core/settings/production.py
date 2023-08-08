@@ -19,6 +19,10 @@ DATABASES = {
     }
 }
 
+# Static files
+
+STATIC_ROOT = BASE_DIR / "static"
+
 # Email
 
 EMAIL_HOST = env.str("EMAIL_HOST")
