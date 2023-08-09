@@ -32,13 +32,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-
     "django_cleanup",
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "corsheaders",
-
     "api",
     "api.v1",
     "api.v1.users",
