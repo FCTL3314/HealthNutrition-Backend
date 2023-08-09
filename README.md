@@ -30,7 +30,7 @@
   </li>
   <li>
     <b>
-      <a href="-pre-commit-hooks">Pre-Commit hooks</a>
+      <a href="#-pre-commit-hooks">Pre-Commit hooks</a>
     </b>
   </li>
 </ul>
