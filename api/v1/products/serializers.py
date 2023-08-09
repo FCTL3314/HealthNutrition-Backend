@@ -53,11 +53,13 @@ class ProductModelSerializer(serializers.ModelSerializer):
     product_type_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=ProductType.objects.all(),
+        source="product_type",
     )
     store = StoreModelSerializer(read_only=True)
     store_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Store.objects.all(),
+        source="store",
     )
 
     class Meta:
