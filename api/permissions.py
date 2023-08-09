@@ -1,8 +1,8 @@
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import SAFE_METHODS, IsAdminUser
 
 
 class IsAdminOrReadOnly(IsAdminUser):
     def has_permission(self, request, view):
-        if view.action in ('create', 'update', 'delete'):
-            return super().has_permission(request, view)
-        return True
+        return bool(
+            request.method in SAFE_METHODS or super().has_permission(request, view)
+        )
