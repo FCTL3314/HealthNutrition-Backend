@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
 from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
+from api.v1.users.managers import EmailVerificationManager
 
 USER_SLUG_RELATED_FIELD = "username"
 
@@ -70,6 +71,8 @@ class EmailVerification(models.Model):
     user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     expiration = models.DateTimeField()
+
+    objects = EmailVerificationManager()
 
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"

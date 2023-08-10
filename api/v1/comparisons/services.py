@@ -4,22 +4,20 @@ from rest_framework.response import Response
 
 from api.decorators import order_queryset
 from api.v1.comparisons.models import Comparison
-from api.v1.comparisons.serializers import ComparisonModelSerializer
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.models import Product, ProductType
 
 
 class ComparisonModifyService:
-    serializer_class = ComparisonModelSerializer
-
-    def __init__(self, product_id: int, user):
+    def __init__(self, product_id: int, user, serializer):
         self._product_id = product_id
         self._user = user
+        self._serializer = serializer
 
     def add(self) -> Response:
         product = get_object_or_404(Product, pk=self._product_id)
         self._user.comparisons.add(product, through_defaults=None)
-        serializer = self.serializer_class(
+        serializer = self._serializer(
             get_object_or_404(Comparison, product=product, user=self._user),
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)

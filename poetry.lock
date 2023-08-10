@@ -461,6 +461,17 @@ files = [
 ]
 
 [[package]]
+name = "dependencies"
+version = "7.7.0"
+description = "Constructor injection designed with OOP in mind."
+optional = false
+python-versions = "*"
+files = [
+    {file = "dependencies-7.7.0-py2.py3-none-any.whl", hash = "sha256:6a842068931258efc88b1faa7f08829b7e58271f4a097e2d06e766917909ad4f"},
+    {file = "dependencies-7.7.0.tar.gz", hash = "sha256:ae662ffe5726582705d26ae86977d0d616922100c38a211f0c27c765554fb026"},
+]
+
+[[package]]
 name = "distlib"
 version = "0.3.7"
 description = "Distribution utilities"
@@ -1770,4 +1781,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "011b24879b67a0e49f386495528002563b82599e033bb3d7cb546004878fd2bc"
+content-hash = "0721a90a80c8c4c7c504cefe1159d629a9aa62857c4676faa13256d5188d07d4"

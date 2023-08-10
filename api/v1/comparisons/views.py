@@ -3,6 +3,7 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
+from api.v1.comparisons.serializers import ComparisonModelSerializer
 from api.v1.comparisons.services import ComparisonListService, ComparisonModifyService
 from api.v1.products.paginators import (
     ProductPageNumberPagination,
@@ -19,7 +20,11 @@ class ComparisonGenericViewSet(GenericViewSet, CreateModelMixin, DestroyModelMix
 
     @property
     def comparison_modify_service(self):
-        return ComparisonModifyService(self.kwargs["product_id"], self.request.user)
+        return ComparisonModifyService(
+            self.kwargs["product_id"],
+            self.request.user,
+            ComparisonModelSerializer,
+        )
 
     def create(self, request, *args, **kwargs):
         return self.comparison_modify_service.add()
