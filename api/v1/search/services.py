@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from api.v1.products.models import ProductType
+from api.v1.products.models import Product, ProductType
 
 
 class BaseSearchService(ABC):
@@ -13,7 +13,12 @@ class BaseSearchService(ABC):
         raise NotImplementedError
 
 
-class ProductSearchService(BaseSearchService):
+class ProductTypeSearchService(BaseSearchService):
     def get_searched_queryset(self):
         searched_queryset = ProductType.objects.search(self.query)
         return searched_queryset.product_price_annotation()
+
+
+class ProductSearchService(BaseSearchService):
+    def get_searched_queryset(self):
+        return Product.objects.search(self.query)
