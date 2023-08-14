@@ -1,15 +1,13 @@
 from dependencies import Injector
 
-from api.v1.users.serializers import EmailVerificationSerializer
-from api.v1.users.services.email_verification.email_sending_interval import (
-    EmailSendingIntervalService,
-)
 from api.v1.users.services.email_verification.email_verification_sender import (
-    EmailVerificationSenderService,
+    EVSenderService,
+)
+from api.v1.users.services.email_verification.next_email_sending_time import (
+    EVNextSendingTimeService,
 )
 
 
-class EmailVerificationSenderDependencies(Injector):
-    email_verification_sender_service = EmailVerificationSenderService
-    sending_interval_service = EmailSendingIntervalService
-    serializer_class = EmailVerificationSerializer
+class EVSenderContainer(Injector):
+    email_verification_sender = EVSenderService
+    next_sending_time_calculator = EVNextSendingTimeService

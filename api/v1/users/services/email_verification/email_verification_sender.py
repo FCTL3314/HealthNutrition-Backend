@@ -1,42 +1,85 @@
-from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
 
+from django.utils.timezone import now
 from rest_framework import status
-from rest_framework.response import Response
 
-from api.v1.users.services.email_verification.email_sending_interval import (
-    BaseEmailSendingIntervalService,
+from api.common.services import AbstractService
+from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
+from api.v1.users.models import EmailVerification
+from api.v1.users.services import EmailVerificationDTO, UserDTO
+from api.v1.users.services.email_verification.next_email_sending_time import (
+    EVNextSendingTimeService,
 )
 from api.v1.users.tasks import send_verification_email
 
 
-class BaseEmailVerificationSenderService(ABC):
-    def __init__(
-        self,
-        sending_interval_service: BaseEmailSendingIntervalService,
-        serializer_class,
+class EVSendingStatus(Enum):
+    SUCCESSFULLY_SENT = ("Successfully sent.", 1)
+    SENDING_LIMIT_REACHED = ("Sending limit reached.", 2)
+
+    def __init__(self, message, value):
+        self._message = message
+        self._value = value
+
+    @property
+    def message(self):
+        return self._message
+
+    @property
+    def value(self):
+        return self._value
+
+
+@dataclass
+class EVSendingResponse:
+    status: EVSendingStatus
+    status_code: int
+    data: EmailVerificationDTO | None = None
+    retry_after: datetime | None = None
+
+
+class EVSenderService(AbstractService):
+    def __init__(self, next_sending_time_calculator: EVNextSendingTimeService):
+        self._next_sending_time_service = next_sending_time_calculator
+
+    def execute(
+        self, user: UserDTO, latest_verification: EmailVerificationDTO
+    ) -> EVSendingResponse:
+        if self._is_sending_interval_passed(latest_verification):
+            verification = self._send(user)
+            return self._successfully_sent_response(verification)
+        return self._sending_limit_reached_response(latest_verification)
+
+    @staticmethod
+    def _is_sending_interval_passed(latest_verification: EmailVerificationDTO) -> bool:
+        if latest_verification is None:
+            return False
+        elapsed_time = now() - latest_verification.created_at
+        return elapsed_time.seconds > EMAIL_SENDING_SECONDS_INTERVAL
+
+    @staticmethod
+    def _send(user: UserDTO) -> EmailVerificationDTO:
+        verification = EmailVerificationDTO.to_dto(
+            EmailVerification.objects.create(user_id=user.id)
+        )
+        send_verification_email.delay(object_id=verification.id)
+        return verification
+
+    @staticmethod
+    def _successfully_sent_response(verification: EmailVerificationDTO):
+        return EVSendingResponse(
+            status=EVSendingStatus.SUCCESSFULLY_SENT,
+            status_code=status.HTTP_201_CREATED,
+            data=verification,
+        )
+
+    def _sending_limit_reached_response(
+        self, latest_verification: EmailVerificationDTO
     ):
-        self._sending_interval_service = sending_interval_service
-        self._serializer_class = serializer_class
-
-    @abstractmethod
-    def send(self, user) -> Response:
-        ...
-
-
-class EmailVerificationSenderService(BaseEmailVerificationSenderService):
-    def send(self, user) -> Response:
-        if user.is_verification_sending_interval_passed():
-            verification = user.create_email_verification()
-            send_verification_email.delay(object_id=verification.id)
-            serializer = self._serializer_class(verification)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return self._sending_limit_reached_response(user)
-
-    def _sending_limit_reached_response(self, user) -> Response:
-        response = {
-            "detail": "Sending limit reached.",
-            "retry_after": self._sending_interval_service.calculate_next_sending_datetime(
-                user
-            ),
-        }
-        return Response(response, status=status.HTTP_429_TOO_MANY_REQUESTS)
+        return EVSendingResponse(
+            status=EVSendingStatus.SENDING_LIMIT_REACHED,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            retry_after=self._next_sending_time_service.execute(latest_verification),
+        )
