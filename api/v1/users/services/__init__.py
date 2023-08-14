@@ -3,6 +3,8 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 
+from api.common.adapters import AbstractModelToDTOAdapter
+
 User = get_user_model()
 
 
@@ -24,6 +26,8 @@ class UserDTO:
     date_joined: datetime
     last_login: datetime
 
+
+class UserAdapter(AbstractModelToDTOAdapter):
     @staticmethod
     def to_dto(user) -> "UserDTO":
         return UserDTO(
@@ -53,12 +57,14 @@ class EmailVerificationDTO:
     created_at: datetime
     expiration: datetime
 
+
+class EVAdapter(AbstractModelToDTOAdapter):
     @staticmethod
-    def to_dto(verification) -> "EmailVerificationDTO":
+    def to_dto(email_verification) -> "EmailVerificationDTO":
         return EmailVerificationDTO(
-            id=verification.id,
-            code=verification.code,
-            user_id=verification.user_id,
-            created_at=verification.created_at,
-            expiration=verification.expiration,
+            id=email_verification.id,
+            code=email_verification.code,
+            user_id=email_verification.user_id,
+            created_at=email_verification.created_at,
+            expiration=email_verification.expiration,
         )

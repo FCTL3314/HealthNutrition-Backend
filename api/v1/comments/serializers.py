@@ -26,4 +26,4 @@ class ProductCommentSerializer(BaseCommentSerializer):
 
     class Meta(BaseCommentSerializer.Meta):
         model = ProductComment
-        fields = BaseCommentSerializer.Meta.fields + ("product", "product_id")
+        fields = BaseCommentSerializer.Meta.fields + ("product", "product_id")  # type: ignore[assignment]

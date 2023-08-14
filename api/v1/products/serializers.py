@@ -39,13 +39,13 @@ class ProductTypeAggregatedSerializer(ProductTypeModelSerializer):
             "product_price_avg",
             "product_price_min",
             "product_stores_count",
-        )
+        )  # type: ignore[assignment]
         read_only_fields = ProductTypeModelSerializer.Meta.read_only_fields + (
             "product_price_max",
             "product_price_avg",
             "product_price_min",
             "product_stores_count",
-        )
+        )  # type: ignore[assignment]
 
 
 class ProductModelSerializer(serializers.ModelSerializer):

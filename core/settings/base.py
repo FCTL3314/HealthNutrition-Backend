@@ -204,12 +204,3 @@ DJOSER = {
         "user_create": "api.v1.users.serializers.UserCreateSerializer",
     },
 }
-
-ALLOWED_DJOSER_ENDPOINTS = (
-    "users-me",
-    "users-detail",
-    "users-list",
-    "users-set-password",
-    "users-reset-password",
-    "users-reset-password-confirm",
-)

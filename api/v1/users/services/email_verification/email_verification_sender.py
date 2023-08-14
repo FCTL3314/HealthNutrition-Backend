@@ -5,6 +5,7 @@ from enum import Enum
 from django.utils.timezone import now
 from rest_framework import status
 
+from api.common.adapters import AbstractModelToDTOAdapter
 from api.common.services import AbstractService
 from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
 from api.v1.users.models import EmailVerification
@@ -41,8 +42,13 @@ class EVSendingResponse:
 
 
 class EVSenderService(AbstractService):
-    def __init__(self, next_sending_time_calculator: EVNextSendingTimeService):
-        self._next_sending_time_service = next_sending_time_calculator
+    def __init__(
+        self,
+        next_sending_time_calculator: EVNextSendingTimeService,
+        email_verification_adapter: AbstractModelToDTOAdapter,
+    ):
+        self._next_sending_time_calculator = next_sending_time_calculator
+        self._email_verification_adapter = email_verification_adapter
 
     def execute(
         self, user: UserDTO, latest_verification: EmailVerificationDTO
@@ -59,13 +65,12 @@ class EVSenderService(AbstractService):
         elapsed_time = now() - latest_verification.created_at
         return elapsed_time.seconds > EMAIL_SENDING_SECONDS_INTERVAL
 
-    @staticmethod
-    def _send(user: UserDTO) -> EmailVerificationDTO:
-        verification = EmailVerificationDTO.to_dto(
+    def _send(self, user: UserDTO) -> EmailVerificationDTO:
+        email_verification = self._email_verification_adapter.to_dto(
             EmailVerification.objects.create(user_id=user.id)
         )
-        send_verification_email.delay(object_id=verification.id)
-        return verification
+        send_verification_email.delay(object_id=email_verification.id)
+        return email_verification
 
     @staticmethod
     def _successfully_sent_response(verification: EmailVerificationDTO):
@@ -81,5 +86,5 @@ class EVSenderService(AbstractService):
         return EVSendingResponse(
             status=EVSendingStatus.SENDING_LIMIT_REACHED,
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            retry_after=self._next_sending_time_service.execute(latest_verification),
+            retry_after=self._next_sending_time_calculator.execute(latest_verification),
         )
