@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from api.common.services import AbstractService
 from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
-from api.v1.users.services import EmailVerificationDTO
+from api.v1.users.services.data_transfer import EmailVerificationDTO
 
 
 class EVNextSendingTimeService(AbstractService):
