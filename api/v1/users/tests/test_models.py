@@ -15,12 +15,6 @@ def test_user_create_email_verification(user):
 
 
 @pytest.mark.django_db
-def test_user_seconds_since_last_email_verification_sending(user):
-    user.create_email_verification()
-    assert user.seconds_since_last_email_verification_sending() == pytest.approx(0)
-
-
-@pytest.mark.django_db
 def test_user_valid_email_verifications(user):
     def create_not_valid_verifications():
         mixer.cycle(5).blend(

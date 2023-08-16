@@ -9,7 +9,6 @@ from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
-from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
 from api.v1.users.managers import EmailVerificationManager
 
 USER_SLUG_RELATED_FIELD = "username"
@@ -27,19 +26,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
-    def seconds_since_last_email_verification_sending(self) -> int:
-        if self.valid_email_verifications():
-            last_verification = EmailVerification.objects.latest("created_at")
-            elapsed_time = now() - last_verification.created_at
-            return elapsed_time.seconds
-        return EMAIL_SENDING_SECONDS_INTERVAL + 1
-
-    def is_verification_sending_interval_passed(self) -> bool:
-        seconds_since_last_sending = (
-            self.seconds_since_last_email_verification_sending()
-        )
-        return seconds_since_last_sending > EMAIL_SENDING_SECONDS_INTERVAL
 
     def create_email_verification(self):
         verification = EmailVerification.objects.create(user=self)
