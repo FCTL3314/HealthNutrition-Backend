@@ -4,6 +4,11 @@ from api.v1.users.services.data_transfer import EmailVerificationDTO
 
 
 class EVSendingIntervalCheckerService(AbstractService):
+    """
+    Calculates whether the allowed interval for sending
+    the next verification email has passed.
+    """
+
     def __init__(
         self,
         latest_verification: EmailVerificationDTO | None,
@@ -15,9 +20,6 @@ class EVSendingIntervalCheckerService(AbstractService):
         self._time_provider = time_provider
 
     def execute(self) -> bool:
-        return self._is_sending_interval_passed()
-
-    def _is_sending_interval_passed(self) -> bool:
         if self._latest_verification is None:
             return True
         next_sending_datetime = self._next_sending_time_calculator.execute()

@@ -15,7 +15,7 @@ class EmailVerificationCreateAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         return EVSenderService(
             self.serializer_class,
-            request.user.id,
+            request.user,
         ).execute()
 
 
