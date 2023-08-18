@@ -1,3 +1,3 @@
 from collections import namedtuple
 
-ErrorMessage = namedtuple("Error", ["message", "code"])
+ErrorMessage = namedtuple("ErrorMessage", ("message", "code"))

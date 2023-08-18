@@ -14,20 +14,20 @@ repos:
     rev: v2.31.1
     hooks:
       - id: pyupgrade
-        args: [ --py310-plus ]
+        args: ['--py310-plus']
 
   - repo: https://github.com/pre-commit/mirrors-autopep8
     rev: v2.0.1
     hooks:
       - id: autopep8
-        args: [ --max-line-length=120, --in-place ]
+        args: ['--max-line-length=120', '--in-place']
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
       - id: flake8
         exclude: "(__init__.py)|(migrations)|(settings)"
-        args: [ "--ignore=E501,F821", "--max-line-length=120" ]
+        args: ["--ignore=E501,F821", "--max-line-length=120"]
 
   - repo: https://github.com/psf/black
     rev: 23.7.0
@@ -39,4 +39,4 @@ repos:
     hooks:
       - id: isort
         exclude: __init__.py
-        args: [ --profile, black, --filter-files ]
+        args: ['--profile', 'black', '--filter-files']

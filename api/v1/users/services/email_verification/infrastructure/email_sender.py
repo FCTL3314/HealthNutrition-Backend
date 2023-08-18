@@ -49,24 +49,23 @@ class EVSenderService(AbstractService):
     ):
         self._serializer_class = serializer_class
         self._user = user
-        self._latest_verification = EmailVerification.objects.last_sent(user.id)
         self._next_sending_time_calculator = EVNextSendingTimeService(
             self.latest_verification_dto
         )
-        sending_interval_checker = EVSendingIntervalCheckerService(
-            self.latest_verification_dto,
-            self._next_sending_time_calculator,
-        )
         self._sending_availability_service = EVAvailabilityService(
             UserAdapter.to_dto(user),
-            sending_interval_checker,
+            EVSendingIntervalCheckerService(
+                self.latest_verification_dto,
+                self._next_sending_time_calculator,
+            ),
         )
 
     @cached_property
     def latest_verification_dto(self) -> EmailVerificationDTO | None:
-        if self._latest_verification is None:
+        latest_verification = EmailVerification.objects.last_sent(self._user.id)
+        if latest_verification is None:
             return None
-        return EVAdapter.to_dto(self._latest_verification)
+        return EVAdapter.to_dto(latest_verification)
 
     def execute(self) -> APIResponse:
         availability_status = self._sending_availability_service.execute()
@@ -104,11 +103,9 @@ class EVSenderService(AbstractService):
         )
 
     def _sending_limit_reached_response(self) -> APIResponse:
-        messages = (
-            {
-                "retry_after": self._next_sending_time_calculator.execute(),
-            },
-        )
+        messages = {
+            "retry_after": self._next_sending_time_calculator.execute(),
+        }
         return APIResponse(
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
