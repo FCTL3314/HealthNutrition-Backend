@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from functools import cached_property
 
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.serializers import Serializer
 
 from api.common.services import AbstractService
 from api.responses import APIResponse
 from api.utils.errors import ErrorMessage
-from api.v1.users.models import EmailVerification, User
+from api.v1.users.models import EmailVerification
 from api.v1.users.services.data_transfer import (
     EmailVerificationDTO,
     EVAdapter,
@@ -25,21 +26,23 @@ from api.v1.users.services.email_verification.domain.sending_interval_checker im
 )
 from api.v1.users.tasks import send_verification_email
 
+User = get_user_model()
+
 
 @dataclass
 class EVSendErrors:
     SENDING_LIMIT_REACHED = ErrorMessage(
-        "Sending limit reached.", "sending_limit_reached."
+        "Sending limit reached.", "sending_limit_reached"
     )
     ALREADY_VERIFIED = ErrorMessage(
-        "Your email is already verified.", "email_already_verified."
+        "Your email is already verified.", "email_already_verified"
     )
 
 
 class EVSenderService(AbstractService):
     """
     Sends a confirmation email to the provided user, if possible,
-    otherwise returns an error message.
+    otherwise returns an error response.
     """
 
     def __init__(

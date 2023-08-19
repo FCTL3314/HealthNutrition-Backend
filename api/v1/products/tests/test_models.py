@@ -30,7 +30,7 @@ def test_product_manager_price_aggregation(products):
 def test_product_type_manager_price_annotation(product_type):
     mixer.cycle(5).blend("products.Product", product_type=product_type)
     queryset = ProductType.objects.filter(id=product_type.id)
-    annotated_queryset = queryset.product_price_annotation()
+    annotated_queryset = queryset.products_price_annotation()
 
     test_object = annotated_queryset.first()
 

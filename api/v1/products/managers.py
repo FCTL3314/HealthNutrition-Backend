@@ -25,7 +25,7 @@ class ProductManager(models.Manager):
 
 
 class ProductTypeQuerySet(models.QuerySet):
-    def product_price_annotation(self) -> QuerySet:
+    def products_price_annotation(self) -> QuerySet:
         return self.annotate(
             product__price__avg=Round(Avg("product__price"), PRICE_ROUNDING),
             product__price__max=Round(Max("product__price"), PRICE_ROUNDING),

@@ -42,9 +42,10 @@ class User(AbstractUser):
         self.save()
 
     def verify(self, commit=True) -> None:
-        self.is_verified = True
-        if commit:
-            self.save(update_fields=("is_verified",))
+        if not self.is_verified:
+            self.is_verified = True
+            if commit:
+                self.save(update_fields=("is_verified",))
 
     def change_slug(self, commit=True) -> None:
         self.slug = slugify(getattr(self, USER_SLUG_RELATED_FIELD))

@@ -24,7 +24,7 @@ class ProductTypeModelViewSet(ModelViewSet):
     @order_queryset(*PRODUCT_TYPES_ORDERING)
     def get_queryset(self):
         initial_queryset = ProductType.objects.all()
-        return initial_queryset.product_price_annotation()
+        return initial_queryset.products_price_annotation()
 
 
 class ProductModelViewSet(ModelViewSet):

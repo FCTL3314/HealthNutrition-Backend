@@ -47,5 +47,4 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 
 
 class UserVerificationSerializer(serializers.Serializer):
-    email = serializers.EmailField()
     code = serializers.UUIDField()
