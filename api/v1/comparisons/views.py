@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.decorators import order_queryset
 from api.v1.comparisons.models import Comparison
-from api.v1.comparisons.serializers import ComparisonModelSerializer
+from api.v1.comparisons.serializers import ComparisonSerializer
 from api.v1.comparisons.services import ComparisonAddService, ComparisonRemoveService
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.models import ProductType
@@ -17,13 +17,13 @@ from api.v1.products.paginators import (
     ProductTypePageNumberPagination,
 )
 from api.v1.products.serializers import (
-    ProductModelSerializer,
+    ProductSerializer,
     ProductTypeAggregatedSerializer,
 )
 
 
 class ComparisonCreateView(CreateAPIView):
-    serializer_class = ComparisonModelSerializer
+    serializer_class = ComparisonSerializer
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
@@ -35,7 +35,6 @@ class ComparisonCreateView(CreateAPIView):
 
 
 class ComparisonDestroyView(DestroyAPIView):
-    serializer_class = ComparisonModelSerializer
     permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
@@ -58,7 +57,7 @@ class ComparedProductTypesListView(ListAPIView):
 
 class ComparedProductsListView(ListAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ProductModelSerializer
+    serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
 
     @order_queryset(*PRODUCTS_ORDERING)

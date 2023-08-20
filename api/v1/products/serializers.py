@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from api.v1.products.models import Product, ProductType
 from api.v1.stores.models import Store
-from api.v1.stores.serializers import StoreModelSerializer
+from api.v1.stores.serializers import StoreSerializer
 
 
 class ProductTypeModelSerializer(serializers.ModelSerializer):
@@ -39,23 +39,23 @@ class ProductTypeAggregatedSerializer(ProductTypeModelSerializer):
             "product_price_avg",
             "product_price_min",
             "product_stores_count",
-        )  # type: ignore[assignment]
+        )
         read_only_fields = ProductTypeModelSerializer.Meta.read_only_fields + (
             "product_price_max",
             "product_price_avg",
             "product_price_min",
             "product_stores_count",
-        )  # type: ignore[assignment]
+        )
 
 
-class ProductModelSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     product_type = ProductTypeModelSerializer(read_only=True)
     product_type_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=ProductType.objects.all(),
         source="product_type",
     )
-    store = StoreModelSerializer(read_only=True)
+    store = StoreSerializer(read_only=True)
     store_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Store.objects.all(),

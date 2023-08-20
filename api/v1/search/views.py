@@ -5,7 +5,7 @@ from api.v1.products.paginators import (
     ProductTypePageNumberPagination,
 )
 from api.v1.products.serializers import (
-    ProductModelSerializer,
+    ProductSerializer,
     ProductTypeAggregatedSerializer,
 )
 from api.v1.search.serializers import SearchSerializer
@@ -24,7 +24,7 @@ class ProductTypeSearchListAPIView(ListAPIView):
 
 
 class ProductSearchListAPIView(ListAPIView):
-    serializer_class = ProductModelSerializer
+    serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
 
     def get_queryset(self):

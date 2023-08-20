@@ -1,6 +1,8 @@
 from http import HTTPStatus
 
 import pytest
+from django.contrib.auth import get_user_model
+from faker import Faker
 from rest_framework.reverse import reverse
 
 from api.utils.tests import (
@@ -11,12 +13,15 @@ from api.utils.tests import (
 from api.v1.stores.constants import STORES_PAGINATE_BY
 from api.v1.stores.models import Store
 
+User = get_user_model()
+
+
 STORE_DETAIL = "api:v1:stores:stores-detail"
 STORE_LIST = "api:v1:stores:stores-list"
 
 
 @pytest.mark.django_db
-def test_store_detail(client, store):
+def test_store_detail(client, store: Store):
     path = reverse(STORE_DETAIL, args=(store.slug,))
 
     response = client.get(path)
@@ -26,7 +31,7 @@ def test_store_detail(client, store):
 
 
 @pytest.mark.django_db
-def test_store_list(client, stores):
+def test_store_list(client, stores: list[Store]):
     path = reverse(STORE_LIST)
 
     response = client.get(path)
@@ -36,7 +41,7 @@ def test_store_list(client, stores):
 
 
 @pytest.mark.django_db
-def test_store_update(client, store, admin_user, faker):
+def test_store_update(client, store: Store, admin_user: User, faker: Faker):
     path = reverse(STORE_DETAIL, args=(store.slug,))
 
     data = {
@@ -57,7 +62,7 @@ def test_store_update(client, store, admin_user, faker):
 
 
 @pytest.mark.django_db
-def test_store_create(client, faker, admin_user):
+def test_store_create(client, admin_user: User, faker: Faker):
     path = reverse(STORE_LIST)
 
     data = {
@@ -66,25 +71,29 @@ def test_store_create(client, faker, admin_user):
         "logo": generate_test_image(),
         "description": faker.text(),
     }
-    headers = get_authorization_header(get_access_token(admin_user))
 
     assert Store.objects.count() == 0
 
-    response = client.post(path, data=data, **headers)
+    response = client.post(
+        path,
+        data=data,
+        **get_authorization_header(get_access_token(admin_user)),
+    )
 
     assert response.status_code == HTTPStatus.CREATED
     assert Store.objects.count() == 1
 
 
 @pytest.mark.django_db
-def test_store_destroy(client, store, admin_user):
+def test_store_destroy(client, store: Store, admin_user: User):
     path = reverse(STORE_DETAIL, args=(store.slug,))
-
-    headers = get_authorization_header(get_access_token(admin_user))
 
     assert Store.objects.count() == 1
 
-    response = client.delete(path, **headers)
+    response = client.delete(
+        path,
+        **get_authorization_header(get_access_token(admin_user)),
+    )
 
     assert response.status_code == HTTPStatus.NO_CONTENT
     assert Store.objects.count() == 0

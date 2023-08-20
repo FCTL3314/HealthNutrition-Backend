@@ -6,7 +6,7 @@ from api.v1.products.models import Product, ProductType
 
 
 @pytest.mark.django_db
-def test_product_manager_price_aggregation(products):
+def test_product_manager_price_aggregation(products: list[Product]):
     ids = []
     prices = []
 
@@ -27,7 +27,7 @@ def test_product_manager_price_aggregation(products):
 
 
 @pytest.mark.django_db
-def test_product_type_manager_price_annotation(product_type):
+def test_product_type_manager_price_annotation(product_type: ProductType):
     mixer.cycle(5).blend("products.Product", product_type=product_type)
     queryset = ProductType.objects.filter(id=product_type.id)
     annotated_queryset = queryset.products_price_annotation()

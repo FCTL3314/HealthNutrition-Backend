@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 
 from django.contrib.auth.models import AbstractUser
@@ -53,11 +53,15 @@ class User(AbstractUser):
             self.save(update_fields=("slug",))
 
 
+def get_email_verification_expiration() -> datetime:
+    return now() + timedelta(hours=2)
+
+
 class EmailVerification(models.Model):
     code = models.UUIDField(null=True, unique=True)
     user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    expiration = models.DateTimeField()
+    expiration = models.DateTimeField(default=get_email_verification_expiration)
 
     objects = EmailVerificationManager()
 
@@ -66,7 +70,6 @@ class EmailVerification(models.Model):
 
     def save(self, *args, **kwargs):
         self.code = self.generate_code()
-        self.expiration = now() + timedelta(hours=2)
         super().save(*args, **kwargs)
 
     def generate_code(self) -> UUID:

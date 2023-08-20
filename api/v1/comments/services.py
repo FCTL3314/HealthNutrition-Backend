@@ -1,16 +1,26 @@
 from http import HTTPStatus
 
-from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+from rest_framework.serializers import Serializer
+
+from api.common.services import AbstractService
+from api.responses import APIResponse
+
+User = get_user_model()
 
 
-class CommentService:
-    def __init__(self, serializer, request_data: dict, user):
-        self._serializer = serializer
-        self._request_data = request_data
+class ProductCommentAddService(AbstractService):
+    def __init__(
+        self,
+        serializer_class: type[Serializer],
+        user: User,
+        data: dict,
+    ):
+        self._serializer = serializer_class(data=data)
+        self._serializer.is_valid(raise_exception=True)
         self._user = user
+        self._data = data
 
-    def create(self):
-        serializer = self._serializer(data=self._request_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(author=self._user)
-        return Response(serializer.data, status=HTTPStatus.CREATED)
+    def execute(self) -> APIResponse:
+        self._serializer.save(author=self._user)
+        return APIResponse(self._serializer.data, status=HTTPStatus.CREATED)

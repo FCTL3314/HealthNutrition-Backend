@@ -10,7 +10,7 @@ from api.v1.products.paginators import (
     ProductTypePageNumberPagination,
 )
 from api.v1.products.serializers import (
-    ProductModelSerializer,
+    ProductSerializer,
     ProductTypeAggregatedSerializer,
 )
 
@@ -31,6 +31,6 @@ class ProductModelViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = ProductModelSerializer
+    serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
     lookup_field = "slug"

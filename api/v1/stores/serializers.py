@@ -3,7 +3,7 @@ from rest_framework import serializers
 from api.v1.stores.models import Store
 
 
-class StoreModelSerializer(serializers.ModelSerializer):
+class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
         fields = ("id", "name", "url", "logo", "description", "views", "slug")

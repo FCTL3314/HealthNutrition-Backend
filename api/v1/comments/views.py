@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from api.v1.comments.models import ProductComment
 from api.v1.comments.paginators import CommentPageNumberPagination
 from api.v1.comments.serializers import ProductCommentSerializer
-from api.v1.comments.services import CommentService
+from api.v1.comments.services import ProductCommentAddService
 
 
 class ProductCommentModelViewSet(ModelViewSet):
@@ -14,5 +14,8 @@ class ProductCommentModelViewSet(ModelViewSet):
     serializer_class = ProductCommentSerializer
 
     def create(self, request, *args, **kwargs):
-        comment_service = CommentService(self.serializer_class, request)
-        return comment_service.create()
+        return ProductCommentAddService(
+            self.serializer_class,
+            request.user,
+            request.data,
+        ).execute()
