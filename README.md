@@ -94,17 +94,16 @@ savings while shopping across different stores for a wide range of products.
 * **Docstrings**
 * **Tests (PyTest)**
 
+# ❕ Peculiarities
+
+* #### The code contains the following abbreviations::
+  * **EV - EmailVerification**
+
 # 💽 Local installation
 1. #### Clone or download the repository.
 2. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
-   * SECRET_KEY
-   * ALLOWED_HOSTS
-   * CORS_ALLOWED_ORIGINS(Optional)
-   * REDIS_HOST
-   * REDIS_PORT
-   * RABBITMQ_HOST
-   * RABBITMQ_PORT
-   * EMAIL_HOST_USER
+  ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/015be672-f847-48ea-b409-27ab2ff03b48)
+
 3. #### Run docker services for local development: `docker-compose -f docker/local/docker-compose.yml up`
 
 > #### Django automatically detects code changes by using a docker volume that spans all the code.
