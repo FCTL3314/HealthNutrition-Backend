@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
+from api.v1.users.constants import EV_EXPIRATION
 from api.v1.users.managers import EmailVerificationManager
 
 USER_SLUG_RELATED_FIELD = "username"
@@ -53,15 +54,15 @@ class User(AbstractUser):
             self.save(update_fields=("slug",))
 
 
-def get_email_verification_expiration() -> datetime:
-    return now() + timedelta(hours=2)
+def _get_email_verification_expiration() -> datetime:
+    return now() + timedelta(seconds=EV_EXPIRATION)
 
 
 class EmailVerification(models.Model):
     code = models.UUIDField(null=True, unique=True)
     user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    expiration = models.DateTimeField(default=get_email_verification_expiration)
+    expiration = models.DateTimeField(default=_get_email_verification_expiration)
 
     objects = EmailVerificationManager()
 

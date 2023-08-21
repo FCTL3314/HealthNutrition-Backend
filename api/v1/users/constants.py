@@ -1,7 +1,9 @@
+from django.conf import settings
+
 VISITS_CACHE_TIME = (60 * 60) * 12
 
-EMAIL_SENDING_SECONDS_INTERVAL = 60
-EMAIL_EXPIRATION_HOURS = (60 * 60) * 2
+EV_SENDING_INTERVAL = settings.env.int("EV_SENDING_INTERVAL")
+EV_EXPIRATION = settings.env.int("EV_EXPIRATION")
 
 ALLOWED_DJOSER_ENDPOINTS = (
     "users-me",

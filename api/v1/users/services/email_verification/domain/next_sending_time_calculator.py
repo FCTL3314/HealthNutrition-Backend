@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from api.common.services import AbstractService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
-from api.v1.users.constants import EMAIL_SENDING_SECONDS_INTERVAL
+from api.v1.users.constants import EV_SENDING_INTERVAL
 from api.v1.users.services.data_transfer import EmailVerificationDTO
 
 
@@ -31,4 +31,4 @@ class EVNextSendingTimeService(AbstractService):
         Returns the interval at which the message is sent as
         a timedelta object.
         """
-        return timedelta(seconds=EMAIL_SENDING_SECONDS_INTERVAL)
+        return timedelta(seconds=EV_SENDING_INTERVAL)
