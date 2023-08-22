@@ -8,8 +8,8 @@ from api.v1.users.models import EmailVerification
 def send_verification_email(object_id: int) -> None:
     verification = EmailVerification.objects.get(id=object_id)
     verification.send_verification_email(
-        subject_template_name="email/email_verification_subject.html",
-        html_email_template_name="email/email_verification.html",
+        subject_template_name="email/verification_email_subject.html",
+        html_email_template_name="email/verification_email.html",
     )
 
 

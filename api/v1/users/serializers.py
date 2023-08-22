@@ -2,6 +2,7 @@ from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerialize
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
+from api.v1.users.constants import EV_CODE_LENGTH
 from api.v1.users.models import EmailVerification, User
 
 
@@ -47,4 +48,4 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 
 
 class UserVerificationSerializer(serializers.Serializer):
-    code = serializers.UUIDField()
+    code = serializers.CharField(max_length=EV_CODE_LENGTH)

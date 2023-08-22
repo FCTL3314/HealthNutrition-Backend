@@ -1,5 +1,6 @@
+import random
 from datetime import datetime, timedelta
-from uuid import UUID, uuid4
+from string import digits
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -9,7 +10,7 @@ from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
-from api.v1.users.constants import EV_EXPIRATION
+from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION
 from api.v1.users.managers import EmailVerificationManager
 
 USER_SLUG_RELATED_FIELD = "username"
@@ -54,17 +55,24 @@ class User(AbstractUser):
             self.save(update_fields=("slug",))
 
 
-def _get_email_verification_expiration() -> datetime:
+def get_email_verification_expiration() -> datetime:
     return now() + timedelta(seconds=EV_EXPIRATION)
 
 
 class EmailVerification(models.Model):
-    code = models.UUIDField(null=True, unique=True)
+    code = models.CharField(null=True, max_length=EV_CODE_LENGTH)
     user = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    expiration = models.DateTimeField(default=_get_email_verification_expiration)
+    expiration = models.DateTimeField(default=get_email_verification_expiration)
 
     objects = EmailVerificationManager()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("code", "user"), name="unique_code_and_email"
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.email} | {self.expiration}"
@@ -73,9 +81,9 @@ class EmailVerification(models.Model):
         self.code = self.generate_code()
         super().save(*args, **kwargs)
 
-    def generate_code(self) -> UUID:
-        code = uuid4()
-        if EmailVerification.objects.filter(code=code).exists():
+    def generate_code(self) -> str:
+        code = "".join(random.choice(digits) for _ in range(EV_CODE_LENGTH))
+        if EmailVerification.objects.filter(code=code, user=self.user).exists():
             return self.generate_code()
         return code
 
