@@ -89,12 +89,13 @@ savings while shopping across different stores for a wide range of products.
 <details><summary><h1>🔥 Features</h1></summary>
 
 * **REST API**
+* **Domain Driven Development**
 * **JWT Authentication**
 * **Postponed Tasks / Celery**
 * **Authentication / Authorization**
 * **Profile editing**
-* **Email verification**
-* **Docstrings**
+* **Email sending**
+* **Documentation**
 * **Tests (PyTest)**
 
 </details>
