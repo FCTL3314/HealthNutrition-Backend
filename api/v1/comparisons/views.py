@@ -9,9 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from api.decorators import order_queryset
 from api.v1.comparisons.models import Comparison
 from api.v1.comparisons.serializers import ComparisonSerializer
-from api.v1.comparisons.services import ComparisonAddService, ComparisonRemoveService
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
-from api.v1.products.models import ProductType
+from api.v1.products.models import Product, ProductType
 from api.v1.products.paginators import (
     ProductPageNumberPagination,
     ProductTypePageNumberPagination,
@@ -26,22 +25,22 @@ class ComparisonCreateView(CreateAPIView):
     serializer_class = ComparisonSerializer
     permission_classes = (IsAuthenticated,)
 
-    def create(self, request, *args, **kwargs):
-        return ComparisonAddService(
-            self.serializer_class,
-            self.request.user,
-            self.kwargs["product_id"],
-        ).execute()
+    def perform_create(self, serializer):
+        product = Product.objects.get(id=self.kwargs["product_id"])
+        serializer.save(user=self.request.user, product=product)
 
 
 class ComparisonDestroyView(DestroyAPIView):
     permission_classes = (IsAuthenticated,)
 
-    def destroy(self, request, *args, **kwargs):
-        return ComparisonRemoveService(
-            self.request.user,
-            self.kwargs["product_id"],
-        ).execute()
+    def get_object(self):
+        return Product.objects.get(id=self.kwargs["product_id"])
+
+    def perform_destroy(self, instance):
+        Comparison.objects.filter(
+            user=self.request.user,
+            product=instance,
+        ).delete()
 
 
 class ComparedProductTypesListView(ListAPIView):
