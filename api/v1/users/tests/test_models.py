@@ -59,7 +59,13 @@ def test_email_verification_is_expired():
 @pytest.mark.django_db
 def test_send_verification_email(user: User):
     verification = user.create_email_verification()
-    verification.send_verification_email()
+
+    subject_template_name = "email/verification_email_subject.html"
+    html_email_template_name = "email/verification_email.html"
+
+    verification.send_verification_email(
+        subject_template_name, html_email_template_name
+    )
 
     assert len(mail.outbox) == 1
     email = mail.outbox[0]

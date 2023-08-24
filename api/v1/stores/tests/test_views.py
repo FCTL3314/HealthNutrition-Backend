@@ -5,11 +5,7 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework.reverse import reverse
 
-from api.utils.tests import (
-    generate_test_image,
-    get_access_token,
-    get_authorization_header,
-)
+from api.utils.tests import generate_test_image, get_authorization_header
 from api.v1.stores.constants import STORES_PAGINATE_BY
 from api.v1.stores.models import Store
 
@@ -48,12 +44,12 @@ def test_store_update(client, store: Store, admin_user: User, faker: Faker):
         "name": faker.name(),
     }
 
-    headers = {
-        "content_type": "application/json",
-        **get_authorization_header(get_access_token(admin_user)),
-    }
-
-    response = client.patch(path, data=data, **headers)
+    response = client.patch(
+        path,
+        data=data,
+        content_type="application/json",
+        **get_authorization_header(admin_user),
+    )
 
     store.refresh_from_db()
 
@@ -77,7 +73,7 @@ def test_store_create(client, admin_user: User, faker: Faker):
     response = client.post(
         path,
         data=data,
-        **get_authorization_header(get_access_token(admin_user)),
+        **get_authorization_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.CREATED
@@ -92,7 +88,7 @@ def test_store_destroy(client, store: Store, admin_user: User):
 
     response = client.delete(
         path,
-        **get_authorization_header(get_access_token(admin_user)),
+        **get_authorization_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.NO_CONTENT

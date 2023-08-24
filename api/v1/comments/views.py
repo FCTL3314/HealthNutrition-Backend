@@ -1,12 +1,19 @@
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from api.v1.comments.models import ProductComment, StoreComment
 from api.v1.comments.paginators import CommentPageNumberPagination
 from api.v1.comments.serializers import ProductCommentSerializer, StoreCommentSerializer
 
 
-class BaseCommentViewSet(ModelViewSet):
+class BaseCommentViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
     pagination_class = CommentPageNumberPagination
     permission_classes = (IsAuthenticatedOrReadOnly,)
 

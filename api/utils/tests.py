@@ -1,6 +1,6 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from faker import Faker
-from rest_framework_simplejwt.tokens import AccessToken, Token
+from rest_framework_simplejwt.tokens import AccessToken
 
 from api.v1.users.models import User
 
@@ -17,6 +17,7 @@ def get_access_token(user: User) -> AccessToken:
     return AccessToken.for_user(user)
 
 
-def get_authorization_header(token: Token) -> dict[str, str]:
+def get_authorization_header(user: User) -> dict[str, str]:
     """Returns an authorization header based on received token."""
+    token = get_access_token(user)
     return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
