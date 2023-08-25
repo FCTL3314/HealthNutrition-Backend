@@ -35,7 +35,7 @@
   </li>
 </ul>
 
-# 📃 Description
+<details open><summary><h1>📃 Description</h1></summary>
 
 This Django application is designed for **comparing prices between different stores, helping users find the best
 deals on various products**. The project provides a **user-friendly interface** to browse products across different
@@ -55,7 +55,9 @@ savings while shopping across different stores for a wide range of products.
 
 > #### The project was created for educational purposes, simulating fictitious products without real value.
 
-# 🌄 Demonstration
+</details>
+
+<details><summary><h1>🌄 Demonstration</h1></summary>
 
 ### Product categories
 
@@ -82,24 +84,31 @@ savings while shopping across different stores for a wide range of products.
 ![firefox_4HtesbsbBG](https://github.com/FCTL3314/StoreTracker/assets/97694131/7e404765-9adf-4505-b8d2-302eb7952e53)
 ![firefox_IRjbXLaWtk](https://github.com/FCTL3314/StoreTracker/assets/97694131/99094345-4b41-4acc-b5c4-247e17031c0b)
 
+</details>
 
-# 🔥 Features
+<details><summary><h1>🔥 Features</h1></summary>
 
 * **REST API**
+* **Domain Driven Development**
 * **JWT Authentication**
 * **Postponed Tasks / Celery**
 * **Authentication / Authorization**
 * **Profile editing**
-* **Email verification**
-* **Docstrings**
+* **Email sending**
+* **Documentation**
 * **Tests (PyTest)**
 
-# ❕ Peculiarities
+</details>
+
+<details><summary><h1>❕ Peculiarities</h1></summary>
 
 * #### The code contains the following abbreviations::
   * **EV - EmailVerification**
 
-# 💽 Local installation
+</details>
+
+<details><summary><h1>💽 Local installation</h1></summary>
+
 1. #### Clone or download the repository.
 2. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
   ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/015be672-f847-48ea-b409-27ab2ff03b48)
@@ -108,6 +117,11 @@ savings while shopping across different stores for a wide range of products.
 
 > #### Django automatically detects code changes by using a docker volume that spans all the code.
 
-# 🪝 Pre-Commit hooks
+</details>
+
+<details><summary><h1>🪝 Pre-Commit hooks</h1></summary>
+
 1. #### Install: `pre-commit install`
 2. #### Test run `pre-commit run --all-files`
+
+</details>
