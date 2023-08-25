@@ -3,23 +3,19 @@ from http import HTTPStatus
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from mixer.backend.django import mixer
 
 from api.utils.tests import get_auth_header
 from api.v1.comparisons.models import Comparison
+from api.v1.comparisons.tests.conftest import create_user_comparisons
 from api.v1.products.models import Product
+
+User = get_user_model()
 
 COMPARISON_ADD = "api:v1:comparisons:add"
 COMPARISON_REMOVE = "api:v1:comparisons:remove"
 
 COMPARISON_PRODUCT_TYPES_LIST = "api:v1:comparisons:product-types"
 COMPARISON_PRODUCTS_LIST = "api:v1:comparisons:products"
-
-User = get_user_model()
-
-
-def _create_user_comparisons(user: User):
-    return mixer.cycle(5).blend("comparisons.Comparison", user=user)
 
 
 def _is_comparison_exists(user: User, product: Product):
@@ -54,7 +50,7 @@ def test_comparison_remove_view(client, product: Product, admin_user: User):
 
 @pytest.mark.django_db
 def test_compared_product_types_list_view(client, admin_user: User):
-    _create_user_comparisons(admin_user)
+    create_user_comparisons(admin_user)
     path = reverse(COMPARISON_PRODUCT_TYPES_LIST)
 
     response = client.get(path, **get_auth_header(admin_user))
@@ -65,7 +61,7 @@ def test_compared_product_types_list_view(client, admin_user: User):
 
 @pytest.mark.django_db
 def test_compared_products_list_view(client, admin_user: User):
-    comparisons = _create_user_comparisons(admin_user)
+    comparisons = create_user_comparisons(admin_user)
     product_type = comparisons[0].product.product_type
     path = reverse(COMPARISON_PRODUCTS_LIST, args=(product_type.slug,))
 
