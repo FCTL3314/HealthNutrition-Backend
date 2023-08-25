@@ -6,7 +6,7 @@ from django.db.models import Model
 from django.urls import reverse
 from mixer.backend.django import mixer
 
-from api.utils.tests import get_authorization_header
+from api.utils.tests import get_auth_header
 from api.v1.comments.constants import COMMENTS_PAGINATE_BY
 from api.v1.comments.models import BaseComment, ProductComment, StoreComment
 from api.v1.products.models import Product
@@ -67,7 +67,7 @@ def test_comment_create(
         path,
         data=data,
         content_type="application/json",
-        **get_authorization_header(admin_user),
+        **get_auth_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.CREATED
@@ -97,7 +97,7 @@ def test_comment_update(
         path,
         data={"text": comment_text},
         content_type="application/json",
-        **get_authorization_header(admin_user),
+        **get_auth_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -124,7 +124,7 @@ def test_comment_delete(
 
     path = reverse(url_pattern, args=(comment_object.id,))
 
-    response = client.delete(path, **get_authorization_header(admin_user))
+    response = client.delete(path, **get_auth_header(admin_user))
 
     assert response.status_code == HTTPStatus.NO_CONTENT
     assert comment_model.objects.count() == 0

@@ -17,7 +17,7 @@ def get_access_token(user: User) -> AccessToken:
     return AccessToken.for_user(user)
 
 
-def get_authorization_header(user: User) -> dict[str, str]:
+def get_auth_header(user: User) -> dict[str, str]:
     """Returns an authorization header based on received token."""
     token = get_access_token(user)
     return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
