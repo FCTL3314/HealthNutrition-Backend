@@ -14,8 +14,8 @@ User = get_user_model()
 COMPARISON_ADD = "api:v1:comparisons:add"
 COMPARISON_REMOVE = "api:v1:comparisons:remove"
 
-COMPARISON_PRODUCT_TYPES_LIST = "api:v1:comparisons:product-types"
-COMPARISON_PRODUCTS_LIST = "api:v1:comparisons:products"
+COMPARISON_PRODUCT_TYPES = "api:v1:comparisons:product-types"
+COMPARISON_PRODUCTS = "api:v1:comparisons:products"
 
 
 def _is_comparison_exists(user: User, product: Product):
@@ -51,7 +51,7 @@ def test_comparison_remove_view(client, product: Product, admin_user: User):
 @pytest.mark.django_db
 def test_compared_product_types_list_view(client, admin_user: User):
     create_user_comparisons(admin_user)
-    path = reverse(COMPARISON_PRODUCT_TYPES_LIST)
+    path = reverse(COMPARISON_PRODUCT_TYPES)
 
     response = client.get(path, **get_auth_header(admin_user))
 
@@ -63,7 +63,7 @@ def test_compared_product_types_list_view(client, admin_user: User):
 def test_compared_products_list_view(client, admin_user: User):
     comparisons = create_user_comparisons(admin_user)
     product_type = comparisons[0].product.product_type
-    path = reverse(COMPARISON_PRODUCTS_LIST, args=(product_type.slug,))
+    path = reverse(COMPARISON_PRODUCTS, args=(product_type.slug,))
 
     response = client.get(path, **get_auth_header(admin_user))
 

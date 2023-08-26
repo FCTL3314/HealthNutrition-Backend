@@ -16,18 +16,18 @@ User = get_user_model()
 
 
 PRODUCT_COMMENT_DETAIL = "api:v1:comments:product-detail"
-PRODUCT_COMMENT_LIST = "api:v1:comments:product-list"
+PRODUCT_COMMENTS = "api:v1:comments:product-list"
 
 STORE_COMMENT_DETAIL = "api:v1:comments:store-detail"
-STORE_COMMENT_LIST = "api:v1:comments:store-list"
+STORE_COMMENTS = "api:v1:comments:store-list"
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "path,comment_model",
     [
-        (reverse(PRODUCT_COMMENT_LIST), ProductComment),
-        (reverse(STORE_COMMENT_LIST), StoreComment),
+        (reverse(PRODUCT_COMMENTS), ProductComment),
+        (reverse(STORE_COMMENTS), StoreComment),
     ],
 )
 def test_comment_list(client, path: str, comment_model: BaseComment):
@@ -43,8 +43,8 @@ def test_comment_list(client, path: str, comment_model: BaseComment):
 @pytest.mark.parametrize(
     "path,comment_model,comment_related_model,model_id_key",
     [
-        (reverse(PRODUCT_COMMENT_LIST), ProductComment, Product, "product_id"),
-        (reverse(STORE_COMMENT_LIST), StoreComment, Store, "store_id"),
+        (reverse(PRODUCT_COMMENTS), ProductComment, Product, "product_id"),
+        (reverse(STORE_COMMENTS), StoreComment, Store, "store_id"),
     ],
 )
 def test_comment_create(
