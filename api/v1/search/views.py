@@ -17,10 +17,9 @@ class ProductTypeSearchListAPIView(ListAPIView):
     pagination_class = ProductTypePageNumberPagination
 
     def get_queryset(self):
-        search_service = ProductTypeSearchService(
+        return ProductTypeSearchService(
             SearchSerializer, self.request.query_params
-        )
-        return search_service.get_searched_queryset()
+        ).get_searched_queryset()
 
 
 class ProductSearchListAPIView(ListAPIView):
@@ -28,7 +27,6 @@ class ProductSearchListAPIView(ListAPIView):
     pagination_class = ProductPageNumberPagination
 
     def get_queryset(self):
-        search_service = ProductSearchService(
+        return ProductSearchService(
             SearchSerializer, self.request.query_params
-        )
-        return search_service.get_searched_queryset()
+        ).get_searched_queryset()

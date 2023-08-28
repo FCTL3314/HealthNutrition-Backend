@@ -5,10 +5,5 @@ from api.v1.stores.constants import STORES_PAGINATE_BY
 
 
 @pytest.fixture()
-def store():
-    return mixer.blend("stores.Store")
-
-
-@pytest.fixture()
 def stores():
     return mixer.cycle(STORES_PAGINATE_BY * 2).blend("stores.Store")

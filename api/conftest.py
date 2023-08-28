@@ -13,6 +13,11 @@ def users():
 
 
 @pytest.fixture()
+def store():
+    return mixer.blend("stores.Store")
+
+
+@pytest.fixture()
 def product_type():
     return mixer.blend("products.ProductType")
 

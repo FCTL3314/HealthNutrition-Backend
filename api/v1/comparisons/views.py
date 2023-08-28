@@ -51,7 +51,7 @@ class ComparedProductTypesListView(ListAPIView):
     @order_queryset(*PRODUCT_TYPES_ORDERING)
     def get_queryset(self):
         product_types = Comparison.objects.product_types(self.request.user)
-        return product_types.products_price_annotation()
+        return product_types.products_annotation()
 
 
 class ComparedProductsListView(ListAPIView):

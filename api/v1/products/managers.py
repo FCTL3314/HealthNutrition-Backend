@@ -18,6 +18,9 @@ class ProductQuerySet(models.QuerySet):
 class ProductManager(models.Manager):
     _queryset_class = ProductQuerySet
 
+    def price_aggregation(self):
+        return self.all().price_aggregation()
+
     def search(self, query: str) -> QuerySet:
         return self.filter(
             Q(name__icontains=query) | Q(card_description__icontains=query)
@@ -25,7 +28,7 @@ class ProductManager(models.Manager):
 
 
 class ProductTypeQuerySet(models.QuerySet):
-    def products_price_annotation(self) -> QuerySet:
+    def products_annotation(self) -> QuerySet:
         return self.annotate(
             product__price__avg=Round(Avg("product__price"), PRICE_ROUNDING),
             product__price__max=Round(Max("product__price"), PRICE_ROUNDING),
@@ -36,6 +39,9 @@ class ProductTypeQuerySet(models.QuerySet):
 
 class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
+
+    def products_annotation(self):
+        return self.all().products_annotation()
 
     def search(self, query: str) -> QuerySet:
         return self.filter(Q(name__icontains=query) | Q(description__icontains=query))

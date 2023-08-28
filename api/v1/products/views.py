@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
 
-from api.decorators import order_queryset
 from api.permissions import IsAdminOrReadOnly
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.filters import ProductFilter
@@ -15,19 +14,17 @@ from api.v1.products.serializers import (
 )
 
 
-class ProductTypeModelViewSet(ModelViewSet):
+class ProductTypeViewSet(ModelViewSet):
+    queryset = ProductType.objects.products_annotation().order_by(
+        *PRODUCT_TYPES_ORDERING
+    )
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductTypeAggregatedSerializer
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
-    @order_queryset(*PRODUCT_TYPES_ORDERING)
-    def get_queryset(self):
-        initial_queryset = ProductType.objects.all()
-        return initial_queryset.products_price_annotation()
 
-
-class ProductModelViewSet(ModelViewSet):
+class ProductViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
     permission_classes = (IsAdminOrReadOnly,)

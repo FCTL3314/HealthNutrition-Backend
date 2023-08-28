@@ -18,7 +18,7 @@ class ISearchService(ABC):
 class ProductTypeSearchService(ISearchService):
     def get_searched_queryset(self):
         searched_queryset = ProductType.objects.search(self.query)
-        return searched_queryset.products_price_annotation()
+        return searched_queryset.products_annotation()
 
 
 class ProductSearchService(ISearchService):
