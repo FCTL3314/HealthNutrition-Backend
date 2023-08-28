@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from string import digits
 
 from django.contrib.auth.models import AbstractUser
@@ -10,7 +10,7 @@ from django.utils.timezone import now
 
 from api.decorators import order_queryset
 from api.utils.mail import convert_html_to_email_message
-from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION
+from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION_TIMEDELTA
 from api.v1.users.managers import EmailVerificationManager
 
 USER_SLUG_RELATED_FIELD = "username"
@@ -56,7 +56,7 @@ class User(AbstractUser):
 
 
 def get_email_verification_expiration() -> datetime:
-    return now() + timedelta(seconds=EV_EXPIRATION)
+    return now() + EV_EXPIRATION_TIMEDELTA
 
 
 class EmailVerification(models.Model):

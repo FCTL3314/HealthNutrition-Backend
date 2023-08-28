@@ -1,10 +1,8 @@
-from datetime import timedelta
-
 import pytest
 from django.utils.timezone import now
 from mixer.backend.django import mixer
 
-from api.v1.users.constants import EV_EXPIRATION
+from api.v1.users.constants import EV_EXPIRATION_TIMEDELTA
 
 
 @pytest.fixture()
@@ -16,18 +14,18 @@ def email_verification():
 def expired_email_verification():
     return mixer.blend(
         "users.EmailVerification",
-        expiration=now() - timedelta(seconds=EV_EXPIRATION),
+        expiration=now() - EV_EXPIRATION_TIMEDELTA,
     )
 
 
 @pytest.fixture()
 def email_verifications():
-    return mixer.cycle(5).blend("users.EmailVerification")
+    return mixer.cycle().blend("users.EmailVerification")
 
 
 @pytest.fixture()
 def expired_email_verifications():
-    return mixer.cycle(5).blend(
+    return mixer.cycle().blend(
         "users.EmailVerification",
-        expiration=now() - timedelta(seconds=EV_EXPIRATION),
+        expiration=now() - EV_EXPIRATION_TIMEDELTA,
     )

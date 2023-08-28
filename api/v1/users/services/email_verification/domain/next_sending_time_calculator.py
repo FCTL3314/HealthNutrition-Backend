@@ -1,14 +1,14 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from api.common.services import AbstractService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
-from api.v1.users.constants import EV_SENDING_INTERVAL
+from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.services.data_transfer import EmailVerificationDTO
 
 
 class EVNextSendingTimeService(AbstractService):
     """
-    Calculates the date and time when the confirmation
+    Calculates the date and time when the verification
     email can be resent.
     """
 
@@ -23,12 +23,4 @@ class EVNextSendingTimeService(AbstractService):
     def execute(self) -> datetime:
         if self._latest_verification is None:
             return self._time_provider.now
-        return self._latest_verification.created_at + self._sending_interval
-
-    @property
-    def _sending_interval(self) -> timedelta:
-        """
-        Returns the interval at which the message is sent as
-        a timedelta object.
-        """
-        return timedelta(seconds=EV_SENDING_INTERVAL)
+        return self._latest_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA

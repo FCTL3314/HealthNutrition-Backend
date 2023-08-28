@@ -1,12 +1,10 @@
-from datetime import timedelta
-
 import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.utils.timezone import now
 from mixer.backend.django import mixer
 
-from api.v1.users.constants import EV_EXPIRATION
+from api.v1.users.constants import EV_EXPIRATION_TIMEDELTA
 from api.v1.users.models import EmailVerification
 
 User = get_user_model()
@@ -42,7 +40,7 @@ class TestUserModel:
         return mixer.cycle(5).blend(
             "users.EmailVerification",
             user=user,
-            expiration=now() - timedelta(seconds=EV_EXPIRATION),
+            expiration=now() - EV_EXPIRATION_TIMEDELTA,
         )
 
 
@@ -77,7 +75,7 @@ class TestEmailVerificationManager:
     @staticmethod
     @pytest.mark.django_db
     def test_last_sent(user: User):
-        mixer.cycle(5).blend("users.EmailVerification", user=user)
+        mixer.cycle(2).blend("users.EmailVerification", user=user)
         expected = EmailVerification.objects.latest("created_at")
         actual = EmailVerification.objects.last_sent(user.id)
         assert expected == actual
