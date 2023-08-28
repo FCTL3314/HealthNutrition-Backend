@@ -16,14 +16,13 @@ from api.v1.stores.models import Store
 User = get_user_model()
 
 
-STORE_DETAIL = "api:v1:stores:stores-detail"
-STORES = "api:v1:stores:stores-list"
-
-
 class TestStoreViewSet:
+    URL_PATTERN = "api:v1:stores:stores-list"
+    DETAIL_URL_PATTERN = "api:v1:stores:stores-detail"
+
     @pytest.mark.django_db
     def test_detail(self, client, store: Store):
-        path = reverse(STORE_DETAIL, args=(store.slug,))
+        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
 
         RetrieveCommonTest(client, path).run_test(
             (
@@ -39,13 +38,13 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_list(self, client, stores: list[Store]):
-        path = reverse(STORES)
+        path = reverse(self.URL_PATTERN)
 
         ListCommonTest(client, path).run_test()
 
     @pytest.mark.django_db
     def test_create(self, client, admin_user: User, faker: Faker):
-        path = reverse(STORES)
+        path = reverse(self.URL_PATTERN)
         data = {
             "name": faker.name(),
             "url": faker.url(),
@@ -60,7 +59,7 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_update(self, client, store: Store, admin_user: User, faker: Faker):
-        path = reverse(STORE_DETAIL, args=(store.slug,))
+        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
         fields = {
             "name": faker.name(),
             "description": faker.text(),
@@ -73,7 +72,7 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_destroy(self, client, store: Store, admin_user: User):
-        path = reverse(STORE_DETAIL, args=(store.slug,))
+        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
 
         DestroyCommonTest(client, path, admin_user).run_test(Store)
 

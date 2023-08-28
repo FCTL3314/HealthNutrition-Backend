@@ -8,6 +8,16 @@ def user():
 
 
 @pytest.fixture()
+def verified_user():
+    return mixer.blend("users.User", is_verified=True)
+
+
+@pytest.fixture()
+def unverified_user():
+    return mixer.blend("users.User", is_verified=False)
+
+
+@pytest.fixture()
 def users():
     return mixer.cycle(5).blend("users.User")
 

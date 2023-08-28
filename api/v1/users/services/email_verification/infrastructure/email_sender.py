@@ -121,5 +121,5 @@ class EVSenderService(AbstractService):
         return APIResponse(
             detail=EVSendErrors.ALREADY_VERIFIED.message,
             code=EVSendErrors.ALREADY_VERIFIED.code,
-            status=status.HTTP_429_TOO_MANY_REQUESTS,
+            status=status.HTTP_400_BAD_REQUEST,
         )

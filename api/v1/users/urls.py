@@ -3,7 +3,7 @@ from djoser.views import UserViewSet
 from rest_framework import routers
 
 from api.v1.users.constants import ALLOWED_DJOSER_ENDPOINTS
-from api.v1.users.views import EmailVerificationCreateAPIView, VerifyUserUpdateAPIView
+from api.v1.users.views import EmailVerificationCreateView, VerifyUserUpdateView
 
 app_name = "users"
 
@@ -15,8 +15,8 @@ djoser_paths = [
 ]
 
 verification_paths = [
-    path("send/", EmailVerificationCreateAPIView.as_view(), name="verification-send"),
-    path("verify/", VerifyUserUpdateAPIView.as_view(), name="verify"),
+    path("send/", EmailVerificationCreateView.as_view(), name="verification-send"),
+    path("verify/", VerifyUserUpdateView.as_view(), name="verify"),
 ]
 
 urlpatterns = [

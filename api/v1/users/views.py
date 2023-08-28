@@ -1,4 +1,5 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from api.v1.users.serializers import (
     CurrentUserSerializer,
@@ -11,8 +12,9 @@ from api.v1.users.services.email_verification import (
 )
 
 
-class EmailVerificationCreateAPIView(CreateAPIView):
+class EmailVerificationCreateView(CreateAPIView):
     serializer_class = EmailVerificationSerializer
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         return EVSenderService(
@@ -21,8 +23,9 @@ class EmailVerificationCreateAPIView(CreateAPIView):
         ).execute()
 
 
-class VerifyUserUpdateAPIView(UpdateAPIView):
+class VerifyUserUpdateView(UpdateAPIView):
     serializer_class = UserVerificationSerializer
+    permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
         return EmailVerifierService(
