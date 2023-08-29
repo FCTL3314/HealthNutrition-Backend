@@ -6,19 +6,18 @@ from api.v1.products.constants import PRICE_ROUNDING
 
 
 class ProductQuerySet(models.QuerySet):
-    def price_aggregation(self) -> dict:
-        aggregations = self.aggregate(
+    def price_aggregation(self) -> dict[str, float]:
+        return self.aggregate(
             price__min=Round(Min("price"), PRICE_ROUNDING),
             price__max=Round(Max("price"), PRICE_ROUNDING),
             price__avg=Round(Avg("price"), PRICE_ROUNDING),
         )
-        return aggregations
 
 
 class ProductManager(models.Manager):
     _queryset_class = ProductQuerySet
 
-    def price_aggregation(self):
+    def price_aggregation(self) -> QuerySet:
         return self.all().price_aggregation()
 
     def search(self, query: str) -> QuerySet:
@@ -40,7 +39,7 @@ class ProductTypeQuerySet(models.QuerySet):
 class ProductTypeManager(models.Manager):
     _queryset_class = ProductTypeQuerySet
 
-    def products_annotation(self):
+    def products_annotation(self) -> QuerySet:
         return self.all().products_annotation()
 
     def search(self, query: str) -> QuerySet:

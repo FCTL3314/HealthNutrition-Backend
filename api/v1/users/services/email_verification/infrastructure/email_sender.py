@@ -41,7 +41,7 @@ class EVSendErrors:
 
 class EVSenderService(AbstractService):
     """
-    Sends a confirmation email to the provided user, if possible,
+    Sends a verification email to the provided user, if possible,
     otherwise returns an error response.
     """
 
@@ -56,9 +56,8 @@ class EVSenderService(AbstractService):
             self.latest_verification_dto
         )
         self._sending_availability_service = EVAvailabilityService(
-            UserAdapter.to_dto(user),
+            UserAdapter().to_dto(user),
             EVSendingIntervalCheckerService(
-                self.latest_verification_dto,
                 self._next_sending_time_calculator,
             ),
         )
@@ -68,7 +67,7 @@ class EVSenderService(AbstractService):
         latest_verification = EmailVerification.objects.last_sent(self._user.id)
         if latest_verification is None:
             return None
-        return EVAdapter.to_dto(latest_verification)
+        return EVAdapter().to_dto(latest_verification)
 
     def execute(self) -> APIResponse:
         availability_status = self._sending_availability_service.execute()

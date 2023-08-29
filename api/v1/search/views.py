@@ -12,7 +12,7 @@ from api.v1.search.serializers import SearchSerializer
 from api.v1.search.services import ProductSearchService, ProductTypeSearchService
 
 
-class ProductTypeSearchListAPIView(ListAPIView):
+class ProductTypeSearchListView(ListAPIView):
     serializer_class = ProductTypeAggregatedSerializer
     pagination_class = ProductTypePageNumberPagination
 
@@ -22,7 +22,7 @@ class ProductTypeSearchListAPIView(ListAPIView):
         ).get_searched_queryset()
 
 
-class ProductSearchListAPIView(ListAPIView):
+class ProductSearchListView(ListAPIView):
     serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
 

@@ -1,9 +1,9 @@
 from typing import Any
 
-from rest_framework.response import Response as DRFResponse
+from rest_framework.response import Response
 
 
-class APIResponse(DRFResponse):
+class APIResponse(Response):
     def __init__(
         self,
         data=None,
@@ -16,9 +16,13 @@ class APIResponse(DRFResponse):
         exception=False,
         content_type=None,
     ):
-        data_content = data or self.build_error_data(detail, code, messages)
         super().__init__(
-            data_content, status, template_name, headers, exception, content_type
+            data or self.build_error_data(detail, code, messages),
+            status,
+            template_name,
+            headers,
+            exception,
+            content_type,
         )
 
     @staticmethod
@@ -33,5 +37,5 @@ class APIResponse(DRFResponse):
         if code is not None:
             data_content["code"] = code
         if messages is not None:
-            data_content["messages"] = messages  # type: ignore[assignment]
+            data_content["messages"] = messages
         return data_content
