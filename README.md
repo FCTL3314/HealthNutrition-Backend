@@ -102,8 +102,8 @@ savings while shopping across different stores for a wide range of products.
 
 <details><summary><h1>❕ Peculiarities</h1></summary>
 
-* #### The code contains the following abbreviations::
-  * **EV - EmailVerification**
+### Abbreviations:
+* **EV - EmailVerification**
 
 </details>
 
