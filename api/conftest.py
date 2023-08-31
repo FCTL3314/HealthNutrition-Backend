@@ -1,6 +1,8 @@
 import pytest
 from mixer.backend.django import mixer
 
+from api.common.time_providers import UTCTimeProvider
+
 
 @pytest.fixture()
 def user():
@@ -35,3 +37,8 @@ def product_type():
 @pytest.fixture()
 def product():
     return mixer.blend("products.Product")
+
+
+@pytest.fixture()
+def utc_time_provider():
+    return UTCTimeProvider()
