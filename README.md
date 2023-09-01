@@ -114,8 +114,7 @@ savings while shopping across different stores for a wide range of products.
   ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/015be672-f847-48ea-b409-27ab2ff03b48)
 
 3. #### Run docker services for local development: `docker-compose -f docker/local/docker-compose.yml up`
-
-> #### Django automatically detects code changes by using a docker volume that spans all the code.
+4. #### Run server: `python manage.py runserver`
 
 </details>
 

@@ -6,11 +6,15 @@ services:
     image: redis:alpine
     volumes:
       - ../../data/redis/:/data/
+    ports:
+      - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:alpine
     volumes:
       - ../../data/rabbitmq/:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
 
   celery:
     build:
@@ -21,24 +25,8 @@ services:
     entrypoint: docker/local/celery_entrypoint.sh
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.local
+      RABBITMQ_HOST: rabbitmq
     env_file:
       - ../../.env
     depends_on:
       - rabbitmq
-
-  web:
-    build:
-      context: ../../
-      dockerfile: docker/local/Dockerfile
-    volumes:
-      - ../../:/opt/StoreTracker/
-    entrypoint: docker/local/web_entrypoint.sh
-    environment:
-      DJANGO_SETTINGS_MODULE: core.settings.local
-    env_file:
-      - ../../.env
-    ports:
-      - "8000:8000"
-    depends_on:
-      - redis
-      - celery
