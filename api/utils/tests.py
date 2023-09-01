@@ -1,7 +1,9 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.timezone import now
 from faker import Faker
 from rest_framework_simplejwt.tokens import AccessToken
 
+from api.v1.users.constants import EV_EXPIRATION_TIMEDELTA
 from api.v1.users.models import User
 
 
@@ -21,3 +23,7 @@ def get_auth_header(user: User) -> dict[str, str]:
     """Returns an authorization header based on received token."""
     token = get_access_token(user)
     return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
+
+
+def get_expired_email_verification_kwargs() -> dict:
+    return {"expiration": now() - EV_EXPIRATION_TIMEDELTA}

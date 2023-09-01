@@ -1,8 +1,7 @@
 import pytest
-from django.utils.timezone import now
 from mixer.backend.django import mixer
 
-from api.v1.users.constants import EV_EXPIRATION_TIMEDELTA
+from api.utils.tests import get_expired_email_verification_kwargs
 
 
 @pytest.fixture()
@@ -14,7 +13,7 @@ def email_verification():
 def expired_email_verification():
     return mixer.blend(
         "users.EmailVerification",
-        expiration=now() - EV_EXPIRATION_TIMEDELTA,
+        **get_expired_email_verification_kwargs(),
     )
 
 
@@ -27,5 +26,5 @@ def email_verifications():
 def expired_email_verifications():
     return mixer.cycle().blend(
         "users.EmailVerification",
-        expiration=now() - EV_EXPIRATION_TIMEDELTA,
+        **get_expired_email_verification_kwargs(),
     )
