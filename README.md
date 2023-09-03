@@ -111,7 +111,7 @@ savings while shopping across different stores for a wide range of products.
 
 1. #### Clone or download the repository.
 2. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
-  ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/015be672-f847-48ea-b409-27ab2ff03b48)
+  ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/55086b3e-5c87-43db-b718-cd96d37adcbf)
 
 3. #### Run docker services for local development: `docker-compose -f docker/local/docker-compose.yml up`
 4. #### Run server: `python manage.py runserver`
