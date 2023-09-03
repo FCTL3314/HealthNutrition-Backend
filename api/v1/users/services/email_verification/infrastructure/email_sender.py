@@ -24,7 +24,6 @@ from api.v1.users.services.email_verification.domain.next_sending_time_calculato
 from api.v1.users.services.email_verification.domain.sending_interval_checker import (
     EVSendingIntervalCheckerService,
 )
-from api.v1.users.tasks import send_verification_email
 
 User = get_user_model()
 
@@ -93,7 +92,7 @@ class EVSenderService(AbstractService):
         Creates an EmailVerification object and sends it.
         """
         email_verification = EmailVerification.objects.create(user_id=self._user.id)
-        send_verification_email.delay(object_id=email_verification.id)
+        email_verification.send_verification_email()
         return email_verification
 
     def _email_sent_response(

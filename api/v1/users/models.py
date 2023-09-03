@@ -8,8 +8,8 @@ from django.db.models import QuerySet
 from django.utils.text import slugify
 from django.utils.timezone import now
 
+from api.common.tasks import send_html_mail
 from api.decorators import order_queryset
-from api.utils.mail import convert_html_to_email_message
 from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION_TIMEDELTA
 from api.v1.users.managers import EmailVerificationManager
 
@@ -88,22 +88,17 @@ class EmailVerification(models.Model):
         return code
 
     def send_verification_email(
-        self,
-        subject_template_name: str,
-        html_email_template_name: str,
+        self, html_email_template_name: str = "email/verification_email.html"
     ) -> None:
-        context = {
-            "user": self.user,
-            "verification_code": self.code,
-        }
-
-        msg = convert_html_to_email_message(
-            subject_template_name=subject_template_name,
+        send_html_mail.delay(
+            subject="Your email verification",
             html_email_template_name=html_email_template_name,
-            emails_list=[self.user.email],
-            context=context,
+            recipient_list=[self.user.email],
+            context={
+                "username": self.user.username,
+                "verification_code": self.code,
+            },
         )
-        msg.send()
 
     def is_expired(self) -> bool:
         return self.expiration < now()
