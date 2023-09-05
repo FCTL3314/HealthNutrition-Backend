@@ -52,6 +52,9 @@ def test_ev_sending_service(
 
     if expected_status == HTTPStatus.CREATED:
         assert EmailVerification.objects.count() == 1
+        email_verification = EmailVerification.objects.first()
+        serialized_email_verification = EmailVerificationSerializer(email_verification)
+        assert serialized_email_verification.data == response.data
 
 
 @pytest.mark.django_db

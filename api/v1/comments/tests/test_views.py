@@ -24,13 +24,13 @@ STORE_COMMENTS = "api:v1:comments:store-list"
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "path,comment_model",
+    "path, comment_model",
     [
         (reverse(PRODUCT_COMMENTS), ProductComment),
         (reverse(STORE_COMMENTS), StoreComment),
     ],
 )
-def test_comment_list(client, path: str, comment_model: BaseComment):
+def test_comment_list(client, path: str, comment_model: type[BaseComment]):
     mixer.cycle(COMMENTS_PAGINATE_BY * 2).blend(comment_model)
 
     response = client.get(path)
@@ -41,7 +41,7 @@ def test_comment_list(client, path: str, comment_model: BaseComment):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "path,comment_model,comment_related_model,model_id_key",
+    "path, comment_model, comment_related_model, model_id_key",
     [
         (reverse(PRODUCT_COMMENTS), ProductComment, Product, "product_id"),
         (reverse(STORE_COMMENTS), StoreComment, Store, "store_id"),
@@ -76,7 +76,7 @@ def test_comment_create(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "url_pattern,comment_model",
+    "url_pattern, comment_model",
     [
         (PRODUCT_COMMENT_DETAIL, ProductComment),
         (STORE_COMMENT_DETAIL, StoreComment),
@@ -108,7 +108,7 @@ def test_comment_update(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "url_pattern,comment_model",
+    "url_pattern, comment_model",
     [
         (PRODUCT_COMMENT_DETAIL, ProductComment),
         (STORE_COMMENT_DETAIL, StoreComment),

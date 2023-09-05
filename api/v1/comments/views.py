@@ -25,10 +25,10 @@ class BaseCommentViewSet(
 
 
 class ProductCommentViewSet(BaseCommentViewSet):
-    queryset = ProductComment.objects.all()
+    queryset = ProductComment.objects.newest()
     serializer_class = ProductCommentSerializer
 
 
 class StoreCommentViewSet(BaseCommentViewSet):
-    queryset = StoreComment.objects.all()
+    queryset = StoreComment.objects.newest()
     serializer_class = StoreCommentSerializer

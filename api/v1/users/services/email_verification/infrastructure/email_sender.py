@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.serializers import Serializer
 
 from api.common.services import AbstractService
+from api.common.tasks import send_html_mail
 from api.responses import APIResponse
 from api.utils.errors import ErrorMessage
 from api.v1.users.models import EmailVerification
@@ -91,8 +92,16 @@ class EVSenderService(AbstractService):
         """
         Creates an EmailVerification object and sends it.
         """
-        email_verification = EmailVerification.objects.create(user_id=self._user.id)
-        email_verification.send_verification_email()
+        email_verification = EmailVerification.objects.create(user=self._user)
+        send_html_mail.delay(
+            subject="Your email verification",
+            html_email_template_name="email/verification_email.html",
+            recipient_list=[email_verification.user.email],
+            context={
+                "username": email_verification.user.username,
+                "verification_code": email_verification.code,
+            },
+        )
         return email_verification
 
     def _email_sent_response(

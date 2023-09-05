@@ -21,7 +21,7 @@ def unverified_user():
 
 @pytest.fixture()
 def users():
-    return mixer.cycle(5).blend("users.User")
+    return mixer.cycle().blend("users.User")
 
 
 @pytest.fixture()

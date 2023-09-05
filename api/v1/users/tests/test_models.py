@@ -1,6 +1,5 @@
 import pytest
 from django.contrib.auth import get_user_model
-from django.core import mail
 from django.utils.timezone import now
 from mixer.backend.django import mixer
 
@@ -21,8 +20,8 @@ class TestUserModel:
     @staticmethod
     @pytest.mark.django_db
     def test_create_email_verification(user: User):
-        verification = user.create_email_verification()
-        assert EmailVerification.objects.first() == verification
+        email_verification = EmailVerification.objects.create(user=user)
+        assert EmailVerification.objects.first() == email_verification
 
     @pytest.mark.django_db
     def test_valid_email_verifications(self, user: User):
@@ -53,22 +52,6 @@ class TestEmailVerificationModel:
     ):
         assert not email_verification.is_expired()
         assert expired_email_verification.is_expired()
-
-    @staticmethod
-    @pytest.mark.django_db
-    def test_send_verification_email(user: User):
-        verification = user.create_email_verification()
-
-        subject_template_name = "email/verification_email_subject.html"
-        html_email_template_name = "email/verification_email.html"
-
-        verification.send_verification_email(
-            subject_template_name, html_email_template_name
-        )
-
-        assert len(mail.outbox) == 1
-        email = mail.outbox[0]
-        assert email.to == [user.email]
 
 
 class TestEmailVerificationManager:
