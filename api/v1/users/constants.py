@@ -2,6 +2,10 @@ from datetime import timedelta
 
 from core.settings.base import env
 
+USERS_PAGINATE_BY = 12
+
+USERS_ORDERING = ("username",)
+
 VISITS_CACHE_TIME = (60 * 60) * 12
 
 EV_SENDING_INTERVAL = env.int("EV_SENDING_INTERVAL")

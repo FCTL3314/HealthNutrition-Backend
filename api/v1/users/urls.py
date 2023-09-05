@@ -1,9 +1,12 @@
 from django.urls import include, path
-from djoser.views import UserViewSet
 from rest_framework import routers
 
 from api.v1.users.constants import ALLOWED_DJOSER_ENDPOINTS
-from api.v1.users.views import EmailVerificationCreateView, VerifyUserUpdateView
+from api.v1.users.views import (
+    EmailVerificationCreateView,
+    UserViewSet,
+    VerifyEmailUpdateView,
+)
 
 app_name = "users"
 
@@ -16,7 +19,7 @@ djoser_paths = [
 
 verification_paths = [
     path("send/", EmailVerificationCreateView.as_view(), name="verification-send"),
-    path("verify/", VerifyUserUpdateView.as_view(), name="verify"),
+    path("verify/", VerifyEmailUpdateView.as_view(), name="verify"),
 ]
 
 urlpatterns = [
