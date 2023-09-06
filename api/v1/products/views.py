@@ -1,3 +1,4 @@
+from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
@@ -18,6 +19,8 @@ class ProductTypeViewSet(ModelViewSet):
     queryset = ProductType.objects.products_annotation().order_by(
         *PRODUCT_TYPES_ORDERING
     )
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name", "description")
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductTypeAggregatedSerializer
     pagination_class = ProductTypePageNumberPagination
@@ -27,6 +30,8 @@ class ProductTypeViewSet(ModelViewSet):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name", "card_description")
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
