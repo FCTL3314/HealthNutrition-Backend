@@ -2,6 +2,7 @@ from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import GenericViewSet
 
+from api.v1.comments.filters import ProductCommentFilter, StoreCommentFilter
 from api.v1.comments.models import ProductComment, StoreComment
 from api.v1.comments.paginators import CommentPageNumberPagination
 from api.v1.comments.serializers import ProductCommentSerializer, StoreCommentSerializer
@@ -27,8 +28,10 @@ class BaseCommentViewSet(
 class ProductCommentViewSet(BaseCommentViewSet):
     queryset = ProductComment.objects.newest()
     serializer_class = ProductCommentSerializer
+    filterset_class = ProductCommentFilter
 
 
 class StoreCommentViewSet(BaseCommentViewSet):
     queryset = StoreComment.objects.newest()
     serializer_class = StoreCommentSerializer
+    filterset_class = StoreCommentFilter
