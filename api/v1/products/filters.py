@@ -11,7 +11,4 @@ class ProductFilter(filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = (
-            "product_type",
-            "product_type__slug",
-        )
+        fields = ("product_type__slug",)

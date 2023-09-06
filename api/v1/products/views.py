@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 
@@ -30,7 +31,10 @@ class ProductTypeViewSet(ModelViewSet):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.SearchFilter,
+    )
     search_fields = ("name", "card_description")
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ProductSerializer
