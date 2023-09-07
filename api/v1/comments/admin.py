@@ -5,7 +5,7 @@ from api.v1.comments.models import ProductComment, StoreComment
 
 class BaseCommentAdmin(admin.TabularInline):
     search_fields = ("text",)
-    ordering = ("text",)
+    ordering = ("created_at",)
 
 
 class ProductCommentAdmin(BaseCommentAdmin):
