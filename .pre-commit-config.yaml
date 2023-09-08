@@ -16,18 +16,12 @@ repos:
       - id: pyupgrade
         args: ['--py310-plus']
 
-  - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v2.0.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.287
     hooks:
-      - id: autopep8
-        args: ['--max-line-length=120', '--in-place']
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        exclude: "(__init__.py)|(migrations)|(settings)"
-        args: ["--ignore=E501,F821", "--max-line-length=120"]
+      - id: ruff
+        exclude: '(__init__.py)|(migrations)|(settings)'
+        args: ['--line-length=120', '--fix']
 
   - repo: https://github.com/psf/black
     rev: 23.7.0

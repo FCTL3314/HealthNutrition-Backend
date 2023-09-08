@@ -1,5 +1,3 @@
-import socket
-
 from core.settings.base import *
 
 # Static files

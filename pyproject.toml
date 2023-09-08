@@ -33,7 +33,7 @@ pytest-django = "4.5.2"
 pre-commit = "^3.3.3"
 black = "^23.7.0"
 isort = "^5.12.0"
-flake8 = "^6.1.0"
+ruff = "^0.0.287"
 
 [build-system]
 requires = ["poetry-core"]
@@ -46,6 +46,13 @@ filterwarnings = [
     "ignore::DeprecationWarning:kombu.*:0",
     "ignore::DeprecationWarning:celery.*:0",
     "ignore::DeprecationWarning:rest_framework_simplejwt.*:0",
+]
+
+[tool.ruff]
+line-length = 119
+exclude = [
+    "settings",
+    "migrations",
 ]
 
 [tool.mypy]
