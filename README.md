@@ -129,6 +129,6 @@ savings while shopping across different stores for a wide range of products.
 <details><summary><h1>🪝 Pre-Commit hooks</h1></summary>
 
 1. #### Install: `pre-commit install`
-2. #### Test run `pre-commit run --all-files`
+2. #### Test run: `pre-commit run --all-files`
 
 </details>
