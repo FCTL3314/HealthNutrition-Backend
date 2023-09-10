@@ -45,6 +45,7 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailVerification
         fields = ("expiration", "created_at")
+        read_only_fields = ("expiration", "created_at")
 
 
 class UserVerificationSerializer(serializers.Serializer):

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_filters",
     "corsheaders",
+    "drf_yasg",
     "api",
     "api.v1",
     "api.v1.users",
