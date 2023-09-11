@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_filters",
     "corsheaders",
-    "drf_yasg",
+    "drf_spectacular",
     "api",
     "api.v1",
     "api.v1.users",
@@ -179,7 +179,27 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+}
+
+# Spectacular API documentation
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Store Tracker API",
+    "DESCRIPTION": (
+        "Django / DRF based app for comparing prices between " "different stores."
+    ),
+    "CONTACT": {
+        "email": "solovev.nikita.05@gmail.com",
+    },
+    "LICENSE": "Apache 2.0",
+    "VERSION": "1.0.0",
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+    "SWAGGER_UI_SETTINGS": {
+        "filter": True,
+    },
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # Simple JWT

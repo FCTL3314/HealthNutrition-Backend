@@ -1,9 +1,11 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from drf_spectacular.utils import extend_schema_view
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from api.decorators import order_queryset
 from api.v1.users.constants import USERS_ORDERING
+from api.v1.users.docs import EMAIL_VERIFICATION_VIEW_DOCS, VERIFY_EMAIL_VIEW_DOCS
 from api.v1.users.paginators import UserPageNumberPagination
 from api.v1.users.serializers import (
     CurrentUserSerializer,
@@ -24,6 +26,7 @@ class UserViewSet(DjoserUserViewSet):
         return super().get_queryset()
 
 
+@extend_schema_view(**EMAIL_VERIFICATION_VIEW_DOCS)
 class EmailVerificationCreateView(CreateAPIView):
     serializer_class = EmailVerificationSerializer
     permission_classes = (IsAuthenticated,)
@@ -35,11 +38,12 @@ class EmailVerificationCreateView(CreateAPIView):
         ).execute()
 
 
-class VerifyEmailUpdateView(UpdateAPIView):
+@extend_schema_view(**VERIFY_EMAIL_VIEW_DOCS)
+class VerifyEmailUpdateView(CreateAPIView):
     serializer_class = UserVerificationSerializer
     permission_classes = (IsAuthenticated,)
 
-    def update(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         return EmailVerifierService(
             self.serializer_class,
             CurrentUserSerializer,
