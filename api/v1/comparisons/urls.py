@@ -11,7 +11,7 @@ urlpatterns = [
         name="product-types",
     ),
     path(
-        "products/<slug:slug>/",
+        "products/<slug:product_type_slug>/",
         views.ComparedProductsListView.as_view(),
         name="products",
     ),
