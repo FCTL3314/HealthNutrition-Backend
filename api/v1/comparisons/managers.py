@@ -11,7 +11,7 @@ class ComparisonQuerySet(models.QuerySet):
         product_type_ids = self.filter(user=user).values_list(
             "product__product_type", flat=True
         )
-        return ProductType.objects.filter(id__in=product_type_ids.distinct())
+        return ProductType.objects.filter(id__in=product_type_ids)
 
     def products(self, product_type: ProductType, user: User):
         product_ids = self.filter(

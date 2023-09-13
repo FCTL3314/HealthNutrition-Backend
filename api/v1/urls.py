@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from api.v1.api_schema import urlpatterns as schema_urlpatterns
+from api.v1.schema_urls import urlpatterns as schema_urlpatterns
 
 app_name = "v1"
 
