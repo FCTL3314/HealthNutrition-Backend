@@ -113,9 +113,9 @@ savings while shopping across different stores for a wide range of products.
 2. #### Install dependencies: `poetry install`
 3. #### Activate the Poetry virtual environment: `poetry shell`
 4. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
-    ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/55086b3e-5c87-43db-b718-cd96d37adcbf)
-5. #### Run docker services for development: `docker-compose -f docker/local/docker-compose.yml up`
-6. #### Run the development server: `python manage.py runserver`
+    ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/c31d86db-7bec-4693-8e97-d649c6e7184f)
+6. #### Run docker services for development: `docker-compose -f docker/local/docker-compose.yml up`
+7. #### Run the development server: `python manage.py runserver`
 
 </details>
 
