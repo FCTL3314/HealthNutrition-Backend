@@ -43,7 +43,7 @@ class TestUserVerifyUpdateView:
 
     @pytest.mark.django_db
     def test_success(self, client, email_verification: EmailVerification):
-        response = client.patch(
+        response = client.post(
             self.path,
             data={"code": email_verification.code},
             content_type="application/json",
@@ -56,7 +56,7 @@ class TestUserVerifyUpdateView:
     def test_invalid_verification_code(
         self, client, email_verification: EmailVerification
     ):
-        response = client.patch(
+        response = client.post(
             self.path,
             data={"code": self._create_invalid_code(email_verification.code)},
             content_type="application/json",
@@ -69,7 +69,7 @@ class TestUserVerifyUpdateView:
     def test_verification_expired(
         self, client, expired_email_verification: EmailVerification
     ):
-        response = client.patch(
+        response = client.post(
             self.path,
             data={"code": expired_email_verification.code},
             content_type="application/json",

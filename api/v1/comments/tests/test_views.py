@@ -24,16 +24,48 @@ STORE_COMMENTS = "api:v1:comments:store-list"
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "path, comment_model",
+    (
+        "path,"
+        "comment_model,"
+        "comment_related_model,"
+        "get_related_kwargs,"
+        "param_arg"
+    ),
     [
-        (reverse(PRODUCT_COMMENTS), ProductComment),
-        (reverse(STORE_COMMENTS), StoreComment),
+        (
+            reverse(PRODUCT_COMMENTS),
+            ProductComment,
+            Product,
+            lambda product: {"product_id": product.id},
+            "product_id",
+        ),
+        (
+            reverse(STORE_COMMENTS),
+            StoreComment,
+            Store,
+            lambda store: {"store_id": store.id},
+            "store_id",
+        ),
     ],
 )
-def test_comment_list(client, path: str, comment_model: type[BaseComment]):
-    mixer.cycle(COMMENTS_PAGINATE_BY * 2).blend(comment_model)
+def test_comment_list(
+    client,
+    path: str,
+    comment_model: type[BaseComment],
+    comment_related_model: type[Model],
+    get_related_kwargs: callable,
+    param_arg: str,
+):
+    comment_related_object = mixer.blend(comment_related_model)
+    mixer.cycle(COMMENTS_PAGINATE_BY * 2).blend(
+        comment_model,
+        **get_related_kwargs(comment_related_object),
+    )
 
-    response = client.get(path)
+    response = client.get(
+        path,
+        data={param_arg: comment_related_object.id},
+    )
 
     assert response.status_code == HTTPStatus.OK
     assert len(response.data["results"]) == COMMENTS_PAGINATE_BY
