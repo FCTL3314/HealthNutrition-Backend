@@ -1,8 +1,8 @@
-from api.common.services import AbstractService
+from api.common.services import IService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
 
 
-class EVSendingIntervalCheckerService(AbstractService):
+class EVSendingIntervalCheckerService(IService):
     """
     Calculates whether the allowed interval for sending
     the next verification email has passed.
@@ -10,7 +10,7 @@ class EVSendingIntervalCheckerService(AbstractService):
 
     def __init__(
         self,
-        next_sending_time_calculator: AbstractService,
+        next_sending_time_calculator: IService,
         time_provider: AbstractTimeProvider = UTCTimeProvider(),
     ):
         self._next_sending_time_calculator = next_sending_time_calculator

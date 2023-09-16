@@ -1,6 +1,6 @@
 from enum import Enum
 
-from api.common.services import AbstractService
+from api.common.services import IService
 from api.v1.users.services.data_transfer import UserDTO
 
 
@@ -14,7 +14,7 @@ class EVAvailabilityStatus(Enum):
     ALREADY_VERIFIED = 3
 
 
-class EVAvailabilityService(AbstractService):
+class EVAvailabilityService(IService):
     """
     Calculates whether a verification email can be sent
     to the provided user.
@@ -23,7 +23,7 @@ class EVAvailabilityService(AbstractService):
     def __init__(
         self,
         user: UserDTO,
-        sending_interval_checker: AbstractService,
+        sending_interval_checker: IService,
     ):
         self._user = user
         self._sending_interval_checker = sending_interval_checker

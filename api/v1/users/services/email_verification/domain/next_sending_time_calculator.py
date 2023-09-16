@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from api.common.services import AbstractService
+from api.common.services import IService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.services.data_transfer import EmailVerificationDTO
 
 
-class EVNextSendingTimeService(AbstractService):
+class EVNextSendingTimeService(IService):
     """
     Calculates the date and time when the verification
     email can be resent.
