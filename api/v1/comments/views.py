@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import GenericViewSet
@@ -21,6 +22,8 @@ class BaseCommentViewSet(
 ):
     pagination_class = CommentPageNumberPagination
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    _filterset_class = None
+    filterset_actions = ("list",)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -28,16 +31,26 @@ class BaseCommentViewSet(
     def perform_update(self, serializer):
         serializer.save(edited=True)
 
+    @property
+    def is_filterset_action(self):
+        return self.action in self.filterset_actions
+
+    @property
+    def filterset_class(self) -> type[django_filters.FilterSet] | None:
+        if self.is_filterset_action:
+            return self._filterset_class
+        return None
+
 
 @product_comment_view_set_docs()
 class ProductCommentViewSet(BaseCommentViewSet):
     queryset = ProductComment.objects.newest()
     serializer_class = ProductCommentSerializer
-    filterset_class = ProductCommentFilter
+    _filterset_class = ProductCommentFilter
 
 
 @store_comment_view_set_docs()
 class StoreCommentViewSet(BaseCommentViewSet):
     queryset = StoreComment.objects.newest()
     serializer_class = StoreCommentSerializer
-    filterset_class = StoreCommentFilter
+    _filterset_class = StoreCommentFilter
