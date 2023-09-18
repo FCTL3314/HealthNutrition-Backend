@@ -22,7 +22,7 @@ class UserVerificationErrors:
     )
 
 
-class EmailVerifierService(IService):
+class UserEmailVerifierService(IService):
     """
     Verify the provided user's email, if possible,
     otherwise returns an error response.
@@ -47,7 +47,7 @@ class EmailVerifierService(IService):
     def execute(self) -> APIResponse:
         if self._email_verification is None:
             return self._invalid_verification_code_response()
-        if self._email_verification.is_expired():
+        if self._email_verification.is_expired:
             return self._verification_expired_response()
         self._user.verify()
         return self._successfully_verified_response()
