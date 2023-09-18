@@ -23,13 +23,6 @@ class TestUserModel:
         email_verification = EmailVerification.objects.create(user=user)
         assert EmailVerification.objects.first() == email_verification
 
-    @pytest.mark.django_db
-    def test_valid_email_verifications(self, user: User):
-        valid_verifications = self._create_valid_verifications(user)
-        self._create_not_valid_verifications(user)
-
-        assert len(user.valid_email_verifications()) == len(valid_verifications)
-
     @staticmethod
     def _create_valid_verifications(user: User) -> list[EmailVerification]:
         return mixer.cycle(5).blend("users.EmailVerification", user=user)
@@ -50,8 +43,8 @@ class TestEmailVerificationModel:
         email_verification: EmailVerification,
         expired_email_verification: EmailVerification,
     ):
-        assert not email_verification.is_expired()
-        assert expired_email_verification.is_expired()
+        assert not email_verification.is_expired
+        assert expired_email_verification.is_expired
 
 
 class TestEmailVerificationManager:

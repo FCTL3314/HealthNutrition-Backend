@@ -19,11 +19,10 @@ User = get_user_model()
 
 class TestProductTypeViewSet:
     URL_PATTERN = "api:v1:products:product-types-list"
-    DETAIL_URL_PATTERN = "api:v1:products:product-types-detail"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, product_type: ProductType):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product_type.slug,))
+        path = product_type.get_absolute_url()
 
         RetrieveCommonTest(client, path).run_test(
             (
@@ -64,7 +63,7 @@ class TestProductTypeViewSet:
     def test_update(
         self, client, product_type: ProductType, admin_user: User, faker: Faker
     ):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product_type.slug,))
+        path = product_type.get_absolute_url()
         fields = {
             "name": faker.name(),
             "description": faker.text(),
@@ -77,18 +76,17 @@ class TestProductTypeViewSet:
 
     @pytest.mark.django_db
     def test_destroy(self, client, product_type: ProductType, admin_user: User):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product_type.slug,))
+        path = product_type.get_absolute_url()
 
         DestroyCommonTest(client, path, admin_user).run_test(ProductType)
 
 
 class TestProductViewSet:
     URL_PATTERN = "api:v1:products:products-list"
-    DETAIL_URL_PATTERN = "api:v1:products:products-detail"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, product: Product):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product.slug,))
+        path = product.get_absolute_url()
 
         RetrieveCommonTest(client, path).run_test(
             (
@@ -140,7 +138,7 @@ class TestProductViewSet:
 
     @pytest.mark.django_db
     def test_update(self, client, product: Product, admin_user: User, faker: Faker):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product.slug,))
+        path = product.get_absolute_url()
         fields = {
             "name": faker.name(),
             "price": faker.pyfloat(2, 2, positive=True),
@@ -155,7 +153,7 @@ class TestProductViewSet:
 
     @pytest.mark.django_db
     def test_destroy(self, client, product: Product, admin_user: User):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(product.slug,))
+        path = product.get_absolute_url()
 
         DestroyCommonTest(client, path, admin_user).run_test(Product)
 

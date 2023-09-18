@@ -13,8 +13,8 @@ from api.v1.users.serializers import (
     UserVerificationSerializer,
 )
 from api.v1.users.services.email_verification import (
-    EmailVerifierService,
     EVSenderService,
+    UserEmailVerifierService,
 )
 
 User = get_user_model()
@@ -79,7 +79,7 @@ def test_email_verifier_service(
         **get_expired_email_verification_kwargs() if expired else {},
     )
 
-    service = EmailVerifierService(
+    service = UserEmailVerifierService(
         UserVerificationSerializer,
         CurrentUserSerializer,
         unverified_user,

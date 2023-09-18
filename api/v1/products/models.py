@@ -31,7 +31,7 @@ class Product(models.Model):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("api:v1:products:product-detail", args=(self.slug,))
+        return reverse("api:v1:products:products-detail", args=(self.slug,))
 
 
 class ProductType(models.Model):
@@ -50,3 +50,6 @@ class ProductType(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
+
+    def get_absolute_url(self) -> str:
+        return reverse("api:v1:products:product-types-detail", args=(self.slug,))

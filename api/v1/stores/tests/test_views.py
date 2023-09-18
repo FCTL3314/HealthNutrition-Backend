@@ -18,11 +18,10 @@ User = get_user_model()
 
 class TestStoreViewSet:
     URL_PATTERN = "api:v1:stores:stores-list"
-    DETAIL_URL_PATTERN = "api:v1:stores:stores-detail"
 
     @pytest.mark.django_db
     def test_detail(self, client, store: Store):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
+        path = store.get_absolute_url()
 
         RetrieveCommonTest(client, path).run_test(
             (
@@ -59,7 +58,7 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_update(self, client, store: Store, admin_user: User, faker: Faker):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
+        path = store.get_absolute_url()
         fields = {
             "name": faker.name(),
             "description": faker.text(),
@@ -72,7 +71,7 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_destroy(self, client, store: Store, admin_user: User):
-        path = reverse(self.DETAIL_URL_PATTERN, args=(store.slug,))
+        path = store.get_absolute_url()
 
         DestroyCommonTest(client, path, admin_user).run_test(Store)
 

@@ -15,10 +15,7 @@ from api.v1.stores.models import Store
 User = get_user_model()
 
 
-PRODUCT_COMMENT_DETAIL = "api:v1:comments:product-detail"
 PRODUCT_COMMENTS = "api:v1:comments:product-list"
-
-STORE_COMMENT_DETAIL = "api:v1:comments:store-detail"
 STORE_COMMENTS = "api:v1:comments:store-list"
 
 
@@ -108,22 +105,21 @@ def test_comment_create(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "url_pattern, comment_model",
+    "comment_model",
     [
-        (PRODUCT_COMMENT_DETAIL, ProductComment),
-        (STORE_COMMENT_DETAIL, StoreComment),
+        ProductComment,
+        StoreComment,
     ],
 )
 def test_comment_update(
     client,
-    url_pattern: str,
     comment_model: type[BaseComment],
     comment_text: str,
     admin_user: User,
 ):
     comment_object = mixer.blend(comment_model)
 
-    path = reverse(url_pattern, args=(comment_object.id,))
+    path = comment_object.get_absolute_url()
 
     response = client.patch(
         path,
@@ -140,21 +136,20 @@ def test_comment_update(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "url_pattern, comment_model",
+    "comment_model",
     [
-        (PRODUCT_COMMENT_DETAIL, ProductComment),
-        (STORE_COMMENT_DETAIL, StoreComment),
+        ProductComment,
+        StoreComment,
     ],
 )
 def test_comment_delete(
     client,
-    url_pattern: str,
     comment_model: type[BaseComment],
     admin_user: User,
 ):
     comment_object = mixer.blend(comment_model)
 
-    path = reverse(url_pattern, args=(comment_object.id,))
+    path = comment_object.get_absolute_url()
 
     response = client.delete(path, **get_auth_header(admin_user))
 

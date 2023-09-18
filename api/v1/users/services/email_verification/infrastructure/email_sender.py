@@ -113,18 +113,17 @@ class EVSenderService(IService):
         )
 
     def _sending_limit_reached_response(self) -> APIResponse:
-        messages = {
-            "retry_after": self._next_sending_time_calculator.execute(),
-        }
         return APIResponse(
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
-            messages=messages,
+            messages={
+                "retry_after": self._next_sending_time_calculator.execute(),
+            },
             status=status.HTTP_429_TOO_MANY_REQUESTS,
         )
 
     @staticmethod
-    def _already_verified_response():
+    def _already_verified_response() -> APIResponse:
         return APIResponse(
             detail=EVSendErrors.ALREADY_VERIFIED.message,
             code=EVSendErrors.ALREADY_VERIFIED.code,

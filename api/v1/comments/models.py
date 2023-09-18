@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from api.v1.comments.managers import BaseCommentManager
 
@@ -21,6 +22,12 @@ class BaseComment(models.Model):
 class ProductComment(BaseComment):
     product = models.ForeignKey(to="products.Product", on_delete=models.CASCADE)
 
+    def get_absolute_url(self) -> str:
+        return reverse("api:v1:comments:product-detail", args=(self.id,))
+
 
 class StoreComment(BaseComment):
     store = models.ForeignKey(to="stores.Store", on_delete=models.CASCADE)
+
+    def get_absolute_url(self) -> str:
+        return reverse("api:v1:comments:store-detail", args=(self.id,))
