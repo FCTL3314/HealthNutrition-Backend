@@ -1,14 +1,12 @@
-import random
 from datetime import datetime
-from string import digits
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import QuerySet
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.timezone import now
 
-from api.decorators import order_queryset
+from api.utils.code_generation import generate_digits_code
 from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION_TIMEDELTA
 from api.v1.users.managers import EmailVerificationManager
 
@@ -28,10 +26,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    @order_queryset("-created_at")
-    def valid_email_verifications(self) -> QuerySet:
-        return self.emailverification_set.filter(expiration__gt=now())
-
     def update_email(self, new_email: str) -> None:
         self.email = new_email
         self.is_verified = False
@@ -47,6 +41,9 @@ class User(AbstractUser):
         self.slug = slugify(getattr(self, USER_SLUG_RELATED_FIELD))
         if commit:
             self.save(update_fields=("slug",))
+
+    def get_absolute_url(self) -> str:
+        return reverse("api:v1:users:users-detail", args=(self.slug,))
 
 
 def get_email_verification_expiration() -> datetime:
@@ -64,7 +61,8 @@ class EmailVerification(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=("code", "user"), name="unique_code_and_email"
+                fields=("code", "user"),
+                name="unique_code_and_email",
             )
         ]
 
@@ -76,10 +74,11 @@ class EmailVerification(models.Model):
         super().save(*args, **kwargs)
 
     def generate_code(self) -> str:
-        code = "".join(random.choice(digits) for _ in range(EV_CODE_LENGTH))
+        code = generate_digits_code(EV_CODE_LENGTH)
         if EmailVerification.objects.filter(code=code, user=self.user).exists():
             return self.generate_code()
         return code
 
+    @property
     def is_expired(self) -> bool:
         return self.expiration < now()
