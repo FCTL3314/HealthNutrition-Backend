@@ -1,6 +1,7 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from api.decorators import order_queryset
 from api.v1.users.constants import USERS_ORDERING
@@ -12,8 +13,8 @@ from api.v1.users.serializers import (
     UserVerificationSerializer,
 )
 from api.v1.users.services.email_verification import (
-    EmailVerifierService,
     EVSenderService,
+    UserEmailVerifierService,
 )
 
 
@@ -26,7 +27,7 @@ class UserViewSet(DjoserUserViewSet):
 
 
 @email_verification_view_docs()
-class EmailVerificationCreateView(CreateAPIView):
+class UserSendEmailVerificationView(CreateAPIView):
     serializer_class = EmailVerificationSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -38,12 +39,12 @@ class EmailVerificationCreateView(CreateAPIView):
 
 
 @verify_email_view_docs()
-class VerifyEmailUpdateView(CreateAPIView):
+class UserEmailVerifierView(APIView):
     serializer_class = UserVerificationSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        return EmailVerifierService(
+        return UserEmailVerifierService(
             self.serializer_class,
             CurrentUserSerializer,
             request.user,
