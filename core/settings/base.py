@@ -23,6 +23,7 @@ CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS = [
+    "cacheops",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -107,14 +108,37 @@ RABBITMQ_RPC_URI = f"rpc{BASE_RABBITMQ_URI}"
 
 # Cache
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": REDIS_URI,
-        "OPTIONS": {
-            "db": "1",
-        },
-    }
+CACHEOPS_REDIS = {
+    "host": REDIS_HOST,
+    "port": REDIS_PORT,
+    "db": 1,
+}
+
+CACHEOPS = {
+    "users.User": {
+        "ops": "all",
+        "timeout": 30 * 60,
+    },
+    "products.Product": {
+        "ops": "all",
+        "timeout": 60 * 60,
+    },
+    "products.ProductType": {
+        "ops": "all",
+        "timeout": (60 * 60) * 2,
+    },
+    "stores.Store": {
+        "ops": "all",
+        "timeout": (60 * 60) * 2,
+    },
+    "comments.ProductComment": {
+        "ops": "all",
+        "timeout": 60 * 30,
+    },
+    "comments.StoreComment": {
+        "ops": "all",
+        "timeout": 60 * 30,
+    },
 }
 
 # Password validation

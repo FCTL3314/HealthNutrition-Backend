@@ -14,7 +14,7 @@ djoser_router = routers.DefaultRouter()
 djoser_router.register("", UserViewSet, basename="users")
 
 djoser_paths = [
-    url for url in djoser_router.urls if url.name in ALLOWED_DJOSER_ENDPOINTS  # type: ignore[union-attr, operator]
+    url for url in djoser_router.urls if url.name in ALLOWED_DJOSER_ENDPOINTS
 ]
 
 verification_paths = [
