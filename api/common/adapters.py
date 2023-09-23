@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Any, Generic, Iterable, TypeVar
 
 from django.db.models import Model
 
@@ -9,9 +9,8 @@ DTOType = TypeVar("DTOType")
 
 
 class IORMToDTOAdapter(ABC, Generic[DTOType]):
-    @classmethod
     @abstractmethod
-    def to_dto(cls, model_instance: Model) -> DTOType:
+    def to_dto(self, model_instance: Model) -> DTOType:
         ...
 
 
@@ -26,7 +25,7 @@ class BaseORMToDTOAdapter(IORMToDTOAdapter[DTOType]):
         )
 
     @property
-    def fields(self) -> tuple[str, ...] | list[str]:
+    def fields(self) -> Iterable[str]:
         raise AttributeError(
             ATTRIBUTE_UNDEFINED_TEMPLATE.format(
                 class_name=self.__class__.__name__,
@@ -34,8 +33,8 @@ class BaseORMToDTOAdapter(IORMToDTOAdapter[DTOType]):
             ),
         )
 
-    def get_model_instance_kwargs(self, model_instance: Model) -> dict:
-        return {field: getattr(model_instance, field) for field in self.fields}
+    def get_instance_kwargs(self, instance: Model) -> dict[str, Any]:
+        return {field: getattr(instance, field) for field in self.fields}
 
-    def to_dto(self, model_instance: Model) -> DTOType:
-        return self.dto_class(**self.get_model_instance_kwargs(model_instance))
+    def to_dto(self, instance: Model) -> DTOType:
+        return self.dto_class(**self.get_instance_kwargs(instance))

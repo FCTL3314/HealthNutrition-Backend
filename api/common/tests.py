@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from http import HTTPStatus
+from typing import Any, Iterable
 
 from django.contrib.auth import get_user_model
 from django.db.models import Model
@@ -38,7 +39,7 @@ class BaseCommonTest(ICommonTest, ABC):
 
 
 class RetrieveCommonTest(BaseCommonTest):
-    def run_test(self, expected_fields: tuple[str, ...] | list[str]):
+    def run_test(self, expected_fields: Iterable[str]):
         response = self._client.get(self._path, **self.headers)
 
         assert response.status_code == self._expected_status or HTTPStatus.OK
@@ -58,7 +59,7 @@ class CreateCommonTest(BaseCommonTest):
     def run_test(
         self,
         model: type[Model],
-        data: dict,
+        data: dict[str, Any],
     ):
         assert model.objects.count() == 0
 
@@ -76,7 +77,7 @@ class UpdateCommonTest(BaseCommonTest):
     def run_test(
         self,
         object_to_update: Model,
-        fields: dict,
+        fields: dict[str, Any],
     ):
         response = self._client.patch(
             self._path,
