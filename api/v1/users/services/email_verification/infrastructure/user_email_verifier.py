@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.serializers import Serializer
 
-from api.common.services import IService
+from api.common.services.base import IService
 from api.responses import APIResponse
 from api.utils.errors import ErrorMessage
 from api.v1.users.models import EmailVerification

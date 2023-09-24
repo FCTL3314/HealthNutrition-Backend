@@ -4,6 +4,10 @@ from core.settings.base import *
 
 DEBUG = True
 
+# Application definition
+
+MIDDLEWARE.insert(0, "silk.middleware.SilkyMiddleware")
+
 # Static files
 
 STATICFILES_DIRS = (BASE_DIR / "static",)

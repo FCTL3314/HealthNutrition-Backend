@@ -1,6 +1,6 @@
 from enum import Enum
 
-from api.common.services import IService
+from api.common.services.base import IService
 from api.v1.users.services.data_transfer import UserDTO
 
 

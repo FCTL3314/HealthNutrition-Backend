@@ -3,6 +3,7 @@ from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
+from api.utils.network import get_client_address
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.filters import ProductFilter
 from api.v1.products.models import Product, ProductType
@@ -13,6 +14,11 @@ from api.v1.products.paginators import (
 from api.v1.products.serializers import (
     ProductSerializer,
     ProductTypeAggregatedSerializer,
+)
+from api.v1.products.services import (
+    ProductRetrieveService,
+    ProductTypeRetrieveService,
+    ProductViewsIncreaseService,
 )
 
 
@@ -27,6 +33,14 @@ class ProductTypeViewSet(ModelViewSet):
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        return ProductTypeRetrieveService(
+            instance,
+            self.serializer_class,
+            ProductViewsIncreaseService(instance, get_client_address(request)),
+        ).retrieve()
+
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
@@ -40,3 +54,11 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = ProductPageNumberPagination
     lookup_field = "slug"
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        return ProductRetrieveService(
+            instance,
+            self.serializer_class,
+            ProductViewsIncreaseService(instance, get_client_address(request)),
+        ).retrieve()

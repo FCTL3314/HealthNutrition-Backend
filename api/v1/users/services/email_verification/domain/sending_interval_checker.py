@@ -1,4 +1,4 @@
-from api.common.services import IService
+from api.common.services.base import IService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
 
 

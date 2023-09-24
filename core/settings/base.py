@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "drf_spectacular",
+    "silk",
     "api",
     "api.v1",
     "api.v1.users",

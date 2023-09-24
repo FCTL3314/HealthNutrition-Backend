@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from api.common.services import IService
+from api.common.services.base import IService
 from api.common.time_providers import AbstractTimeProvider, UTCTimeProvider
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.services.data_transfer import EmailVerificationDTO
