@@ -54,6 +54,7 @@ Overall, this application provides a valuable tool for consumers to find the mos
 savings while shopping across different stores for a wide range of products.
 
 > #### The project was created for educational purposes, simulating fictitious products without real value.
+> #### Frontend part: https://github.com/FCTL3314/StoreTracker-Frontend
 
 </details>
 
