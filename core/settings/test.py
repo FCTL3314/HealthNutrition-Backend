@@ -11,11 +11,7 @@ DATABASES = {
 
 # Cache
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    }
-}
+CACHEOPS_REDIS["db"] = 2
 
 # Email
 

@@ -1,4 +1,5 @@
 import pytest
+from cacheops import invalidate_all
 from mixer.backend.django import mixer
 
 from api.common.time_providers import UTCTimeProvider
@@ -42,3 +43,8 @@ def product():
 @pytest.fixture()
 def utc_time_provider():
     return UTCTimeProvider()
+
+
+@pytest.fixture(autouse=True)
+def clear_test_cache():
+    invalidate_all()
