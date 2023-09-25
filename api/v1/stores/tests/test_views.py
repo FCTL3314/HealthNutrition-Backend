@@ -7,7 +7,7 @@ from api.common.tests import (
     CreateCommonTest,
     DestroyCommonTest,
     ListCommonTest,
-    RetrieveCommonTest,
+    RetrieveViewsCommonTest,
     UpdateCommonTest,
 )
 from api.utils.tests import generate_test_image
@@ -20,10 +20,10 @@ class TestStoreViewSet:
     URL_PATTERN = "api:v1:stores:stores-list"
 
     @pytest.mark.django_db
-    def test_detail(self, client, store: Store):
+    def test_retrieve(self, client, store: Store):
         path = store.get_absolute_url()
 
-        RetrieveCommonTest(client, path).run_test(
+        RetrieveViewsCommonTest(client, path, store).run_test(
             (
                 "id",
                 "name",

@@ -8,7 +8,7 @@ from mixer.backend.django import mixer
 
 from api.utils.tests import get_auth_header
 from api.v1.comments.constants import COMMENTS_PAGINATE_BY
-from api.v1.comments.models import BaseComment, ProductComment, StoreComment
+from api.v1.comments.models import BaseCommentModel, ProductComment, StoreComment
 from api.v1.products.models import Product
 from api.v1.stores.models import Store
 
@@ -48,7 +48,7 @@ STORE_COMMENTS = "api:v1:comments:store-list"
 def test_comment_list(
     client,
     path: str,
-    comment_model: type[BaseComment],
+    comment_model: type[BaseCommentModel],
     comment_related_model: type[Model],
     get_related_kwargs: callable,
     param_arg: str,
@@ -79,7 +79,7 @@ def test_comment_list(
 def test_comment_create(
     client,
     path: str,
-    comment_model: type[BaseComment],
+    comment_model: type[BaseCommentModel],
     comment_related_model: type[Model],
     model_id_key: str,
     comment_text: str,
@@ -113,7 +113,7 @@ def test_comment_create(
 )
 def test_comment_update(
     client,
-    comment_model: type[BaseComment],
+    comment_model: type[BaseCommentModel],
     comment_text: str,
     admin_user: User,
 ):
@@ -144,7 +144,7 @@ def test_comment_update(
 )
 def test_comment_delete(
     client,
-    comment_model: type[BaseComment],
+    comment_model: type[BaseCommentModel],
     admin_user: User,
 ):
     comment_object = mixer.blend(comment_model)

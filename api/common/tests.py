@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Model
 from faker import Faker
 
+from api.common.models import BaseViewsModel
 from api.utils.tests import get_auth_header
 
 User = get_user_model()
@@ -45,6 +46,26 @@ class RetrieveCommonTest(BaseCommonTest):
         assert response.status_code == self._expected_status or HTTPStatus.OK
         for field in expected_fields:
             assert field in response.data
+        return response
+
+
+class RetrieveViewsCommonTest(RetrieveCommonTest):
+    def __init__(
+        self,
+        client,
+        path: str,
+        views_model_object: BaseViewsModel,
+        user: User | None = None,
+        expected_status: int | None = None,
+    ):
+        super().__init__(client, path, user, expected_status)
+        self._views_model_object = views_model_object
+
+    def run_test(self, expected_fields: Iterable[str]):
+        assert self._views_model_object.views == 0
+        super().run_test(expected_fields)
+        self._views_model_object.refresh_from_db()
+        assert self._views_model_object.views == 1
 
 
 class ListCommonTest(BaseCommonTest):
@@ -53,6 +74,7 @@ class ListCommonTest(BaseCommonTest):
 
         assert response.status_code == self._expected_status or HTTPStatus.OK
         assert len(response.data["results"]) > 0
+        return response
 
 
 class CreateCommonTest(BaseCommonTest):
@@ -71,6 +93,7 @@ class CreateCommonTest(BaseCommonTest):
 
         assert response.status_code == self._expected_status or HTTPStatus.CREATED
         assert model.objects.count() == 1
+        return response
 
 
 class UpdateCommonTest(BaseCommonTest):
@@ -91,6 +114,7 @@ class UpdateCommonTest(BaseCommonTest):
         assert response.status_code == self._expected_status or HTTPStatus.OK
         for field in fields:
             assert getattr(object_to_update, field) == fields[field]
+        return response
 
 
 class DestroyCommonTest(BaseCommonTest):
@@ -101,3 +125,4 @@ class DestroyCommonTest(BaseCommonTest):
 
         assert response.status_code == self._expected_status or HTTPStatus.NO_CONTENT
         assert model.objects.count() == 0
+        return response

@@ -7,7 +7,7 @@ from api.common.tests import (
     CreateCommonTest,
     DestroyCommonTest,
     ListCommonTest,
-    RetrieveCommonTest,
+    RetrieveViewsCommonTest,
     UpdateCommonTest,
 )
 from api.utils.tests import generate_test_image
@@ -24,7 +24,7 @@ class TestProductTypeViewSet:
     def test_retrieve(self, client, product_type: ProductType):
         path = product_type.get_absolute_url()
 
-        RetrieveCommonTest(client, path).run_test(
+        RetrieveViewsCommonTest(client, path, product_type).run_test(
             (
                 "id",
                 "name",
@@ -88,7 +88,8 @@ class TestProductViewSet:
     def test_retrieve(self, client, product: Product):
         path = product.get_absolute_url()
 
-        RetrieveCommonTest(client, path).run_test(
+        assert product.views == 0
+        RetrieveViewsCommonTest(client, path, product).run_test(
             (
                 "id",
                 "name",
@@ -104,6 +105,8 @@ class TestProductViewSet:
                 "product_type",
             ),
         )
+        product.refresh_from_db()
+        assert product.views == 1
 
     @pytest.mark.django_db
     def test_list(self, client, products: list[Product]):
