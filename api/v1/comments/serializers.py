@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.v1.comments.models import BaseComment, ProductComment, StoreComment
+from api.v1.comments.models import BaseCommentModel, ProductComment, StoreComment
 from api.v1.products.models import Product
 from api.v1.products.serializers import ProductSerializer
 from api.v1.stores.models import Store
@@ -13,7 +13,7 @@ class BaseCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         abstract = True
-        model = BaseComment
+        model = BaseCommentModel
         fields = ("id", "author", "text", "created_at", "edited")
         read_only_fields = ("created_at", "edited")
 
