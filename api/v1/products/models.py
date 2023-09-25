@@ -2,10 +2,11 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from api.common.models import BaseViewsModel
 from api.v1.products.managers import ProductManager, ProductTypeManager
 
 
-class Product(models.Model):
+class Product(BaseViewsModel):
     name = models.CharField(max_length=128, unique=True)
     price = models.FloatField()
     card_description = models.CharField(max_length=128)
@@ -34,7 +35,7 @@ class Product(models.Model):
         return reverse("api:v1:products:products-detail", args=(self.slug,))
 
 
-class ProductType(models.Model):
+class ProductType(BaseViewsModel):
     name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
     image = models.ImageField(upload_to="products/product_types")
