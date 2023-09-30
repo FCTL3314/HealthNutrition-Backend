@@ -23,6 +23,6 @@ verification_paths = [
 ]
 
 urlpatterns = [
-    path("", include(djoser_paths)),
     path("verification/", include(verification_paths)),
+    path("", include(djoser_paths)),
 ]

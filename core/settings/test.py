@@ -1,5 +1,9 @@
 from core.settings.base import *
 
+# Security
+
+DEBUG = True
+
 # Database
 
 DATABASES = {

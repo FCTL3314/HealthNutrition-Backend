@@ -4,11 +4,11 @@ import pytest
 from django.contrib.auth import get_user_model
 from mixer.backend.django import mixer
 
-from api.common.time_providers import AbstractTimeProvider
+from api.base.time_providers import TimeProviderProto
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.models import EmailVerification
-from api.v1.users.services.data_transfer import EVAdapter, UserAdapter
-from api.v1.users.services.email_verification import (
+from api.v1.users.services.converters import EVConverter, UserConverter
+from api.v1.users.services.domain.email_verification import (
     EVAvailabilityService,
     EVAvailabilityStatus,
     EVNextSendingTimeService,
@@ -20,11 +20,11 @@ User = get_user_model()
 
 class TestNextSendingTimeCalculator:
     @pytest.mark.django_db
-    def test_without_previous_sending(self, utc_time_provider: AbstractTimeProvider):
+    def test_without_previous_sending(self, utc_time_provider: TimeProviderProto):
         next_sending_datetime = EVNextSendingTimeService(None).execute()
 
         assert next_sending_datetime == pytest.approx(
-            utc_time_provider.now,
+            utc_time_provider.now(),
             abs=self.timedelta_approx,
         )
 
@@ -32,10 +32,10 @@ class TestNextSendingTimeCalculator:
     def test_with_previous_sending(
         self,
         email_verification: EmailVerification,
-        utc_time_provider: AbstractTimeProvider,
+        utc_time_provider: TimeProviderProto,
     ):
         next_sending_datetime = EVNextSendingTimeService(
-            EVAdapter().to_dto(email_verification)
+            EVConverter().to_dto(email_verification)
         ).execute()
 
         assert next_sending_datetime == pytest.approx(
@@ -50,7 +50,7 @@ class TestNextSendingTimeCalculator:
 
 class TestSendingIntervalCheckerService:
     @pytest.mark.django_db
-    def test_can_be_sent(self, utc_time_provider: AbstractTimeProvider):
+    def test_can_be_sent(self, utc_time_provider: TimeProviderProto):
         assert EVSendingIntervalCheckerService(
             EVNextSendingTimeService(None),
         ).execute()
@@ -59,11 +59,11 @@ class TestSendingIntervalCheckerService:
     def test_cannot_be_sent(
         self,
         email_verification: EmailVerification,
-        utc_time_provider: AbstractTimeProvider,
+        utc_time_provider: TimeProviderProto,
     ):
         assert not EVSendingIntervalCheckerService(
             EVNextSendingTimeService(
-                EVAdapter().to_dto(email_verification),
+                EVConverter().to_dto(email_verification),
             )
         ).execute()
 
@@ -94,9 +94,11 @@ def test_email_sending_availability_service(
     previous_sending: bool,
     expected_status: EVAvailabilityStatus,
 ):
-    user_dto = UserAdapter().to_dto(mixer.blend("users.User", is_verified=is_verified))
+    user_dto = UserConverter().to_dto(
+        mixer.blend("users.User", is_verified=is_verified)
+    )
     ev_dto = (
-        EVAdapter().to_dto(mixer.blend("users.EmailVerification"))
+        EVConverter().to_dto(mixer.blend("users.EmailVerification"))
         if previous_sending
         else None
     )

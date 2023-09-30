@@ -2,7 +2,7 @@ import pytest
 from cacheops import invalidate_all
 from mixer.backend.django import mixer
 
-from api.common.time_providers import UTCTimeProvider
+from api.base.time_providers import UTCTimeProvider
 
 
 @pytest.fixture()
