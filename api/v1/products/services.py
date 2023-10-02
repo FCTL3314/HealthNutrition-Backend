@@ -2,7 +2,11 @@ from http import HTTPStatus
 
 from rest_framework.serializers import Serializer
 
-from api.base.services import IRetrieveService, ViewsIncreaseService
+from api.base.services import (
+    ConditionalFieldIncreaseService,
+    IRetrieveService,
+    ViewsIncreaseService,
+)
 from api.responses import APIResponse
 from api.v1.products.models import Product, ProductType
 
@@ -22,10 +26,10 @@ class ProductRetrieveService(IRetrieveService):
         self,
         instance: Product,
         serializer: type[Serializer],
-        views_service: ViewsIncreaseService,
+        views_increase_service: ConditionalFieldIncreaseService,
     ):
         super().__init__(instance, serializer)
-        self._views_increase_service = views_service
+        self._views_increase_service = views_increase_service
 
     def retrieve(self, *args, **kwargs) -> APIResponse:
         self._views_increase_service.execute()
@@ -38,10 +42,10 @@ class ProductTypeRetrieveService(IRetrieveService):
         self,
         instance: ProductType,
         serializer: type[Serializer],
-        views_service: ViewsIncreaseService,
+        views_increase_service: ConditionalFieldIncreaseService,
     ):
         super().__init__(instance, serializer)
-        self._views_increase_service = views_service
+        self._views_increase_service = views_increase_service
 
     def retrieve(self, *args, **kwargs) -> APIResponse:
         self._views_increase_service.execute()

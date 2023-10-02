@@ -21,57 +21,71 @@ class IRetrieveService(ABC):
         ...
 
 
-class ViewsIncreaseService(ServiceProto):
+class ConditionalFieldIncreaseService(ServiceProto):
+    field: str | None = None
+
+    def __init__(
+        self,
+        instance: Model,
+        increase_by: int = 1,
+    ):
+        assert (
+            self.field is not None
+        ), f"The 'field' attribute of the {self.__class__.__name__} class must be overridden."
+        assert hasattr(
+            instance, self.field
+        ), f"The provided instance does not have a '{self.field}' field."
+        self._instance = instance
+        self._increase_by = increase_by
+
+    def execute(self) -> None:
+        if self._should_be_increased():
+            self._increase()
+            self._after_field_increased()
+
+    @abstractmethod
+    def _should_be_increased(self) -> bool:
+        ...
+
+    def _increase(self) -> None:
+        """
+        Increments the field of the model object by
+        the value of the increase_by attribute.
+        """
+        current_value = getattr(self._instance, self.field)
+        setattr(
+            self._instance,
+            self.field,
+            current_value + self._increase_by,
+        )
+        self._instance.save()
+
+    def _after_field_increased(self) -> None:
+        """
+        Logic after increasing the value of the object
+        field.
+        """
+        ...
+
+
+class ViewsIncreaseService(ConditionalFieldIncreaseService):
     """
     Increases the view counter of the model instance if
     the user has not yet viewed the object, that is, if
     the cache about its viewing is not in the database.
     """
 
-    views_field = "views"
+    field = "views"
 
     def __init__(
         self,
         instance: Model,
         user_ip_address: str,
+        increase_by: int = 1,
     ):
-        assert hasattr(
-            instance, self.views_field
-        ), f"The provided instance doest not have a '{self.views_field}' field."
-        self._instance = instance
+        super().__init__(instance, increase_by)
         self._user_ip_address = user_ip_address
         self._key = self.get_cache_key()
-
-    def execute(self) -> None:
-        if not self._is_already_viewed:
-            self._increase()
-            self._save_user_view()
-
-    def _increase(self) -> None:
-        """
-        Increases the views field of the model instance.
-        """
-        current_value = getattr(self._instance, self.views_field)
-        setattr(
-            self._instance,
-            self.views_field,
-            current_value + 1,
-        )
-        self._instance.save()
-
-    @property
-    def _is_already_viewed(self) -> bool:
-        try:
-            cache.get(self._key)
-            return True
-        except CacheMiss:
-            return False
-
-    def _save_user_view(self):
-        """
-        Saves the user's browsing to the cache.
-        """
-        cache.set(self._key, True)
 
     @abstractmethod
     def get_cache_key(self) -> str:
@@ -80,3 +94,21 @@ class ViewsIncreaseService(ServiceProto):
         unique view.
         """
         ...
+
+    def _should_be_increased(self) -> bool:
+        """
+        Returns True if the user has not yet viewed this
+        object, that is, if there is no saved cache about
+        viewing it, otherwise False.
+        """
+        try:
+            cache.get(self._key)
+            return False
+        except CacheMiss:
+            return True
+
+    def _after_field_increased(self) -> None:
+        """
+        Saves the user's view to the cache.
+        """
+        cache.set(self._key, True)
