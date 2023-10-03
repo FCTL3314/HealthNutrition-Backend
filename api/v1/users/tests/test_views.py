@@ -1,15 +1,70 @@
 import random
+from collections import namedtuple
 from http import HTTPStatus
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from faker import Faker
 from mixer.backend.django import mixer
 
 from api.utils.tests import get_auth_header
 from api.v1.users.models import EmailVerification
 
 User = get_user_model()
+
+
+ChangeEmailTestDTO = namedtuple(
+    "EmailChangeTestData", ("user", "password", "new_email")
+)
+
+
+@pytest.fixture()
+def change_email_test_dto(verified_user: User, faker: Faker) -> ChangeEmailTestDTO:
+    new_email = faker.email()
+    password = faker.password()
+
+    verified_user.set_password(password)
+    verified_user.save()
+
+    return ChangeEmailTestDTO(
+        verified_user,
+        password,
+        new_email,
+    )
+
+
+class TestUserChangeEmailView:
+    URL_PATTERN = "api:v1:users:change-email"
+    path = reverse(URL_PATTERN)
+
+    @pytest.mark.django_db
+    def test_success(self, client, change_email_test_dto: ChangeEmailTestDTO):
+        response = client.post(
+            self.path,
+            data={
+                "new_email": change_email_test_dto.new_email,
+                "password": change_email_test_dto.password,
+            },
+            **get_auth_header(change_email_test_dto.user),
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.data["email"] == change_email_test_dto.new_email
+        assert response.data["is_verified"] is False
+
+    @pytest.mark.django_db
+    def test_same_email(self, client, change_email_test_dto: ChangeEmailTestDTO):
+        data = {
+            "new_email": change_email_test_dto.user.email,
+            "password": change_email_test_dto.password,
+        }
+        response = client.post(
+            self.path, data=data, **get_auth_header(change_email_test_dto.user)
+        )
+
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.data["code"] == "same_email"
 
 
 class TestEmailVerificationCreateView:
