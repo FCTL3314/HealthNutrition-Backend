@@ -41,6 +41,11 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
         fields = UserSerializer.Meta.fields + DjoserUserCreateSerializer.Meta.fields
 
 
+class UserChangeEmailSerializer(serializers.Serializer):
+    new_email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+
 class EmailVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailVerification

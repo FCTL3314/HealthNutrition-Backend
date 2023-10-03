@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from functools import cached_property
 
 from django.contrib.auth import get_user_model
@@ -28,6 +27,15 @@ class EVSendErrors:
     )
     ALREADY_VERIFIED = ErrorMessage(
         "Your email is already verified.", "email_already_verified"
+    )
+
+
+class UserVerificationErrors:
+    VERIFICATION_EXPIRED = ErrorMessage(
+        "The verification code has expired.", "verification_code_expired"
+    )
+    INVALID_CODE = ErrorMessage(
+        "Invalid verification code.", "invalid_verification_code"
     )
 
 
@@ -121,16 +129,6 @@ class EVSenderService(ServiceProto):
             code=EVSendErrors.ALREADY_VERIFIED.code,
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
-@dataclass
-class UserVerificationErrors:
-    VERIFICATION_EXPIRED = ErrorMessage(
-        "The verification code has expired.", "verification_code_expired"
-    )
-    INVALID_CODE = ErrorMessage(
-        "Invalid verification code.", "invalid_verification_code"
-    )
 
 
 class UserEmailVerifierService(ServiceProto):

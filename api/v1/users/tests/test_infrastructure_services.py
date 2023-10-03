@@ -12,7 +12,7 @@ from api.v1.users.serializers import (
     EmailVerificationSerializer,
     UserVerificationSerializer,
 )
-from api.v1.users.services.infrastructure.email_verification import (
+from api.v1.users.services.infrastructure.user_email_verification import (
     EVSenderService,
     UserEmailVerifierService,
 )

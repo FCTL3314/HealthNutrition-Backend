@@ -28,12 +28,17 @@ class User(AbstractUser):
 
     def update_email(self, new_email: str) -> None:
         self.email = new_email
-        self.is_verified = False
         self.save()
 
     def verify(self, commit=True) -> None:
         if not self.is_verified:
             self.is_verified = True
+            if commit:
+                self.save(update_fields=("is_verified",))
+
+    def make_unverified(self, commit=True) -> None:
+        if self.is_verified:
+            self.is_verified = False
             if commit:
                 self.save(update_fields=("is_verified",))
 
