@@ -7,6 +7,29 @@ from rest_framework.serializers import Serializer
 
 
 class ServiceProto(Protocol):
+    """
+    A protocol for creating domain and infrastructure services.
+
+    Response style:
+        Instead of directly returning a Response class object from
+        the execute method,it is recommended to create separate
+        response methods, naming them according to this pattern:
+        <response_name>_response.
+        Example:
+
+            def execute(self) -> APIResponse:
+                if some_condition is None:
+                    return self._successful_response()
+                else:
+                    return self._error_response()
+
+            def _successful_response(self) -> APIResponse:
+                return APIResponse(...)
+
+            def _error_response(self) -> APIResponse:
+                return APIResponse(...)
+    """
+
     def execute(self):
         ...
 
