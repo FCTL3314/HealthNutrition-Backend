@@ -14,20 +14,18 @@ from api.v1.users.models import EmailVerification
 User = get_user_model()
 
 
-ChangeEmailTestDTO = namedtuple(
-    "EmailChangeTestData", ("user", "password", "new_email")
-)
+EmailChangeData = namedtuple("EmailChangeData", ("user", "password", "new_email"))
 
 
 @pytest.fixture()
-def change_email_test_dto(verified_user: User, faker: Faker) -> ChangeEmailTestDTO:
+def email_change_test_data(verified_user: User, faker: Faker) -> EmailChangeData:
     new_email = faker.email()
     password = faker.password()
 
     verified_user.set_password(password)
     verified_user.save()
 
-    return ChangeEmailTestDTO(
+    return EmailChangeData(
         verified_user,
         password,
         new_email,
@@ -39,32 +37,47 @@ class TestUserChangeEmailView:
     path = reverse(URL_PATTERN)
 
     @pytest.mark.django_db
-    def test_success(self, client, change_email_test_dto: ChangeEmailTestDTO):
+    def test_success(self, client, email_change_test_data: EmailChangeData):
         response = client.post(
             self.path,
             data={
-                "new_email": change_email_test_dto.new_email,
-                "password": change_email_test_dto.password,
+                "new_email": email_change_test_data.new_email,
+                "password": email_change_test_data.password,
             },
-            **get_auth_header(change_email_test_dto.user),
+            **get_auth_header(email_change_test_data.user),
         )
 
         assert response.status_code == HTTPStatus.OK
-        assert response.data["email"] == change_email_test_dto.new_email
+        assert response.data["email"] == email_change_test_data.new_email
         assert response.data["is_verified"] is False
 
     @pytest.mark.django_db
-    def test_same_email(self, client, change_email_test_dto: ChangeEmailTestDTO):
+    def test_same_email(self, client, email_change_test_data: EmailChangeData):
         data = {
-            "new_email": change_email_test_dto.user.email,
-            "password": change_email_test_dto.password,
+            "new_email": email_change_test_data.user.email,
+            "password": email_change_test_data.password,
         }
         response = client.post(
-            self.path, data=data, **get_auth_header(change_email_test_dto.user)
+            self.path, data=data, **get_auth_header(email_change_test_data.user)
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST
         assert response.data["code"] == "same_email"
+
+    @pytest.mark.django_db
+    def test_invalid_password(
+        self, client, email_change_test_data: EmailChangeData, faker: Faker
+    ):
+        data = {
+            "new_email": email_change_test_data.user.email,
+            "password": faker.password(),
+        }
+        response = client.post(
+            self.path, data=data, **get_auth_header(email_change_test_data.user)
+        )
+
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.data["code"] == "invalid_password"
 
 
 class TestEmailVerificationCreateView:
