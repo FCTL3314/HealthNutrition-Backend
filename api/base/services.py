@@ -16,9 +16,8 @@ class ServiceProto(Protocol):
         response methods, naming them according to this pattern:
         <response_name>_response.
         Example:
-
             def execute(self) -> APIResponse:
-                if some_condition is None:
+                if some_condition:
                     return self._successful_response()
                 else:
                     return self._error_response()
@@ -45,6 +44,11 @@ class IRetrieveService(ABC):
 
 
 class ConditionalFieldIncreaseService(ServiceProto):
+    """
+    Increases the field of an object by n when any
+    condition is met.
+    """
+
     field: str | None = None
 
     def __init__(

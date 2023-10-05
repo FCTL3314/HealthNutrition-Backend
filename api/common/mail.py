@@ -4,7 +4,11 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 
-def convert_mail_subject(subject) -> str:
+def convert_mail_subject(subject: str) -> str:
+    """
+    Adds the title of the project to the end of the
+    message title.
+    """
     return f"{subject} | Store Tracker"
 
 

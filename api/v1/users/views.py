@@ -28,9 +28,7 @@ from api.v1.users.services.infrastructure.user_email_verification import (
     EVSenderService,
     UserEmailVerifierService,
 )
-from api.v1.users.services.infrastructure.user_image_upload import (
-    UserImageUploadService,
-)
+from api.v1.users.services.infrastructure.user_update import UserUpdateService
 
 User = get_user_model()
 
@@ -43,9 +41,10 @@ class UserViewSet(DjoserUserViewSet):
         return queryset.order_by(*USERS_ORDERING)
 
     def update(self, request, *args, **kwargs) -> Response | APIResponse:
-        return UserImageUploadService(
-            request.data.get("image")
-        ).execute() or super().update(request, *args, **kwargs)
+        return UserUpdateService(
+            request.data.get("image"),
+            lambda: super().update(request, *args, **kwargs),
+        ).execute()
 
 
 @user_send_email_verification_view_docs()

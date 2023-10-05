@@ -2,10 +2,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
-from api.common.models import BaseViewsModel
+from api.common.models import ViewsModelMixin
 
 
-class Store(BaseViewsModel):
+class Store(ViewsModelMixin, models.Model):
     name = models.CharField(max_length=64, unique=True)
     url = models.URLField(unique=True)
     logo = models.ImageField(upload_to="stores")

@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.timezone import now
 
-from api.utils.code_generation import generate_digits_code
+from api.utils.codes import generate_digits_code
 from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION_TIMEDELTA
 from api.v1.users.managers import EmailVerificationManager
 
