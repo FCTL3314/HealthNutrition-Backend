@@ -37,11 +37,11 @@ class UserUpdateService(ServiceProto):
 
     def execute(self) -> APIResponse | Response:
         if self._image is not None and not is_user_image_size_valid(self._image.size):
-            return self.image_size_too_large_response()
+            return self.invalid_image_size_response()
         return self._default_update_callback()
 
     @staticmethod
-    def image_size_too_large_response() -> APIResponse:
+    def invalid_image_size_response() -> APIResponse:
         return APIResponse(
             detail=UserUpdateErrors.IMAGE_SIZE_TOO_LARGE.message,
             code=UserUpdateErrors.IMAGE_SIZE_TOO_LARGE.code,

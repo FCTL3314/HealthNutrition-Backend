@@ -1,4 +1,4 @@
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile, TemporaryUploadedFile
 from django.utils.timezone import now
 from faker import Faker
 from rest_framework_simplejwt.tokens import AccessToken
@@ -11,6 +11,16 @@ def generate_test_image() -> SimpleUploadedFile:
     """Returns a representation of an image file."""
     return SimpleUploadedFile(
         "test_generated_image.jpg", Faker().image(), content_type="image/jpg"
+    )
+
+
+def generate_temporary_image(size: int = 1000) -> TemporaryUploadedFile:
+    """Returns a representation of an temporary image file."""
+    return TemporaryUploadedFile(
+        "test_generated_image.jpg",
+        Faker().image(),
+        size=size,
+        charset=None,
     )
 
 

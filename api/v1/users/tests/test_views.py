@@ -1,5 +1,4 @@
 import random
-from collections import namedtuple
 from http import HTTPStatus
 
 import pytest
@@ -10,26 +9,9 @@ from mixer.backend.django import mixer
 
 from api.utils.tests import get_auth_header
 from api.v1.users.models import EmailVerification
+from api.v1.users.tests.conftest import EmailChangeData
 
 User = get_user_model()
-
-
-EmailChangeData = namedtuple("EmailChangeData", ("user", "password", "new_email"))
-
-
-@pytest.fixture()
-def email_change_test_data(verified_user: User, faker: Faker) -> EmailChangeData:
-    new_email = faker.email()
-    password = faker.password()
-
-    verified_user.set_password(password)
-    verified_user.save()
-
-    return EmailChangeData(
-        verified_user,
-        password,
-        new_email,
-    )
 
 
 class TestUserChangeEmailView:
@@ -80,7 +62,7 @@ class TestUserChangeEmailView:
         assert response.data["code"] == "invalid_password"
 
 
-class TestEmailVerificationCreateView:
+class TestUserSendEmailVerificationView:
     URL_PATTERN = "api:v1:users:verification-send"
     path = reverse(URL_PATTERN)
 
@@ -105,7 +87,7 @@ class TestEmailVerificationCreateView:
         assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
-class TestUserVerifyUpdateView:
+class TestUserEmailVerifierView:
     URL_PATTERN = "api:v1:users:verify"
     path = reverse(URL_PATTERN)
 
