@@ -9,12 +9,11 @@ from api.common.tasks import send_html_mail
 from api.responses import APIResponse
 from api.utils.errors import ErrorMessage
 from api.v1.users.models import EmailVerification
-from api.v1.users.services.converters import EVConverter, UserConverter
+from api.v1.users.services.converters import EVConverter
 from api.v1.users.services.domain.email_verification import (
-    EVAvailabilityService,
     EVAvailabilityStatus,
-    EVNextSendingTimeService,
-    EVSendingIntervalCheckerService,
+    get_ev_next_sending_time,
+    get_ev_sending_availability_status,
 )
 from api.v1.users.services.schemas import EmailVerification as EmailVerificationSchema
 
@@ -52,25 +51,18 @@ class EVSenderService(ServiceProto):
     ):
         self._serializer_class = serializer_class
         self._user = user
-        self._next_sending_time_calculator = EVNextSendingTimeService(
-            self.latest_verification_dto
-        )
-        self._sending_availability_service = EVAvailabilityService(
-            UserConverter().to_dto(user),
-            EVSendingIntervalCheckerService(
-                self._next_sending_time_calculator,
-            ),
-        )
 
     @cached_property
-    def latest_verification_dto(self) -> EmailVerificationSchema | None:
+    def _latest_verification_schema(self) -> EmailVerificationSchema | None:
         latest_verification = EmailVerification.objects.last_sent(self._user.id)
         if latest_verification is None:
             return None
         return EVConverter().to_dto(latest_verification)
 
     def execute(self) -> APIResponse:
-        availability_status = self._sending_availability_service.execute()
+        availability_status = get_ev_sending_availability_status(
+            self._user, self._latest_verification_schema
+        )
         return self._handle_availability_status(availability_status)
 
     def _handle_availability_status(
@@ -117,7 +109,9 @@ class EVSenderService(ServiceProto):
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
             messages={
-                "retry_after": self._next_sending_time_calculator.execute(),
+                "retry_after": get_ev_next_sending_time(
+                    self._latest_verification_schema
+                ),
             },
             status=status.HTTP_429_TOO_MANY_REQUESTS,
         )

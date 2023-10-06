@@ -1,7 +1,6 @@
 from datetime import datetime
 from enum import Enum
 
-from api.base.services import ServiceProto
 from api.base.time_providers import TimeProviderProto, UTCTimeProvider
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.services.schemas import EmailVerification, User
@@ -17,62 +16,40 @@ class EVAvailabilityStatus(Enum):
     ALREADY_VERIFIED = 3
 
 
-class EVAvailabilityService(ServiceProto):
+def get_ev_sending_availability_status(
+    user: User,
+    latest_verification: EmailVerification | None,
+) -> EVAvailabilityStatus:
     """
     Calculates whether a verification email can be sent
     to the provided user.
     """
-
-    def __init__(
-        self,
-        user: User,
-        sending_interval_checker: ServiceProto,
-    ):
-        self._user = user
-        self._sending_interval_checker = sending_interval_checker
-
-    def execute(self) -> EVAvailabilityStatus:
-        if self._user.is_verified:
-            return EVAvailabilityStatus.ALREADY_VERIFIED
-        if not self._sending_interval_checker.execute():
-            return EVAvailabilityStatus.SENDING_LIMIT_REACHED
-        return EVAvailabilityStatus.CAN_BE_SENT
+    if user.is_verified:
+        return EVAvailabilityStatus.ALREADY_VERIFIED
+    if not is_ev_sending_interval_passed(latest_verification):
+        return EVAvailabilityStatus.SENDING_LIMIT_REACHED
+    return EVAvailabilityStatus.CAN_BE_SENT
 
 
-class EVNextSendingTimeService(ServiceProto):
-    """
-    Calculates the date and time when the verification
-    email can be resent.
-    """
-
-    def __init__(
-        self,
-        latest_verification: EmailVerification | None,
-        time_provider: TimeProviderProto = UTCTimeProvider(),
-    ):
-        self._latest_verification = latest_verification
-        self._time_provider = time_provider
-
-    def execute(self) -> datetime:
-        if self._latest_verification is None:
-            return self._time_provider.now()
-        return self._latest_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA
-
-
-class EVSendingIntervalCheckerService(ServiceProto):
+def is_ev_sending_interval_passed(
+    latest_verification: EmailVerification | None,
+    time_provider: TimeProviderProto = UTCTimeProvider(),
+) -> bool:
     """
     Calculates whether the allowed interval for sending
     the next verification email has passed.
     """
+    return time_provider.now() >= get_ev_next_sending_time(latest_verification)
 
-    def __init__(
-        self,
-        next_sending_time_calculator: ServiceProto,
-        time_provider: TimeProviderProto = UTCTimeProvider(),
-    ):
-        self._next_sending_time_calculator = next_sending_time_calculator
-        self._time_provider = time_provider
 
-    def execute(self) -> bool:
-        next_sending_datetime = self._next_sending_time_calculator.execute()
-        return self._time_provider.now() >= next_sending_datetime
+def get_ev_next_sending_time(
+    latest_verification: EmailVerification | None,
+    time_provider: TimeProviderProto = UTCTimeProvider(),
+) -> datetime:
+    """
+    Calculates the date and time when the verification
+    email can be resent.
+    """
+    if latest_verification is None:
+        return time_provider.now()
+    return latest_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA
