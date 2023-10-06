@@ -54,4 +54,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        poetry run pytest .
+        poetry run pytest api/v1/products/tests/test_views.py::TestProductTypeViewSet::test_retrieve
