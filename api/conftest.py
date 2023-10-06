@@ -7,37 +7,51 @@ from api.base.time_providers import UTCTimeProvider
 
 @pytest.fixture()
 def user():
-    return mixer.blend("users.User")
+    user = mixer.blend("users.User")
+    yield user
+    user.delete()
 
 
 @pytest.fixture()
 def verified_user():
-    return mixer.blend("users.User", is_verified=True)
+    user = mixer.blend("users.User", is_verified=True)
+    yield user
+    user.delete()
 
 
 @pytest.fixture()
 def unverified_user():
-    return mixer.blend("users.User", is_verified=False)
+    user = mixer.blend("users.User", is_verified=False)
+    yield user
+    user.delete()
 
 
 @pytest.fixture()
 def users():
-    return mixer.cycle().blend("users.User")
+    users = mixer.cycle().blend("users.User")
+    yield users
+    users.delete()
 
 
 @pytest.fixture()
 def store():
-    return mixer.blend("stores.Store")
+    store = mixer.blend("stores.Store")
+    yield store
+    store.delete()
 
 
 @pytest.fixture()
 def product_type():
-    return mixer.blend("products.ProductType")
+    product_type = mixer.blend("products.ProductType")
+    yield product_type
+    product_type.delete()
 
 
 @pytest.fixture()
 def product():
-    return mixer.blend("products.Product")
+    product = mixer.blend("products.Product")
+    yield product
+    product.delete()
 
 
 @pytest.fixture()
