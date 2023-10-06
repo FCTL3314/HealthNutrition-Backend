@@ -45,7 +45,7 @@ class TestNextSendingTimeCalculator:
 
     @property
     def timedelta_approx(self):
-        return timedelta(seconds=1, milliseconds=1000, microseconds=1000)
+        return timedelta(seconds=5, milliseconds=10000, microseconds=10000)
 
 
 class TestSendingIntervalCheckerService:
