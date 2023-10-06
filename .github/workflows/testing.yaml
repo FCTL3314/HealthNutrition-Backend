@@ -51,8 +51,11 @@ jobs:
         poetry config installer.max-workers 10
         poetry install
 
-    - name: Run Tests
+    - name: Make Migrations
       run: |
         poetry run python manage.py makemigrations --settings=core.settings.test
         poetry run python manage.py migrate --settings=core.settings.test
-        poetry run pytest api/v1/products/tests/test_views.py::TestProductTypeViewSet::test_retrieve
+
+    - name: Run Tests
+      run: |
+        poetry run pytest .
