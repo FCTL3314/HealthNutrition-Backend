@@ -6,23 +6,52 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  SECRET_KEY: "TEST_SECRET_KEY"
+  ALLOWED_HOSTS: "*"
+  CORS_ALLOWED_ORIGINS: "*"
+
+  REDIS_HOST: "127.0.0.1"
+  REDIS_PORT: "6379"
+
+  RABBITMQ_HOST: "127.0.0.1"
+  RABBITMQ_PORT: "5672"
+
+  EMAIL_HOST_USER: "email@development.com"
+  EV_SENDING_INTERVAL: "60"
+  EV_EXPIRATION: "7200"
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis:alpine
+        ports:
+          - "6379:6379"
+
+      rabbitmq:
+        image: rabbitmq:alpine
+        ports:
+          - "5672:5672"
+
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install poetry
         poetry config installer.max-workers 10
         poetry install
+
     - name: Run Tests
       run: |
         poetry run pytest .

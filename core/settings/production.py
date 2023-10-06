@@ -8,6 +8,19 @@ DEBUG = False
 
 STATIC_ROOT = BASE_DIR / "static"
 
+# Database
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST"),
+        "PORT": env("DATABASE_PORT"),
+    }
+}
+
 # Email
 
 EMAIL_HOST = env.str("EMAIL_HOST")
