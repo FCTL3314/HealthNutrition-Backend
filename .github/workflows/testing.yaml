@@ -54,5 +54,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        poetry run makemigrations
+        poetry run python manage.py makemigrations
         poetry run pytest api/v1/products/tests/test_views.py::TestProductTypeViewSet::test_retrieve
