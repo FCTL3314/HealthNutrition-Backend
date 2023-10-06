@@ -1,4 +1,7 @@
-from django.core.files.uploadedfile import SimpleUploadedFile, TemporaryUploadedFile
+from datetime import datetime
+from typing import Any, Iterable
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.timezone import now
 from faker import Faker
 from rest_framework_simplejwt.tokens import AccessToken
@@ -14,16 +17,6 @@ def generate_test_image() -> SimpleUploadedFile:
     )
 
 
-def generate_temporary_image(size: int = 1000) -> TemporaryUploadedFile:
-    """Returns a representation of an temporary image file."""
-    return TemporaryUploadedFile(
-        "test_generated_image.jpg",
-        Faker().image(),
-        size=size,
-        charset=None,
-    )
-
-
 def get_access_token(user: User) -> AccessToken:
     """Return an access token for provided user."""
     return AccessToken.for_user(user)
@@ -35,5 +28,24 @@ def get_auth_header(user: User) -> dict[str, str]:
     return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
 
-def get_expired_email_verification_kwargs() -> dict:
+def get_expired_email_verification_kwarg() -> dict[str, datetime]:
     return {"expiration": now() - EV_EXPIRATION_TIMEDELTA}
+
+
+def is_objects_fields_match(
+    first_object: dict | object, second_object: dict | object, fields: Iterable[str]
+) -> bool:
+    """
+    Checks whether the fields of the first object
+    are equal to the fields of the second object.
+    """
+
+    def get_field(obj, key: str) -> Any:
+        return obj[key] if isinstance(obj, dict) else getattr(obj, key)
+
+    for field in fields:
+        first_object_field = get_field(first_object, field)
+        second_object_field = get_field(second_object, field)
+        if first_object_field != second_object_field:
+            return False
+    return True

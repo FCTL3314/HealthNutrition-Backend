@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 from mixer.backend.django import mixer
 
-from api.utils.tests import get_expired_email_verification_kwargs
+from api.utils.tests import get_expired_email_verification_kwarg
 
 User = get_user_model()
 
@@ -21,7 +21,7 @@ def email_verification():
 def expired_email_verification():
     return mixer.blend(
         "users.EmailVerification",
-        **get_expired_email_verification_kwargs(),
+        **get_expired_email_verification_kwarg(),
     )
 
 
@@ -34,7 +34,7 @@ def email_verifications():
 def expired_email_verifications():
     return mixer.cycle().blend(
         "users.EmailVerification",
-        **get_expired_email_verification_kwargs(),
+        **get_expired_email_verification_kwarg(),
     )
 
 

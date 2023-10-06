@@ -42,8 +42,10 @@ class UserViewSet(DjoserUserViewSet):
 
     def update(self, request, *args, **kwargs) -> Response | APIResponse:
         return UserUpdateService(
-            request.data.get("image"),
-            lambda: super(UserViewSet, self).update(request, *args, **kwargs),
+            self.get_object(),
+            self.get_serializer_class(),
+            request.data,
+            kwargs.get("partial", False),
         ).execute()
 
 

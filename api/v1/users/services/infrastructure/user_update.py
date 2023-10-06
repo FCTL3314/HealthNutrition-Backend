@@ -1,11 +1,14 @@
 from http import HTTPStatus
+from typing import Any
 
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from rest_framework.response import Response
+from django.db.models import Model
+from rest_framework.serializers import Serializer
 
 from api.base.services import ServiceProto
 from api.responses import APIResponse
 from api.utils.errors import ErrorMessage
+from api.utils.models import invalidate_prefetch_cache
 from api.v1.users.constants import MAX_USER_IMAGE_SIZE_MB
 from api.v1.users.services.domain.file_upload import is_user_image_size_valid
 
@@ -22,23 +25,33 @@ class UserUpdateErrors:
 
 class UserUpdateService(ServiceProto):
     """
-    Updates the user by calling the standard method of
-    updating the model object in django if the conditions
-    are met.
+    Responsible for updating the user object, validates
+    conditions such as:
+        The size of the uploaded image.
     """
 
     def __init__(
         self,
-        image: TemporaryUploadedFile | None,
-        default_update_callback: callable,
+        instance: Model,
+        serializer_class: type[Serializer],
+        data: dict[str, Any],
+        partial: bool,
     ):
-        self._image = image
-        self._default_update_callback = default_update_callback
+        self._instance = instance
+        self._serializer = serializer_class(self._instance, data=data, partial=partial)
+        self._serializer.is_valid(raise_exception=True)
+        self._data = data
+        self._image: TemporaryUploadedFile = data.get("image")
 
-    def execute(self) -> APIResponse | Response:
+    def execute(self) -> APIResponse:
         if self._image is not None and not is_user_image_size_valid(self._image.size):
             return self.invalid_image_size_response()
-        return self._default_update_callback()
+        self._serializer.save()
+        invalidate_prefetch_cache(self._instance)
+        return self._successfully_updated_response()
+
+    def _successfully_updated_response(self) -> APIResponse:
+        return APIResponse(self._serializer.data)
 
     @staticmethod
     def invalid_image_size_response() -> APIResponse:
