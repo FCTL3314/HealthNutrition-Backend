@@ -1,4 +1,5 @@
-from datetime import timedelta
+from datetime import datetime
+from typing import Iterable
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -23,9 +24,11 @@ class TestNextSendingTimeCalculator:
     def test_without_previous_sending(self, utc_time_provider: TimeProviderProto):
         next_sending_datetime = EVNextSendingTimeService(None).execute()
 
-        assert next_sending_datetime == pytest.approx(
-            utc_time_provider.now(),
-            abs=self.timedelta_approx,
+        assert self._is_same_datetime(
+            (
+                next_sending_datetime,
+                utc_time_provider.now(),
+            )
         )
 
     @pytest.mark.django_db
@@ -38,14 +41,31 @@ class TestNextSendingTimeCalculator:
             EVConverter().to_dto(email_verification)
         ).execute()
 
-        assert next_sending_datetime == pytest.approx(
-            email_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA,
-            abs=self.timedelta_approx,
+        assert self._is_same_datetime(
+            (
+                next_sending_datetime,
+                email_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA,
+            )
         )
 
-    @property
-    def timedelta_approx(self):
-        return timedelta(seconds=5, milliseconds=10000, microseconds=10000)
+    @staticmethod
+    def _is_same_datetime(
+        comparable_objects: Iterable[datetime],
+        comparable_attrs: Iterable[str] = ("day", "hour", "minute", "second"),
+    ) -> bool:
+        """
+        Returns True if the 'comparable_attrs' attributes
+        for each object in comparable_objects are the same,
+        otherwise False.
+        """
+        for attr in comparable_attrs:
+            values = set()
+            for comparable_object in comparable_objects:
+                value = getattr(comparable_object, attr)
+                values.add(value)
+                if len(values) > 1:
+                    return False
+        return True
 
 
 class TestSendingIntervalCheckerService:
