@@ -53,6 +53,18 @@ jobs:
         poetry config installer.max-workers 10
         poetry install
 
+    - name: Ruff linter
+      run: |
+        poetry run ruff .
+
+    - name: Isort linter
+      run: |
+        poetry run isort .
+
+    - name: Black linter
+      run: |
+        poetry run black .
+
     - name: Make Migrations
       run: |
         poetry run python manage.py makemigrations
