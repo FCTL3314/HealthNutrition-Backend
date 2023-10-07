@@ -7,6 +7,8 @@ on:
     branches: [ "master" ]
 
 env:
+  DJANGO_SETTINGS_MODULE: "core.settings.test"
+
   SECRET_KEY: "TEST_SECRET_KEY"
   ALLOWED_HOSTS: "*"
 
@@ -53,8 +55,8 @@ jobs:
 
     - name: Make Migrations
       run: |
-        poetry run python manage.py makemigrations --settings=core.settings.test
-        poetry run python manage.py migrate --settings=core.settings.test
+        poetry run python manage.py makemigrations
+        poetry run python manage.py migrate
 
     - name: Run Tests
       run: |
