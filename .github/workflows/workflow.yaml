@@ -54,16 +54,9 @@ jobs:
         poetry install
 
     - name: Ruff linter
-      run: |
-        poetry run ruff .
-
-    - name: Isort linter
-      run: |
-        poetry run isort .
-
-    - name: Black linter
-      run: |
-        poetry run black .
+      uses: chartboost/ruff-action@v1
+      with:
+        src: "."
 
     - name: Make Migrations
       run: |
