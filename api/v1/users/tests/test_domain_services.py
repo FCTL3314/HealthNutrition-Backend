@@ -1,17 +1,15 @@
-from datetime import datetime
-from typing import Iterable
-
 import pytest
 from django.contrib.auth import get_user_model
 from mixer.backend.django import mixer
 
 from api.base.time_providers import TimeProviderProto
+from api.utils.time import is_datetime_attrs_equal
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.models import EmailVerification
 from api.v1.users.services.converters import EVConverter, UserConverter
 from api.v1.users.services.domain.email_verification import (
     EVAvailabilityStatus,
-    get_ev_next_sending_time,
+    get_ev_next_sending_datetime,
     get_ev_sending_availability_status,
     is_ev_sending_interval_passed,
 )
@@ -22,9 +20,9 @@ User = get_user_model()
 class TestNextSendingTimeCalculator:
     @pytest.mark.django_db
     def test_without_previous_sending(self, utc_time_provider: TimeProviderProto):
-        next_sending_datetime = get_ev_next_sending_time(None)
+        next_sending_datetime = get_ev_next_sending_datetime(None)
 
-        assert self._is_same_datetime(
+        assert is_datetime_attrs_equal(
             (
                 next_sending_datetime,
                 utc_time_provider.now(),
@@ -36,33 +34,14 @@ class TestNextSendingTimeCalculator:
         self,
         email_verification: EmailVerification,
     ):
-        next_sending_datetime = get_ev_next_sending_time(email_verification)
+        next_sending_datetime = get_ev_next_sending_datetime(email_verification)
 
-        assert self._is_same_datetime(
+        assert is_datetime_attrs_equal(
             (
                 next_sending_datetime,
                 email_verification.created_at + EV_SENDING_INTERVAL_TIMEDELTA,
             )
         )
-
-    @staticmethod
-    def _is_same_datetime(
-        comparable_objects: Iterable[datetime],
-        comparable_attrs: Iterable[str] = ("day", "hour", "minute", "second"),
-    ) -> bool:
-        """
-        Returns True if the 'comparable_attrs' attributes
-        for each object in comparable_objects are the same,
-        otherwise False.
-        """
-        for attr in comparable_attrs:
-            values = set()
-            for comparable_object in comparable_objects:
-                value = getattr(comparable_object, attr)
-                values.add(value)
-                if len(values) > 1:
-                    return False
-        return True
 
 
 class TestSendingIntervalCheckerService:

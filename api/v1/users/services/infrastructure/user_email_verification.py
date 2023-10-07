@@ -12,7 +12,7 @@ from api.v1.users.models import EmailVerification
 from api.v1.users.services.converters import EVConverter
 from api.v1.users.services.domain.email_verification import (
     EVAvailabilityStatus,
-    get_ev_next_sending_time,
+    get_ev_next_sending_datetime,
     get_ev_sending_availability_status,
 )
 from api.v1.users.services.schemas import EmailVerification as EmailVerificationSchema
@@ -109,7 +109,7 @@ class EVSenderService(ServiceProto):
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
             messages={
-                "retry_after": get_ev_next_sending_time(
+                "retry_after": get_ev_next_sending_datetime(
                     self._latest_verification_schema
                 ),
             },
