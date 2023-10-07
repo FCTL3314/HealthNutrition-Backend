@@ -58,6 +58,11 @@ jobs:
       with:
         src: "."
 
+    - name: Black linter
+      uses: rickstaa/action-black@v1
+      with:
+        black_args: ". --check"
+
     - name: Make Migrations
       run: |
         poetry run python manage.py makemigrations
