@@ -91,6 +91,7 @@ savings while shopping across different stores for a wide range of products.
 
 * **REST API**
 * **Domain Driven Development**
+* **CI/CD**
 * **JWT Authentication**
 * **Postponed Tasks / Celery**
 * **Authentication / Authorization**
@@ -130,6 +131,6 @@ savings while shopping across different stores for a wide range of products.
 <details><summary><h1>🪝 Pre-Commit hooks</h1></summary>
 
 1. #### Install: `pre-commit install`
-2. #### Test run: `pre-commit run --all-files`
+2. #### Check: `pre-commit run --all-files`
 
 </details>
