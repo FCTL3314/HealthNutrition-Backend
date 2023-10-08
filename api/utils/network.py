@@ -1,4 +1,7 @@
-def get_client_address(request):
+from rest_framework.request import Request
+
+
+def get_client_address(request: Request) -> str:
     """
     Retrieves the ip address from the request.
     """

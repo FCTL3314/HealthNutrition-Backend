@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -5,6 +6,7 @@ from rest_framework.generics import (
     get_object_or_404,
 )
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.serializers import Serializer
 
 from api.decorators import order_queryset
 from api.v1.comparisons.docs import (
@@ -25,12 +27,16 @@ from api.v1.products.serializers import (
 )
 
 
+# TODO: Move view logic to services
+
+
 @comparison_create_view_docs()
 class ComparisonCreateView(CreateAPIView):
+    model = Comparison
     serializer_class = ComparisonSerializer
     permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: Serializer) -> None:
         product = Product.objects.get(id=self.kwargs["product_id"])
         serializer.save(user=self.request.user, product=product)
 
@@ -40,10 +46,10 @@ class ComparisonDestroyView(DestroyAPIView):
     model = Comparison
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
+    def get_object(self) -> Product:
         return Product.objects.get(id=self.kwargs["product_id"])
 
-    def perform_destroy(self, instance):
+    def perform_destroy(self, instance: Product) -> None:
         self.model.objects.filter(
             user=self.request.user,
             product=instance,
@@ -57,7 +63,7 @@ class ComparedProductTypesListView(ListAPIView):
     pagination_class = ProductTypePageNumberPagination
 
     @order_queryset(*PRODUCT_TYPES_ORDERING)
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[ProductType]:
         product_types = self.queryset.product_types(self.request.user)
         return product_types.products_annotation()
 
@@ -69,7 +75,7 @@ class ComparedProductsListView(ListAPIView):
     pagination_class = ProductPageNumberPagination
 
     @order_queryset(*PRODUCTS_ORDERING)
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Product]:
         product_type = get_object_or_404(
             ProductType, slug=self.kwargs["product_type_slug"]
         )

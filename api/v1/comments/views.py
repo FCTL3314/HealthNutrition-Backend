@@ -1,6 +1,7 @@
 import django_filters
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.serializers import Serializer
 from rest_framework.viewsets import GenericViewSet
 
 from api.v1.comments.docs import (
@@ -25,14 +26,14 @@ class BaseCommentViewSet(
     _filterset_class = None
     filterset_actions = ("list",)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
 
-    def perform_update(self, serializer):
+    def perform_update(self, serializer: Serializer) -> None:
         serializer.save(edited=True)
 
     @property
-    def is_filterset_action(self):
+    def is_filterset_action(self) -> bool:
         return self.action in self.filterset_actions
 
     @property

@@ -2,23 +2,9 @@ from http import HTTPStatus
 
 from rest_framework.serializers import Serializer
 
-from api.base.services import (
-    ConditionalFieldIncreaseService,
-    IRetrieveService,
-    ViewsIncreaseService,
-)
+from api.base.services import IRetrieveService, ConditionalFieldIncreaseService
 from api.responses import APIResponse
 from api.v1.products.models import Product, ProductType
-
-
-class ProductViewsIncreaseService(ViewsIncreaseService):
-    def get_cache_key(self) -> str:
-        return f"ip:{self._user_ip_address}-product_id:{self._instance.id}"
-
-
-class ProductTypeViewsIncreaseService(ViewsIncreaseService):
-    def get_cache_key(self) -> str:
-        return f"ip:{self._user_ip_address}-product_type_id:{self._instance.id}"
 
 
 class ProductRetrieveService(IRetrieveService):

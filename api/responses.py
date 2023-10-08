@@ -42,7 +42,7 @@ class APIResponse(Response):
         detail: str,
         code: str,
         messages: Iterable[str] | dict[str, Any],
-    ) -> dict[str, Any]:
+    ) -> dict[str, str]:
         data_content = {}
         if detail is not None:
             data_content["detail"] = detail

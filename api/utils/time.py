@@ -7,6 +7,10 @@ def is_datetime_attrs_equal(
     comparable_attrs: Iterable[str] = ("day", "hour", "minute", "second"),
 ) -> bool:
     """
+    Allows to make an inaccurate comparison of datetime
+    objects, the comparison is carried out only by the
+    received attributes.
+
     Returns True if the 'comparable_attrs' attributes
     for each object in comparable_objects are the same,
     otherwise False.

@@ -1,12 +1,15 @@
+from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
+from api.responses import APIResponse
 from api.utils.network import get_client_address
 from api.v1.stores.constants import STORES_ORDERING
 from api.v1.stores.models import Store
 from api.v1.stores.paginators import StorePageNumberPagination
 from api.v1.stores.serializers import StoreSerializer
-from api.v1.stores.services import StoreRetrieveService, StoreViewsIncreaseService
+from api.v1.stores.services.domain import StoreViewsIncreaseService
+from api.v1.stores.services.infrastructure import StoreRetrieveService
 
 
 class StoreModelViewSet(ModelViewSet):
@@ -16,7 +19,7 @@ class StoreModelViewSet(ModelViewSet):
     pagination_class = StorePageNumberPagination
     lookup_field = "slug"
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: Request, *args, **kwargs) -> APIResponse:
         instance = self.get_object()
         return StoreRetrieveService(
             instance,

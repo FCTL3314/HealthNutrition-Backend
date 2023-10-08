@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
-from api.common.models import ViewsModelMixin
+from api.common.models.mixins import ViewsModelMixin
 from api.v1.products.managers import ProductManager, ProductTypeManager
 
 

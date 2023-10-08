@@ -1,8 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsAdminOrReadOnly
+from api.responses import APIResponse
 from api.utils.network import get_client_address
 from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
 from api.v1.products.filters import ProductFilter
@@ -15,10 +17,13 @@ from api.v1.products.serializers import (
     ProductSerializer,
     ProductTypeAggregatedSerializer,
 )
-from api.v1.products.services import (
-    ProductRetrieveService,
-    ProductTypeRetrieveService,
+from api.v1.products.services.domain import (
     ProductViewsIncreaseService,
+    ProductTypeViewsIncreaseService,
+)
+from api.v1.products.services.infrastructure import (
+    ProductTypeRetrieveService,
+    ProductRetrieveService,
 )
 
 
@@ -33,12 +38,12 @@ class ProductTypeViewSet(ModelViewSet):
     pagination_class = ProductTypePageNumberPagination
     lookup_field = "slug"
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: Request, *args, **kwargs) -> APIResponse:
         instance = self.get_object()
         return ProductTypeRetrieveService(
             instance,
             self.serializer_class,
-            ProductViewsIncreaseService(instance, get_client_address(request)),
+            ProductTypeViewsIncreaseService(instance, get_client_address(request)),
         ).retrieve()
 
 
@@ -55,7 +60,7 @@ class ProductViewSet(ModelViewSet):
     pagination_class = ProductPageNumberPagination
     lookup_field = "slug"
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: Request, *args, **kwargs) -> APIResponse:
         instance = self.get_object()
         return ProductRetrieveService(
             instance,

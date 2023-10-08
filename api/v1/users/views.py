@@ -40,7 +40,7 @@ class UserViewSet(DjoserUserViewSet):
         queryset = super().get_queryset()
         return queryset.order_by(*USERS_ORDERING)
 
-    def update(self, request, *args, **kwargs) -> Response | APIResponse:
+    def update(self, request: Request, *args, **kwargs) -> Response | APIResponse:
         return UserUpdateService(
             self.get_object(),
             self.get_serializer_class(),

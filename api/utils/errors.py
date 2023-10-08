@@ -2,6 +2,6 @@ from collections import namedtuple
 
 ErrorMessage = namedtuple("ErrorMessage", ("message", "code"))
 
-ATTRIBUTE_UNDEFINED_TEMPLATE = (
-    "The '{class_name:}' class does not have a '{attribute_name:}' attribute defined."
+ATTRIBUTE_MUST_BE_OVERRIDDEN = (
+    "The '{attribute_name:}' attribute of the {class_name:} class must be overridden."
 )

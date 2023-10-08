@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Model
 from faker import Faker
 
-from api.common.models import ViewsModelMixin
+from api.common.models.mixins import ViewsModelMixin
 from api.utils.tests import get_auth_header
 
 User = get_user_model()

@@ -5,6 +5,8 @@ from cacheops import CacheMiss, cache
 from django.db.models import Model
 from rest_framework.serializers import Serializer
 
+from api.utils.errors import ATTRIBUTE_MUST_BE_OVERRIDDEN
+
 
 class ServiceProto(Protocol):
     """
@@ -45,8 +47,9 @@ class IRetrieveService(ABC):
 
 class ConditionalFieldIncreaseService(ServiceProto):
     """
-    Increases the field of an object by n when any
-    condition is met.
+    Increases the field of an object by "increase_by"
+    attribute when "_should_be_increased" condition
+    is met.
     """
 
     field: str | None = None
@@ -56,12 +59,9 @@ class ConditionalFieldIncreaseService(ServiceProto):
         instance: Model,
         increase_by: int = 1,
     ):
-        assert (
-            self.field is not None
-        ), f"The 'field' attribute of the {self.__class__.__name__} class must be overridden."
-        assert hasattr(
-            instance, self.field
-        ), f"The provided instance does not have a '{self.field}' field."
+        assert self.field is not None, ATTRIBUTE_MUST_BE_OVERRIDDEN.format(
+            attribute_name="field", class_name=self.__class__.__name__
+        )
         self._instance = instance
         self._increase_by = increase_by
 
@@ -95,7 +95,7 @@ class ConditionalFieldIncreaseService(ServiceProto):
         ...
 
 
-class ViewsIncreaseService(ConditionalFieldIncreaseService):
+class BaseViewsIncreaseService(ConditionalFieldIncreaseService):
     """
     Increases the view counter of the model instance if
     the user has not yet viewed the object, that is, if
@@ -103,6 +103,8 @@ class ViewsIncreaseService(ConditionalFieldIncreaseService):
     """
 
     field = "views"
+    view_cache_time: int | None = None
+    cache_key: str | None = None
 
     def __init__(
         self,
@@ -110,17 +112,24 @@ class ViewsIncreaseService(ConditionalFieldIncreaseService):
         user_ip_address: str,
         increase_by: int = 1,
     ):
+        assert self.view_cache_time is not None, ATTRIBUTE_MUST_BE_OVERRIDDEN.format(
+            attribute_name="view_cache_time", class_name=self.__class__.__name__
+        )
         super().__init__(instance, increase_by)
         self._user_ip_address = user_ip_address
         self._key = self.get_cache_key()
 
-    @abstractmethod
     def get_cache_key(self) -> str:
         """
         Returns the cache used to store the user's
         unique view.
         """
-        ...
+        assert self.cache_key is not None, (
+            f"'{self.__class__.__name__}' should either "
+            "override a `cache_key` attribute, or override "
+            "the `get_cache_key()` method."
+        )
+        return self.cache_key
 
     def _should_be_increased(self) -> bool:
         """
@@ -138,4 +147,4 @@ class ViewsIncreaseService(ConditionalFieldIncreaseService):
         """
         Saves the user's view to the cache.
         """
-        cache.set(self._key, True)
+        cache.set(self._key, True, self.view_cache_time)
