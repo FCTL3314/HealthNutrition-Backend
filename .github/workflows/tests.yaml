@@ -1,4 +1,4 @@
-name: Workflow
+name: Tests
 
 on:
   push:
@@ -62,20 +62,3 @@ jobs:
       - name: Run Tests
         run: |
           poetry run pytest .
-
-  lint:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Ruff linter
-      uses: chartboost/ruff-action@v1
-      with:
-        src: "."
-
-    - name: Black linter
-      uses: rickstaa/action-black@v1
-      with:
-        black_args: ". --check"
