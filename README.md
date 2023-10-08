@@ -103,7 +103,10 @@ savings while shopping across different stores for a wide range of products.
 </details>
 
 <details><summary><h1>❕ Peculiarities</h1></summary>
-
+### Architecture:
+  * Project services are divided into 2 levels:
+    * Domain -  Services that are in no way dependent on the current infrastructure, that is, the framework.
+    * Infrastructure - Services that can call domain services and interact with the project infrastructure.
 ### Abbreviations:
 * **EV - EmailVerification**
 
