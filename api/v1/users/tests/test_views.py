@@ -78,7 +78,7 @@ class TestUserSendEmailVerificationView:
         response = client.post(self.path, **get_auth_header(user))
 
         assert response.status_code == HTTPStatus.TOO_MANY_REQUESTS
-        assert "retry_after" in response.data["messages"]
+        assert len(response.data["messages"]) == 1
 
     @pytest.mark.django_db
     def test_already_verified(self, client, verified_user: User):

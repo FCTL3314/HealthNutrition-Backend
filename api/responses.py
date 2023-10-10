@@ -1,4 +1,4 @@
-from typing import Any, Iterable
+from typing import Iterable
 
 from rest_framework.response import Response
 
@@ -41,7 +41,7 @@ class APIResponse(Response):
     def _build_error_data(
         detail: str,
         code: str,
-        messages: Iterable[str] | dict[str, Any],
+        messages: Iterable[str],
     ) -> dict[str, str]:
         data_content = {}
         if detail is not None:

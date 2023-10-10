@@ -105,14 +105,13 @@ class EVSenderService(ServiceProto):
         )
 
     def _sending_limit_reached_response(self) -> APIResponse:
+        ev_next_sending_datetime = get_ev_next_sending_datetime(
+            self._latest_verification_schema
+        )
         return APIResponse(
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
-            messages={
-                "retry_after": get_ev_next_sending_datetime(
-                    self._latest_verification_schema
-                ),
-            },
+            messages=(f"Retry after {ev_next_sending_datetime}",),
             status=status.HTTP_429_TOO_MANY_REQUESTS,
         )
 
