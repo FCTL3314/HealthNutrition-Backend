@@ -19,7 +19,7 @@ def user_send_email_verification_view_docs() -> callable(extend_schema_view):
     return extend_schema_view(
         post=extend_schema(
             summary="Changes the user's email to a new one.",
-            responses={400: [CurrentUserSerializer, CurrentUserSerializer]},
+            responses=USER_CHANGE_EMAIL_VIEW_RESPONSES,
         ),
     )
 
