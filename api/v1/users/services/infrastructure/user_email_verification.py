@@ -86,8 +86,8 @@ class EVSenderService(ServiceProto):
         """
         email_verification = EmailVerification.objects.create(user=self._user)
         send_html_mail.delay(
-            subject="Your email verification",
-            html_email_template_name="email/verification_email.html",
+            subject="Email verification",
+            html_email_template_name="email/email_verification.html",
             recipient_list=[email_verification.user.email],
             context={
                 "username": email_verification.user.username,
