@@ -45,7 +45,7 @@ class IRetrieveService(ABC):
         ...
 
 
-class ConditionalFieldIncreaseService(ServiceProto):
+class AbstractConditionalIncreaseService(ServiceProto):
     """
     Increases the field of an object by "increase_by"
     attribute when "_should_be_increased" condition
@@ -95,7 +95,7 @@ class ConditionalFieldIncreaseService(ServiceProto):
         ...
 
 
-class BaseViewsIncreaseService(ConditionalFieldIncreaseService):
+class BaseViewsIncreaseService(AbstractConditionalIncreaseService):
     """
     Increases the view counter of the model instance if
     the user has not yet viewed the object, that is, if

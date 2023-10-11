@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from rest_framework.serializers import Serializer
 
-from api.base.services import IRetrieveService, ConditionalFieldIncreaseService
+from api.base.services import IRetrieveService, AbstractConditionalIncreaseService
 from api.responses import APIResponse
 from api.v1.products.models import Product, ProductType
 
@@ -12,7 +12,7 @@ class ProductRetrieveService(IRetrieveService):
         self,
         instance: Product,
         serializer: type[Serializer],
-        views_increase_service: ConditionalFieldIncreaseService,
+        views_increase_service: AbstractConditionalIncreaseService,
     ):
         super().__init__(instance, serializer)
         self._views_increase_service = views_increase_service
@@ -28,7 +28,7 @@ class ProductTypeRetrieveService(IRetrieveService):
         self,
         instance: ProductType,
         serializer: type[Serializer],
-        views_increase_service: ConditionalFieldIncreaseService,
+        views_increase_service: AbstractConditionalIncreaseService,
     ):
         super().__init__(instance, serializer)
         self._views_increase_service = views_increase_service
