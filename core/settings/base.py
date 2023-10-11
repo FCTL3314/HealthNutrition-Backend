@@ -20,6 +20,13 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 CORS_ALLOW_CREDENTIALS = True
 
+# Frontend
+
+FRONTEND_URL = env.str("FRONTEND_URL", default="http://localhost:5173")
+FRONTEND_PASSWORD_RESET_CONFIRM_URL = env.str(
+    "FRONTEND_PASSWORD_RESET_URL", default="password-reset/confirm/{uid}/{token}/"
+)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -237,4 +244,8 @@ DJOSER = {
         "current_user": "api.v1.users.serializers.CurrentUserSerializer",
         "user_create": "api.v1.users.serializers.UserCreateSerializer",
     },
+    "EMAIL": {
+        "password_reset": "api.v1.users.email.PasswordResetEmail",
+    },
+    "PASSWORD_RESET_CONFIRM_URL": f"{FRONTEND_URL}/{FRONTEND_PASSWORD_RESET_CONFIRM_URL}",
 }
