@@ -89,15 +89,13 @@ savings while shopping across different stores for a wide range of products.
 
 <details><summary><h1>🔥 Features</h1></summary>
 
-* **REST API**
-* **Domain Driven Development**
+* **RESTful API**
+* **Domain Driven Design**
 * **CI/CD**
-* **JWT Authentication**
-* **Postponed Tasks / Celery**
-* **Authentication / Authorization**
-* **Profile editing**
+* **Celery / Postponed Tasks**
 * **Email sending**
-* **Documentation**
+* **JWT Authentication / Authorization**
+* **Code Documentation**
 * **Tests (PyTest)**
 
 </details>
@@ -106,8 +104,8 @@ savings while shopping across different stores for a wide range of products.
 
 ### Architecture:
   * Project services are divided into 2 levels:
-    * Domain -  Services that are in no way dependent on the current infrastructure, that is, the framework.
-    * Infrastructure - Services that can call domain services and interact with the project infrastructure.
+    * **Domain** -  Services that are in no way dependent on the current infrastructure, that is, the framework.
+    * **Infrastructure** - Services that can call domain services and interact with the project infrastructure.
 ### Abbreviations:
 * **EV - EmailVerification**
 
