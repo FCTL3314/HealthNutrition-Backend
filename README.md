@@ -13,21 +13,31 @@
       <a href="#-description">Description</a>
     </b>
   </li>
+
+  <li>
+    <b>
+      <a href="#-endpoints">Endpoints</a>
+    </b>
+  </li>
+  
   <li>
     <b>
       <a href="#-demonstration">Demonstration</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-features">Features</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-local-installation">Local installation</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-pre-commit-hooks">Pre-Commit hooks</a>
@@ -37,24 +47,49 @@
 
 <details open><summary><h1>📃 Description</h1></summary>
 
-This Django application is designed for **comparing prices between different stores, helping users find the best
-deals on various products**. The project provides a **user-friendly interface** to browse products across different
-categories and view price variations among stores.
+This Django application provides a **comprehensive API** for **comparing prices across various stores** and helping users **make informed purchasing decisions**.
 
-Users can **search for specific products or explore product categories to compare prices and make informed purchasing
-decisions**. The application also **allows users to view detailed information about each product**, including store
-details, enabling them to choose the most convenient or preferred store for their purchase.
-
-**The project aims to simplify the process of comparing prices across multiple stores, saving users time and effort in
-finding the best price for their desired products**. With the ability to browse by category and access detailed product
-and store information, **users can easily identify the most competitive prices and make cost-effective purchasing
-choices**.
-
-Overall, this application provides a valuable tool for consumers to find the most favorable prices and maximize their
-savings while shopping across different stores for a wide range of products.
+This API **empowers developers to integrate the price comparison functionality into various applications**, enabling users to **search for products**, **explore categories**, **view detailed product information**, and ultimately make **cost-effective purchasing choices**. It **simplifies the process of comparing prices across multiple stores**, **enhancing the user's shopping experience** and **helping them maximize their savings**.
 
 > #### The project was created for educational purposes, simulating fictitious products without real value.
 > #### Frontend part: https://github.com/FCTL3314/StoreTracker-Frontend
+
+</details>
+
+<details><summary><h1>🪄 Endpoints</h1></summary>
+
+1. **Category Information**:
+   - `GET /products/product-types/{slug}/`: Detailed information about a specific product category by its slug.
+   - `GET /products/product-types/`: A list of product categories.
+
+2. **Product Information**:
+   - `GET /products/{product_slug}/`: Detailed information about a specific product by its slug.
+   - `GET /products/`: A list of products with the ability to filter by product category.
+
+3. **Product comparisons**:
+   - `GET /comparisons/products/{product_type_slug}/`: A list of user-compared product categories.
+   - `GET /comparisons/product-types/`: A list of user-compared categories.
+
+   - `POST /comparisons/add/{prodict_id}/`: Adds a product to the user's comparisons.
+   - `DELETE /comparisons/remove/{prodict_id}/`: Removes a product from the user's comparisons.
+  
+4. **Comments Management**:
+   - `POST /comments/product/add/{product_id}/`: Adds a comment to a product.
+   - `DELETE /comments/product/remove/{product_id}/`: Removes a product comment.
+   - `GET /comments/product-list?product_id=`: A list of a product comments.
+
+   - `POST /comments/store/add/{store_id}/`: Adds a comment to a store.
+   - `DELETE /comments/store/remove/{store_id}/`: Removes a store comment.
+   - `GET /comments/store-list?store_id=`: A list of a store comments.
+
+6. **User Management**:
+   - `POST /token/`: Obtain an authentication token.
+   - `POST /token/refresh/`: Refresh an authentication token to extend its validity.
+   - `POST /users/`: Register a new user.
+   - `GET /users/me/`: Retrieve information about the currently authenticated user.
+   - `PATCH /users/me/`: Update user information.
+   - `POST /users/change-email/`: Change the email address of the currently authenticated user.
+   - `GET /users/{user_slug}/`: Retrieve information about a specific user by its slug.
 
 </details>
 
