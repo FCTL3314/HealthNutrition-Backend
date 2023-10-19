@@ -81,6 +81,10 @@ This API **empowers developers to integrate the price comparison functionality i
    - `POST /comments/store/add/{store_id}/`: Adds a comment to a store.
    - `DELETE /comments/store/remove/{store_id}/`: Removes a store comment.
    - `GET /comments/store-list?store_id=`: A list of a store comments.
+  
+5. **Email verification**:
+   -  `POST /users/verification/send/`: Sends a verification email to the currently authenticated user.
+   -  `POST /users/verification/verify/`: Verify the currently authenticated user if the verification code is correct.
 
 6. **User Management**:
    - `POST /token/`: Obtain an authentication token.
@@ -90,6 +94,10 @@ This API **empowers developers to integrate the price comparison functionality i
    - `PATCH /users/me/`: Update user information.
    - `POST /users/change-email/`: Change the email address of the currently authenticated user.
    - `GET /users/{user_slug}/`: Retrieve information about a specific user by its slug.
+
+7. **Password reset**:
+   - `POST /users/reset_password/`: Sends an email to reset the currently authenticated user's password.
+   - `POST /users/reset_password_confirm/`: Resets the currently authenticated user's password.
 
 </details>
 
