@@ -60,11 +60,11 @@ This API **empowers developers to integrate the price comparison functionality i
 
 1. **Category Information**:
    - `GET /products/product-types/{slug}/`: Detailed information about a specific product category by its slug.
-   - `GET /products/product-types/`: A list of product categories.
+   - `GET /products/product-types/`: A list of product categories with the ability to filter by name.
 
 2. **Product Information**:
    - `GET /products/{product_slug}/`: Detailed information about a specific product by its slug.
-   - `GET /products/`: A list of products with the ability to filter by product category.
+   - `GET /products/`: A list of products with the ability to filter by product category and name.
 
 3. **Product comparisons**:
    - `GET /comparisons/products/{product_type_slug}/`: A list of user-compared product categories.
