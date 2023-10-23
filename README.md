@@ -58,7 +58,7 @@ This API **empowers developers to integrate the price comparison functionality i
 
 <details><summary><h1>🪄 Endpoints</h1></summary>
 
-1. **Stores**
+1. **Stores:**
    - `GET /stores/{slug}/`: Detailed information about a specific store by its slug.
    - `GET /stores-list/`: A list of stores.
    - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific store.
