@@ -58,22 +58,29 @@ This API **empowers developers to integrate the price comparison functionality i
 
 <details><summary><h1>🪄 Endpoints</h1></summary>
 
-1. **Category Information**:
+1. **Stores**
+   - `GET /stores/{slug}/`: Detailed information about a specific store by its slug.
+   - `GET /stores-list/`: A list of stores.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific store.
+
+3. **Categories**:
    - `GET /products/product-types/{slug}/`: Detailed information about a specific product category by its slug.
    - `GET /products/product-types/`: A list of product categories with the ability to filter by name.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific category.
 
-2. **Product Information**:
+4. **Products**:
    - `GET /products/{product_slug}/`: Detailed information about a specific product by its slug.
    - `GET /products/`: A list of products with the ability to filter by product category and name.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific product.
 
-3. **Product comparisons**:
+5. **Product comparisons**:
    - `GET /comparisons/products/{product_type_slug}/`: A list of user-compared product categories.
    - `GET /comparisons/product-types/`: A list of user-compared categories.
 
    - `POST /comparisons/add/{prodict_id}/`: Adds a product to the user's comparisons.
    - `DELETE /comparisons/remove/{prodict_id}/`: Removes a product from the user's comparisons.
   
-4. **Comments Management**:
+6. **Comments Management**:
    - `POST /comments/product/add/{product_id}/`: Adds a comment to a product.
    - `DELETE /comments/product/remove/{product_id}/`: Removes a product comment.
    - `GET /comments/product-list?product_id=`: A list of a product comments.
@@ -82,11 +89,11 @@ This API **empowers developers to integrate the price comparison functionality i
    - `DELETE /comments/store/remove/{store_id}/`: Removes a store comment.
    - `GET /comments/store-list?store_id=`: A list of a store comments.
   
-5. **Email verification**:
+7. **Email verification**:
    -  `POST /users/verification/send/`: Sends a verification email to the currently authenticated user.
    -  `POST /users/verification/verify/`: Verify the currently authenticated user if the verification code is correct.
 
-6. **User Management**:
+8. **User Management**:
    - `POST /token/`: Obtain an authentication token.
    - `POST /token/refresh/`: Refresh an authentication token to extend its validity.
    - `POST /users/`: Register a new user.
@@ -95,7 +102,7 @@ This API **empowers developers to integrate the price comparison functionality i
    - `POST /users/change-email/`: Change the email address of the currently authenticated user.
    - `GET /users/{user_slug}/`: Retrieve information about a specific user by its slug.
 
-7. **Password reset**:
+9. **Password reset**:
    - `POST /users/reset_password/`: Sends an email to reset the currently authenticated user's password.
    - `POST /users/reset_password_confirm/`: Resets the currently authenticated user's password.
 
