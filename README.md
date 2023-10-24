@@ -13,21 +13,31 @@
       <a href="#-description">Description</a>
     </b>
   </li>
+
+  <li>
+    <b>
+      <a href="#-endpoints">Endpoints</a>
+    </b>
+  </li>
+  
   <li>
     <b>
       <a href="#-demonstration">Demonstration</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-features">Features</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-local-installation">Local installation</a>
     </b>
   </li>
+  
   <li>
     <b>
       <a href="#-pre-commit-hooks">Pre-Commit hooks</a>
@@ -37,24 +47,64 @@
 
 <details open><summary><h1>📃 Description</h1></summary>
 
-This Django application is designed for **comparing prices between different stores, helping users find the best
-deals on various products**. The project provides a **user-friendly interface** to browse products across different
-categories and view price variations among stores.
+This Django application provides a **comprehensive API** for **comparing prices across various stores** and helping users **make informed purchasing decisions**.
 
-Users can **search for specific products or explore product categories to compare prices and make informed purchasing
-decisions**. The application also **allows users to view detailed information about each product**, including store
-details, enabling them to choose the most convenient or preferred store for their purchase.
-
-**The project aims to simplify the process of comparing prices across multiple stores, saving users time and effort in
-finding the best price for their desired products**. With the ability to browse by category and access detailed product
-and store information, **users can easily identify the most competitive prices and make cost-effective purchasing
-choices**.
-
-Overall, this application provides a valuable tool for consumers to find the most favorable prices and maximize their
-savings while shopping across different stores for a wide range of products.
+This API **empowers developers to integrate the price comparison functionality into various applications**, enabling users to **search for products**, **explore categories**, **view detailed product information**, and ultimately make **cost-effective purchasing choices**. It **simplifies the process of comparing prices across multiple stores**, **enhancing the user's shopping experience** and **helping them maximize their savings**.
 
 > #### The project was created for educational purposes, simulating fictitious products without real value.
 > #### Frontend part: https://github.com/FCTL3314/StoreTracker-Frontend
+
+</details>
+
+<details><summary><h1>🪄 Endpoints</h1></summary>
+
+1. **Stores:**
+   - `GET /stores/{slug}/`: Detailed information about a specific store by its slug.
+   - `GET /stores-list/`: A list of stores.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific store.
+
+3. **Categories**:
+   - `GET /products/product-types/{slug}/`: Detailed information about a specific product category by its slug.
+   - `GET /products/product-types/`: A list of product categories with the ability to filter by name.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific category.
+
+4. **Products**:
+   - `GET /products/{product_slug}/`: Detailed information about a specific product by its slug.
+   - `GET /products/`: A list of products with the ability to filter by product category and name.
+   - `PUT | PATCH | DELETE /stores/{slug}/`: Deletes or updates specific product.
+
+5. **Product comparisons**:
+   - `GET /comparisons/products/{product_type_slug}/`: A list of user-compared product categories.
+   - `GET /comparisons/product-types/`: A list of user-compared categories.
+
+   - `POST /comparisons/add/{prodict_id}/`: Adds a product to the user's comparisons.
+   - `DELETE /comparisons/remove/{prodict_id}/`: Removes a product from the user's comparisons.
+  
+6. **Comments Management**:
+   - `POST /comments/product/add/{product_id}/`: Adds a comment to a product.
+   - `DELETE /comments/product/remove/{product_id}/`: Removes a product comment.
+   - `GET /comments/product-list?product_id=`: A list of a product comments.
+
+   - `POST /comments/store/add/{store_id}/`: Adds a comment to a store.
+   - `DELETE /comments/store/remove/{store_id}/`: Removes a store comment.
+   - `GET /comments/store-list?store_id=`: A list of a store comments.
+  
+7. **Email verification**:
+   -  `POST /users/verification/send/`: Sends a verification email to the currently authenticated user.
+   -  `POST /users/verification/verify/`: Verify the currently authenticated user if the verification code is correct.
+
+8. **User Management**:
+   - `POST /token/`: Obtain an authentication token.
+   - `POST /token/refresh/`: Refresh an authentication token to extend its validity.
+   - `POST /users/`: Register a new user.
+   - `GET /users/me/`: Retrieve information about the currently authenticated user.
+   - `PATCH /users/me/`: Update user information.
+   - `POST /users/change-email/`: Change the email address of the currently authenticated user.
+   - `GET /users/{user_slug}/`: Retrieve information about a specific user by its slug.
+
+9. **Password reset**:
+   - `POST /users/reset_password/`: Sends an email to reset the currently authenticated user's password.
+   - `POST /users/reset_password_confirm/`: Resets the currently authenticated user's password.
 
 </details>
 
@@ -89,15 +139,13 @@ savings while shopping across different stores for a wide range of products.
 
 <details><summary><h1>🔥 Features</h1></summary>
 
-* **REST API**
-* **Domain Driven Development**
+* **RESTful API**
+* **Domain Driven Design**
 * **CI/CD**
-* **JWT Authentication**
-* **Postponed Tasks / Celery**
-* **Authentication / Authorization**
-* **Profile editing**
+* **Celery / Postponed Tasks**
 * **Email sending**
-* **Documentation**
+* **JWT Authentication / Authorization**
+* **Code Documentation**
 * **Tests (PyTest)**
 
 </details>
@@ -106,8 +154,8 @@ savings while shopping across different stores for a wide range of products.
 
 ### Architecture:
   * Project services are divided into 2 levels:
-    * Domain -  Services that are in no way dependent on the current infrastructure, that is, the framework.
-    * Infrastructure - Services that can call domain services and interact with the project infrastructure.
+    * **Domain** -  Services that are in no way dependent on the current infrastructure, that is, the framework.
+    * **Infrastructure** - Services that can call domain services and interact with the project infrastructure.
 ### Abbreviations:
 * **EV - EmailVerification**
 
@@ -121,7 +169,8 @@ savings while shopping across different stores for a wide range of products.
 4. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
     ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/c31d86db-7bec-4693-8e97-d649c6e7184f)
 5. #### Run docker services for development: `docker-compose -f docker/local/docker-compose.yml up`
-6. #### Run the development server: `python manage.py runserver`
+6. #### Apply migrations: `python manage.py makemigrations` and `python manage.py migrate`
+7. #### Run the development server: `python manage.py runserver`
 
 </details>
 
