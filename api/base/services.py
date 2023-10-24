@@ -8,9 +8,9 @@ from rest_framework.serializers import Serializer
 from api.utils.errors import ATTRIBUTE_MUST_BE_OVERRIDDEN
 
 
-class ServiceProto(Protocol):
+class IService(Protocol):
     """
-    A protocol for creating domain and infrastructure services.
+    An interface for creating domain and infrastructure services.
 
     Response style:
         Instead of directly returning a Response class object from
@@ -45,7 +45,7 @@ class IRetrieveService(ABC):
         ...
 
 
-class AbstractConditionalIncreaseService(ServiceProto):
+class AbstractConditionalIncreaseService(IService):
     """
     Increases the field of an object by "increase_by"
     attribute when "_should_be_increased" condition

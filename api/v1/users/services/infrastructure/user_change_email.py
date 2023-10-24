@@ -4,22 +4,20 @@ from typing import Any
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import Serializer
 
-from api.base.services import ServiceProto
+from api.base.services import IService
 from api.responses import APIResponse
-from api.utils.errors import ErrorMessage
+from api.utils.errors import Error
 from api.v1.users.serializers import CurrentUserSerializer
 
 User = get_user_model()
 
 
 class ChangeEmailErrors:
-    INVALID_PASSWORD = ErrorMessage(
-        "The password entered is incorrect.", "invalid_password"
-    )
-    SAME_EMAIL = ErrorMessage("The new email is the same as the old one.", "same_email")
+    INVALID_PASSWORD = Error("The password entered is incorrect.", "invalid_password")
+    SAME_EMAIL = Error("The new email is the same as the old one.", "same_email")
 
 
-class UserChangeEmailService(ServiceProto):
+class UserChangeEmailService(IService):
     """
     Changes the user's e-mail address by requesting
     a new e-mail address and their password.

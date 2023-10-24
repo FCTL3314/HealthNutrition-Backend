@@ -2,9 +2,31 @@ from http import HTTPStatus
 
 from rest_framework.serializers import Serializer
 
-from api.base.services import IRetrieveService, AbstractConditionalIncreaseService
+from api.base.services import (
+    BaseViewsIncreaseService,
+    IRetrieveService,
+    AbstractConditionalIncreaseService,
+)
 from api.responses import APIResponse
+from api.v1.products.constants import (
+    PRODUCT_VIEW_CACHE_TIME,
+    PRODUCT_TYPE_VIEW_CACHE_TIME,
+)
 from api.v1.products.models import Product, ProductType
+
+
+class ProductViewsIncreaseService(BaseViewsIncreaseService):
+    view_cache_time = PRODUCT_VIEW_CACHE_TIME
+
+    def get_cache_key(self) -> str:
+        return f"ip:{self._user_ip_address}-product_id:{self._instance.id}"
+
+
+class ProductTypeViewsIncreaseService(BaseViewsIncreaseService):
+    view_cache_time = PRODUCT_TYPE_VIEW_CACHE_TIME
+
+    def get_cache_key(self) -> str:
+        return f"ip:{self._user_ip_address}-product_type_id:{self._instance.id}"
 
 
 class ProductRetrieveService(IRetrieveService):

@@ -17,13 +17,11 @@ from api.v1.products.serializers import (
     ProductSerializer,
     ProductTypeAggregatedSerializer,
 )
-from api.v1.products.services.domain import (
+from api.v1.products.services import (
     ProductViewsIncreaseService,
     ProductTypeViewsIncreaseService,
-)
-from api.v1.products.services.infrastructure import (
-    ProductTypeRetrieveService,
     ProductRetrieveService,
+    ProductTypeRetrieveService,
 )
 
 

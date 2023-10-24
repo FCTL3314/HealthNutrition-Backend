@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from mixer.backend.django import mixer
 
-from api.base.time_providers import TimeProviderProto
+from api.base.time_providers import ITimeProvider
 from api.utils.time import is_datetime_attrs_equal
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.models import EmailVerification
@@ -19,7 +19,7 @@ User = get_user_model()
 
 class TestNextSendingTimeCalculator:
     @pytest.mark.django_db
-    def test_without_previous_sending(self, utc_time_provider: TimeProviderProto):
+    def test_without_previous_sending(self, utc_time_provider: ITimeProvider):
         next_sending_datetime = get_ev_next_sending_datetime(None)
 
         assert is_datetime_attrs_equal(

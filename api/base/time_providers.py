@@ -4,9 +4,9 @@ from typing import Protocol, TypeVar
 T = TypeVar("T")
 
 
-class TimeProviderProto(Protocol[T]):
+class ITimeProvider(Protocol[T]):
     """
-    Provides a protocol for obtaining an
+    Provides an interface for obtaining an
     infrastructure-agnostic time.
     """
 
@@ -14,6 +14,6 @@ class TimeProviderProto(Protocol[T]):
         ...
 
 
-class UTCTimeProvider(TimeProviderProto[datetime]):
+class UTCTimeProvider(ITimeProvider[datetime]):
     def now(self) -> datetime:
         return datetime.now(tz=timezone.utc)

@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from api.base.time_providers import TimeProviderProto, UTCTimeProvider
+from api.base.time_providers import ITimeProvider, UTCTimeProvider
 from api.utils.time import round_datetime
 from api.v1.users.constants import EV_SENDING_INTERVAL_TIMEDELTA
 from api.v1.users.services.schemas import EmailVerification, User
@@ -34,7 +34,7 @@ def get_ev_sending_availability_status(
 
 def is_ev_sending_interval_passed(
     latest_verification: EmailVerification | None,
-    time_provider: TimeProviderProto = UTCTimeProvider(),
+    time_provider: ITimeProvider = UTCTimeProvider(),
 ) -> bool:
     """
     Calculates whether the allowed interval for sending
@@ -50,7 +50,7 @@ def is_ev_sending_interval_passed(
 
 def get_ev_next_sending_datetime(
     latest_verification: EmailVerification | None,
-    time_provider: TimeProviderProto = UTCTimeProvider(),
+    time_provider: ITimeProvider = UTCTimeProvider(),
 ) -> datetime:
     """
     Calculates the date and time when the verification

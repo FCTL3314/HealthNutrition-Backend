@@ -4,10 +4,10 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.serializers import Serializer
 
-from api.base.services import ServiceProto
+from api.base.services import IService
 from api.common.tasks import send_html_mail
 from api.responses import APIResponse
-from api.utils.errors import ErrorMessage
+from api.utils.errors import Error
 from api.v1.users.models import EmailVerification
 from api.v1.users.services.converters import EVConverter
 from api.v1.users.services.domain.email_verification import (
@@ -21,24 +21,20 @@ User = get_user_model()
 
 
 class EVSendErrors:
-    SENDING_LIMIT_REACHED = ErrorMessage(
-        "Sending limit reached.", "sending_limit_reached"
-    )
-    ALREADY_VERIFIED = ErrorMessage(
+    SENDING_LIMIT_REACHED = Error("Sending limit reached.", "sending_limit_reached")
+    ALREADY_VERIFIED = Error(
         "Your email is already verified.", "email_already_verified"
     )
 
 
 class UserVerificationErrors:
-    VERIFICATION_EXPIRED = ErrorMessage(
+    VERIFICATION_EXPIRED = Error(
         "The verification code has expired.", "verification_code_expired"
     )
-    INVALID_CODE = ErrorMessage(
-        "Invalid verification code.", "invalid_verification_code"
-    )
+    INVALID_CODE = Error("Invalid verification code.", "invalid_verification_code")
 
 
-class EVSenderService(ServiceProto):
+class EVSenderService(IService):
     """
     Sends a verification email to the provided user, if possible,
     otherwise returns an error response.
@@ -124,7 +120,7 @@ class EVSenderService(ServiceProto):
         )
 
 
-class UserEmailVerifierService(ServiceProto):
+class UserEmailVerifierService(IService):
     """
     Verify the provided user's email, if possible,
     otherwise returns an error response.

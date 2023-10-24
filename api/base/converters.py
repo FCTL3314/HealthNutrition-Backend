@@ -6,6 +6,6 @@ T = TypeVar("T")
 M_I = TypeVar("M_I", bound=Model)
 
 
-class DjangoORMToDTOConverterProto(Protocol[T]):
+class IDjangoORMToDTOConverter(Protocol[T]):
     def to_dto(self, django_model_instance: M_I) -> T:
         ...

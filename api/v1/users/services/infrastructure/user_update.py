@@ -5,16 +5,16 @@ from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db.models import Model
 from rest_framework.serializers import Serializer
 
-from api.base.services import ServiceProto
+from api.base.services import IService
 from api.responses import APIResponse
-from api.utils.errors import ErrorMessage
+from api.utils.errors import Error
 from api.utils.models import invalidate_prefetch_cache
 from api.v1.users.constants import MAX_USER_IMAGE_SIZE_MB
 from api.v1.users.services.domain.file_upload import is_user_image_size_valid
 
 
 class UserUpdateErrors:
-    IMAGE_SIZE_TOO_LARGE = ErrorMessage(
+    IMAGE_SIZE_TOO_LARGE = Error(
         (
             f"The size of the loaded image must be less than "
             f"or equal to {MAX_USER_IMAGE_SIZE_MB} mb."
@@ -23,10 +23,10 @@ class UserUpdateErrors:
     )
 
 
-class UserUpdateService(ServiceProto):
+class UserUpdateService(IService):
     """
-    Responsible for updating the user object, validates
-    conditions such as:
+    Responsible for updating the user object; validates
+    conditions:
         The size of the uploaded image.
     """
 
