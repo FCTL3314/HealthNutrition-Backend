@@ -1,4 +1,4 @@
-import django_filters
+from django.db.models import QuerySet
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.serializers import Serializer
@@ -9,7 +9,7 @@ from api.v1.comments.docs import (
     store_comment_view_set_docs,
 )
 from api.v1.comments.filters import ProductCommentFilter, StoreCommentFilter
-from api.v1.comments.models import ProductComment, StoreComment
+from api.v1.comments.models import ProductComment, StoreComment, BaseCommentModel
 from api.v1.comments.paginators import CommentPageNumberPagination
 from api.v1.comments.serializers import ProductCommentSerializer, StoreCommentSerializer
 
@@ -21,10 +21,28 @@ class BaseCommentViewSet(
     mixins.ListModelMixin,
     GenericViewSet,
 ):
+    model = BaseCommentModel
     pagination_class = CommentPageNumberPagination
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    _filterset_class = None
     filterset_actions = ("list",)
+
+    def filter_queryset(self, queryset):
+        """
+        A wrapper that allows queryset filtering
+        only if the query is sent by the correct
+        method.
+        """
+        if self.action in self.filterset_actions:
+            return super().filter_queryset(queryset)
+        return queryset
+
+    def get_queryset(self) -> QuerySet[BaseCommentModel]:
+        queryset = self.model.objects.newest()
+        if self.action != "list":
+            return queryset
+        if parent_id := self.request.query_params.get("parent_id"):
+            return queryset.filter(parent_id=parent_id)
+        return queryset.top_level()
 
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
@@ -32,26 +50,16 @@ class BaseCommentViewSet(
     def perform_update(self, serializer: Serializer) -> None:
         serializer.save(edited=True)
 
-    @property
-    def is_filterset_action(self) -> bool:
-        return self.action in self.filterset_actions
-
-    @property
-    def filterset_class(self) -> type[django_filters.FilterSet] | None:
-        if self.is_filterset_action:
-            return self._filterset_class
-        return None
-
 
 @product_comment_view_set_docs()
 class ProductCommentViewSet(BaseCommentViewSet):
-    queryset = ProductComment.objects.newest()
+    model = ProductComment
     serializer_class = ProductCommentSerializer
-    _filterset_class = ProductCommentFilter
+    filterset_class = ProductCommentFilter
 
 
 @store_comment_view_set_docs()
 class StoreCommentViewSet(BaseCommentViewSet):
-    queryset = StoreComment.objects.newest()
+    model = StoreComment
     serializer_class = StoreCommentSerializer
-    _filterset_class = StoreCommentFilter
+    filterset_class = StoreCommentFilter
