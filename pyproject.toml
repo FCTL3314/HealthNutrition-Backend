@@ -26,6 +26,7 @@ psycopg2-binary = "^2.9.7"
 django-cacheops = "^7.0.1"
 django-silk = "^5.0.3"
 pydantic = "^2.4.2"
+django-mptt = "^0.15.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "1.4.1"
