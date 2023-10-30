@@ -1,10 +1,11 @@
 from django.db import models
+from mptt.models import MPTTModel
 from django.urls import reverse
 
 from api.v1.comments.managers import BaseCommentManager
 
 
-class BaseCommentModel(models.Model):
+class BaseCommentModel(MPTTModel):
     author = models.ForeignKey(to="users.User", null=True, on_delete=models.CASCADE)
     text = models.CharField(max_length=516)
     created_at = models.DateTimeField(auto_now_add=True)

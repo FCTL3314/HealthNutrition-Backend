@@ -1,6 +1,10 @@
-from django.db import models
+from django.db.models import QuerySet
+from mptt.querysets import TreeQuerySet
 
 
-class BaseCommentManager(models.Manager):
-    def newest(self):
+class BaseCommentQuerySet(TreeQuerySet):
+    def newest(self) -> QuerySet:
+        """
+        Returns newest comments by the date.
+        """
         return self.order_by("-created_at")

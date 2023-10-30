@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "silk",
+    "mptt",
     "api",
     "api.v1",
     "api.v1.users",
