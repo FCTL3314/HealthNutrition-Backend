@@ -1,4 +1,5 @@
 from django.db import models
+from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.urls import reverse
 
@@ -10,6 +11,13 @@ class BaseCommentModel(MPTTModel):
     text = models.CharField(max_length=516)
     created_at = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
+    parent = TreeForeignKey(
+        to="self",
+        null=True,
+        blank=True,
+        related_name="children",
+        on_delete=models.CASCADE,
+    )
 
     objects = BaseCommentManager()
 
