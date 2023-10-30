@@ -56,6 +56,7 @@ def test_comment_list(
     comment_related_object = mixer.blend(comment_related_model)
     mixer.cycle(COMMENTS_PAGINATE_BY * 2).blend(
         comment_model,
+        level=0,
         **get_related_kwargs(comment_related_object),
     )
 
@@ -66,6 +67,77 @@ def test_comment_list(
 
     assert response.status_code == HTTPStatus.OK
     assert len(response.data["results"]) == COMMENTS_PAGINATE_BY
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    (
+        "path,"
+        "comment_model,"
+        "comment_related_model,"
+        "get_related_kwargs,"
+        "param_arg"
+    ),
+    [
+        (
+            reverse(PRODUCT_COMMENTS),
+            ProductComment,
+            Product,
+            lambda product: {"product_id": product.id},
+            "product_id",
+        ),
+        (
+            reverse(STORE_COMMENTS),
+            StoreComment,
+            Store,
+            lambda store: {"store_id": store.id},
+            "store_id",
+        ),
+    ],
+)
+def test_comment_children_list(
+    client,
+    path: str,
+    comment_model: type[BaseCommentModel],
+    comment_related_model: type[Model],
+    get_related_kwargs: callable,
+    param_arg: str,
+):
+    """
+    Tests the return of a list of children of a
+    particular comment.
+    """
+    comment_related_object = mixer.blend(comment_related_model)
+
+    parent_comment = comment_model.objects.create(
+        **get_related_kwargs(comment_related_object)
+    )
+
+    children_count = 6
+    children_to_create = [
+        comment_model(
+            parent_id=parent_comment.id,
+            level=0,
+            lft=0,
+            rght=0,
+            tree_id=0,
+            **get_related_kwargs(comment_related_object),
+        )
+        for _ in range(children_count)
+    ]
+
+    comment_model.objects.bulk_create(children_to_create)
+
+    response = client.get(
+        path,
+        data={
+            param_arg: comment_related_object.id,
+            "parent_id": parent_comment.id,
+        },
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.data["count"] == children_count
 
 
 @pytest.mark.django_db
@@ -119,10 +191,8 @@ def test_comment_update(
 ):
     comment_object = mixer.blend(comment_model)
 
-    path = comment_object.get_absolute_url()
-
     response = client.patch(
-        path,
+        comment_object.get_absolute_url(),
         data={"text": comment_text},
         content_type="application/json",
         **get_auth_header(admin_user),
