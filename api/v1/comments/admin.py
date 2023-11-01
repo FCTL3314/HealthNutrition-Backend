@@ -1,16 +1,9 @@
-from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 
-from api.v1.comments.models import ProductComment, StoreComment
+from api.v1.comments.models import Comment
 
 
-class BaseCommentAdmin(admin.TabularInline):
+class CommentInlineAdmin(GenericTabularInline):
+    model = Comment
     search_fields = ("text",)
     ordering = ("-created_at",)
-
-
-class ProductCommentAdmin(BaseCommentAdmin):
-    model = ProductComment
-
-
-class StoreCommentAdmin(BaseCommentAdmin):
-    model = StoreComment
