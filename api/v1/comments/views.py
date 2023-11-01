@@ -4,26 +4,24 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.serializers import Serializer
 from rest_framework.viewsets import GenericViewSet
 
-from api.v1.comments.docs import (
-    product_comment_view_set_docs,
-    store_comment_view_set_docs,
-)
-from api.v1.comments.filters import ProductCommentFilter, StoreCommentFilter
-from api.v1.comments.models import ProductComment, StoreComment, BaseCommentModel
+from api.v1.comments.filters import CommentFilter
+from api.v1.comments.models import Comment
 from api.v1.comments.paginators import CommentPageNumberPagination
-from api.v1.comments.serializers import ProductCommentSerializer, StoreCommentSerializer
+from api.v1.comments.serializers import CommentSerializer
 
 
-class BaseCommentViewSet(
+class CommentViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     GenericViewSet,
 ):
-    model = BaseCommentModel
+    model = Comment
+    serializer_class = CommentSerializer
     pagination_class = CommentPageNumberPagination
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    filterset_class = CommentFilter
     filterset_actions = ("list",)
 
     def filter_queryset(self, queryset):
@@ -36,7 +34,7 @@ class BaseCommentViewSet(
             return super().filter_queryset(queryset)
         return queryset
 
-    def get_queryset(self) -> QuerySet[BaseCommentModel]:
+    def get_queryset(self) -> QuerySet[Comment]:
         queryset = self.model.objects.newest()
         if self.action != "list":
             return queryset
@@ -49,17 +47,3 @@ class BaseCommentViewSet(
 
     def perform_update(self, serializer: Serializer) -> None:
         serializer.save(edited=True)
-
-
-@product_comment_view_set_docs()
-class ProductCommentViewSet(BaseCommentViewSet):
-    model = ProductComment
-    serializer_class = ProductCommentSerializer
-    filterset_class = ProductCommentFilter
-
-
-@store_comment_view_set_docs()
-class StoreCommentViewSet(BaseCommentViewSet):
-    model = StoreComment
-    serializer_class = StoreCommentSerializer
-    filterset_class = StoreCommentFilter

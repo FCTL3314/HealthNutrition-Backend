@@ -1,19 +1,12 @@
 import django_filters
 
-from api.v1.comments.models import ProductComment, StoreComment
+from api.v1.comments.models import Comment
 
 
-class ProductCommentFilter(django_filters.FilterSet):
-    product_id = django_filters.NumberFilter(required=True)
-
-    class Meta:
-        model = ProductComment
-        fields = ("product_id",)
-
-
-class StoreCommentFilter(django_filters.FilterSet):
-    store_id = django_filters.NumberFilter(required=True)
+class CommentFilter(django_filters.FilterSet):
+    content_type_id = django_filters.NumberFilter(required=True)
+    object_id = django_filters.NumberFilter(required=True)
 
     class Meta:
-        model = StoreComment
-        fields = ("store_id",)
+        model = Comment
+        fields = ("content_type_id", "object_id")
