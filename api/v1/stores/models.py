@@ -1,8 +1,10 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
 from api.common.models.mixins import ViewsModelMixin
+from api.v1.comments.models import Comment
 
 
 class Store(ViewsModelMixin, models.Model):
@@ -12,6 +14,7 @@ class Store(ViewsModelMixin, models.Model):
     description = models.TextField()
     views = models.PositiveIntegerField(default=0)
     slug = models.SlugField(unique=True)
+    comments = GenericRelation(Comment)
 
     def __str__(self):
         return self.name
