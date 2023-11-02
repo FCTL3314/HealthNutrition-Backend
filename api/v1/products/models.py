@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 from api.common.models.mixins import ViewsModelMixin
-from api.v1.comments.models import Comment
 from api.v1.products.managers import ProductManager, ProductTypeManager
 
 
@@ -22,7 +21,7 @@ class Product(ViewsModelMixin, models.Model):
     )
     views = models.PositiveIntegerField(default=0)
     slug = models.SlugField(unique=True)
-    comments = GenericRelation(Comment)
+    comments = GenericRelation("comments.Comment")
 
     objects = ProductManager()
 
