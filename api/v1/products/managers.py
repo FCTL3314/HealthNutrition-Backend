@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg, Count, Max, Min, Q, QuerySet
+from django.db.models import Avg, Count, Max, Min, QuerySet
 from django.db.models.functions import Round
 
 from api.v1.products.constants import PRICE_ROUNDING
@@ -7,6 +7,10 @@ from api.v1.products.constants import PRICE_ROUNDING
 
 class ProductQuerySet(models.QuerySet):
     def price_aggregation(self) -> dict[str, float]:
+        """
+        Returns the minimum, maximum, and average
+        price of the QuerySet products.
+        """
         return self.aggregate(
             price__min=Round(Min("price"), PRICE_ROUNDING),
             price__max=Round(Max("price"), PRICE_ROUNDING),
@@ -14,20 +18,18 @@ class ProductQuerySet(models.QuerySet):
         )
 
 
-class ProductManager(models.Manager):
-    _queryset_class = ProductQuerySet
-
-    def price_aggregation(self) -> QuerySet:
-        return self.all().price_aggregation()
-
-    def search(self, query: str) -> QuerySet:
-        return self.filter(
-            Q(name__icontains=query) | Q(card_description__icontains=query)
-        )
+class ProductManager(models.Manager.from_queryset(ProductQuerySet)):
+    ...
 
 
 class ProductTypeQuerySet(models.QuerySet):
     def products_annotation(self) -> QuerySet:
+        """
+        Adds fields for the minimum, maximum, and
+        average prices, as well as the count of
+        stores offering products of the product_type
+        to the QuerySet objects.
+        """
         return self.annotate(
             product__price__avg=Round(Avg("product__price"), PRICE_ROUNDING),
             product__price__max=Round(Max("product__price"), PRICE_ROUNDING),
@@ -36,11 +38,5 @@ class ProductTypeQuerySet(models.QuerySet):
         )
 
 
-class ProductTypeManager(models.Manager):
-    _queryset_class = ProductTypeQuerySet
-
-    def products_annotation(self) -> QuerySet:
-        return self.all().products_annotation()
-
-    def search(self, query: str) -> QuerySet:
-        return self.filter(Q(name__icontains=query) | Q(description__icontains=query))
+class ProductTypeManager(models.Manager.from_queryset(ProductTypeQuerySet)):
+    ...
