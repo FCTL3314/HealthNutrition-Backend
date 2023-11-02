@@ -17,7 +17,7 @@ User = get_user_model()
 
 
 class TestStoreViewSet:
-    URL_PATTERN = "api:v1:stores:stores-list"
+    STORES_LIST_PATTERN = "api:v1:stores:stores-list"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, store: Store):
@@ -37,13 +37,13 @@ class TestStoreViewSet:
 
     @pytest.mark.django_db
     def test_list(self, client, stores: list[Store]):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.STORES_LIST_PATTERN)
 
         ListCommonTest(client, path).run_test()
 
     @pytest.mark.django_db
     def test_create(self, client, admin_user: User, faker: Faker):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.STORES_LIST_PATTERN)
         data = {
             "name": faker.name(),
             "url": faker.url(),

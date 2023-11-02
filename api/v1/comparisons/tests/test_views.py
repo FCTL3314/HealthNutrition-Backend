@@ -11,11 +11,11 @@ from api.v1.products.models import Product
 
 User = get_user_model()
 
-COMPARISON_ADD = "api:v1:comparisons:add"
-COMPARISON_REMOVE = "api:v1:comparisons:remove"
+COMPARISON_ADD_PATTERN = "api:v1:comparisons:add"
+COMPARISON_REMOVE_PATTERN = "api:v1:comparisons:remove"
 
-COMPARISON_PRODUCT_TYPES = "api:v1:comparisons:product-types"
-COMPARISON_PRODUCTS = "api:v1:comparisons:products"
+COMPARISON_PRODUCT_TYPES_PATTERN = "api:v1:comparisons:product-types"
+COMPARISON_PRODUCTS_PATTERN = "api:v1:comparisons:products"
 
 
 def _is_comparison_exists(user: User, product: Product):
@@ -27,7 +27,7 @@ def _is_comparison_exists(user: User, product: Product):
 
 @pytest.mark.django_db
 def test_comparison_create_view(client, product: Product, admin_user: User):
-    path = reverse(COMPARISON_ADD, args=(product.id,))
+    path = reverse(COMPARISON_ADD_PATTERN, args=(product.id,))
 
     response = client.post(path, **get_auth_header(admin_user))
 
@@ -40,7 +40,7 @@ def test_comparison_remove_view(client, product: Product, admin_user: User):
     Comparison.objects.create(user=admin_user, product=product)
     assert _is_comparison_exists(admin_user, product)
 
-    path = reverse(COMPARISON_REMOVE, args=(product.id,))
+    path = reverse(COMPARISON_REMOVE_PATTERN, args=(product.id,))
 
     response = client.delete(path, **get_auth_header(admin_user))
 
@@ -51,7 +51,7 @@ def test_comparison_remove_view(client, product: Product, admin_user: User):
 @pytest.mark.django_db
 def test_compared_product_types_list_view(client, admin_user: User):
     create_user_comparisons(admin_user)
-    path = reverse(COMPARISON_PRODUCT_TYPES)
+    path = reverse(COMPARISON_PRODUCT_TYPES_PATTERN)
 
     response = client.get(path, **get_auth_header(admin_user))
 
@@ -63,7 +63,7 @@ def test_compared_product_types_list_view(client, admin_user: User):
 def test_compared_products_list_view(client, admin_user: User):
     comparisons = create_user_comparisons(admin_user)
     product_type = comparisons[0].product.product_type
-    path = reverse(COMPARISON_PRODUCTS, args=(product_type.slug,))
+    path = reverse(COMPARISON_PRODUCTS_PATTERN, args=(product_type.slug,))
 
     response = client.get(path, **get_auth_header(admin_user))
 

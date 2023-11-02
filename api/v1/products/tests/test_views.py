@@ -18,7 +18,7 @@ User = get_user_model()
 
 
 class TestProductTypeViewSet:
-    URL_PATTERN = "api:v1:products:product-types-list"
+    PRODUCT_TYPES_LIST_PATTERN = "api:v1:products:product-types-list"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, product_type: ProductType):
@@ -41,13 +41,13 @@ class TestProductTypeViewSet:
 
     @pytest.mark.django_db
     def test_list(self, client, product_types: list[ProductType]):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
 
         ListCommonTest(client, path).run_test()
 
     @pytest.mark.django_db
     def test_create(self, client, admin_user: User, faker: Faker):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
         data = {
             "name": faker.name(),
             "description": faker.text(),
@@ -82,7 +82,7 @@ class TestProductTypeViewSet:
 
 
 class TestProductViewSet:
-    URL_PATTERN = "api:v1:products:products-list"
+    PRODUCTS_LIST_PATTERN = "api:v1:products:products-list"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, product: Product):
@@ -110,7 +110,7 @@ class TestProductViewSet:
 
     @pytest.mark.django_db
     def test_list(self, client, products: list[Product]):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.PRODUCTS_LIST_PATTERN)
 
         ListCommonTest(client, path).run_test()
 
@@ -123,7 +123,7 @@ class TestProductViewSet:
         admin_user: User,
         faker: Faker,
     ):
-        path = reverse(self.URL_PATTERN)
+        path = reverse(self.PRODUCTS_LIST_PATTERN)
         data = {
             "name": faker.name(),
             "price": faker.pyfloat(2, 2, positive=True),

@@ -8,61 +8,36 @@ from mixer.backend.django import mixer
 
 from api.utils.tests import get_auth_header
 from api.v1.comments.constants import COMMENTS_PAGINATE_BY
-from api.v1.comments.models import BaseCommentModel, ProductComment, StoreComment
+from api.v1.comments.models import Comment
 from api.v1.products.models import Product
 from api.v1.stores.models import Store
 
 User = get_user_model()
 
 
-PRODUCT_COMMENTS = "api:v1:comments:product-list"
-STORE_COMMENTS = "api:v1:comments:store-list"
+COMMENTS_PATTERN = "api:v1:comments:comments-list"
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    (
-        "path,"
-        "comment_model,"
-        "comment_related_model,"
-        "get_related_kwargs,"
-        "param_arg"
-    ),
-    [
-        (
-            reverse(PRODUCT_COMMENTS),
-            ProductComment,
-            Product,
-            lambda product: {"product_id": product.id},
-            "product_id",
-        ),
-        (
-            reverse(STORE_COMMENTS),
-            StoreComment,
-            Store,
-            lambda store: {"store_id": store.id},
-            "store_id",
-        ),
-    ],
+    "content_type_model,",
+    [Product, Store],
 )
-def test_comment_list(
-    client,
-    path: str,
-    comment_model: type[BaseCommentModel],
-    comment_related_model: type[Model],
-    get_related_kwargs: callable,
-    param_arg: str,
-):
-    comment_related_object = mixer.blend(comment_related_model)
+def test_comment_list(client, content_type_model: type[Model]):
+    content_object = mixer.blend(content_type_model)
+
     mixer.cycle(COMMENTS_PAGINATE_BY * 2).blend(
-        comment_model,
+        Comment,
+        content_object=content_object,
         level=0,
-        **get_related_kwargs(comment_related_object),
     )
 
     response = client.get(
-        path,
-        data={param_arg: comment_related_object.id},
+        reverse(COMMENTS_PATTERN),
+        data={
+            "object_id": content_object.id,
+            "content_type": content_type_model._meta.model_name,
+        },
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -71,67 +46,41 @@ def test_comment_list(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    (
-        "path,"
-        "comment_model,"
-        "comment_related_model,"
-        "get_related_kwargs,"
-        "param_arg"
-    ),
-    [
-        (
-            reverse(PRODUCT_COMMENTS),
-            ProductComment,
-            Product,
-            lambda product: {"product_id": product.id},
-            "product_id",
-        ),
-        (
-            reverse(STORE_COMMENTS),
-            StoreComment,
-            Store,
-            lambda store: {"store_id": store.id},
-            "store_id",
-        ),
-    ],
+    "content_type_model,",
+    [Product, Store],
 )
 def test_comment_children_list(
     client,
-    path: str,
-    comment_model: type[BaseCommentModel],
-    comment_related_model: type[Model],
-    get_related_kwargs: callable,
-    param_arg: str,
+    content_type_model: type[Model],
 ):
     """
     Tests the return of a list of children of a
     particular comment.
     """
-    comment_related_object = mixer.blend(comment_related_model)
+    content_object = mixer.blend(content_type_model)
 
-    parent_comment = comment_model.objects.create(
-        **get_related_kwargs(comment_related_object)
-    )
+    parent_comment = mixer.blend(Comment, content_object=content_object)
 
     children_count = 6
     children_to_create = [
-        comment_model(
+        Comment(
             parent_id=parent_comment.id,
             level=0,
             lft=0,
             rght=0,
             tree_id=0,
-            **get_related_kwargs(comment_related_object),
+            content_object=content_object,
         )
         for _ in range(children_count)
     ]
 
-    comment_model.objects.bulk_create(children_to_create)
+    Comment.objects.bulk_create(children_to_create)
 
     response = client.get(
-        path,
+        reverse(COMMENTS_PATTERN),
         data={
-            param_arg: comment_related_object.id,
+            "object_id": content_object.id,
+            "content_type": content_type_model._meta.model_name,
             "parent_id": parent_comment.id,
         },
     )
@@ -142,89 +91,62 @@ def test_comment_children_list(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "path, comment_model, comment_related_model, model_id_key",
-    [
-        (reverse(PRODUCT_COMMENTS), ProductComment, Product, "product_id"),
-        (reverse(STORE_COMMENTS), StoreComment, Store, "store_id"),
-    ],
+    "content_type_model",
+    [Product, Store],
 )
 def test_comment_create(
     client,
-    path: str,
-    comment_model: type[BaseCommentModel],
-    comment_related_model: type[Model],
-    model_id_key: str,
-    comment_text: str,
     admin_user: User,
+    content_type_model: type[Model],
+    comment_text: str,
 ):
-    comment_related_object = mixer.blend(comment_related_model)
-
-    data = {
-        "text": comment_text,
-        model_id_key: comment_related_object.id,
-    }
+    content_object = mixer.blend(content_type_model)
 
     response = client.post(
-        path,
-        data=data,
+        reverse(COMMENTS_PATTERN),
+        data={
+            "text": comment_text,
+            "object_id": content_object.id,
+            "content_type": content_type_model._meta.model_name,
+        },
         content_type="application/json",
         **get_auth_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.CREATED
-    assert comment_model.objects.count() == 1
+    assert Comment.objects.count() == 1
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "comment_model",
-    [
-        ProductComment,
-        StoreComment,
-    ],
-)
 def test_comment_update(
     client,
-    comment_model: type[BaseCommentModel],
+    comment: Comment,
     comment_text: str,
     admin_user: User,
 ):
-    comment_object = mixer.blend(comment_model)
-
     response = client.patch(
-        comment_object.get_absolute_url(),
+        comment.get_absolute_url(),
         data={"text": comment_text},
         content_type="application/json",
         **get_auth_header(admin_user),
     )
 
     assert response.status_code == HTTPStatus.OK
-    comment_object.refresh_from_db()
-    assert comment_object.text == comment_text
-    assert comment_object.edited is True
+    comment.refresh_from_db()
+    assert comment.text == comment_text
+    assert comment.edited is True
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "comment_model",
-    [
-        ProductComment,
-        StoreComment,
-    ],
-)
 def test_comment_delete(
     client,
-    comment_model: type[BaseCommentModel],
+    comment: Comment,
     admin_user: User,
 ):
-    comment_object = mixer.blend(comment_model)
-
-    path = comment_object.get_absolute_url()
-
-    response = client.delete(path, **get_auth_header(admin_user))
+    response = client.delete(comment.get_absolute_url(), **get_auth_header(admin_user))
 
     assert response.status_code == HTTPStatus.NO_CONTENT
-    assert comment_model.objects.count() == 0
+    assert Comment.objects.count() == 0
 
 
 if __name__ == "__main__":
