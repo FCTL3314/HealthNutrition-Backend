@@ -26,11 +26,13 @@ class CommentViewSet(
         queryset = self.model.objects.newest()
         if self.action != "list":
             return queryset
-        queryset = queryset.filter(
-            content_type__model=self.request.query_params.get("content_type")
-        )
         if parent_id := self.request.query_params.get("parent_id"):
-            return queryset.filter(parent_id=parent_id)
+            parent = Comment.objects.get(id=parent_id)
+            return parent.get_descendants()
+        queryset = queryset.filter(
+            content_type__model=self.request.query_params.get("content_type"),
+            object_id=self.request.query_params.get("object_id"),
+        )
         return queryset.top_level()
 
     def list(self, request, *args, **kwargs) -> Response:
