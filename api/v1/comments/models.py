@@ -36,6 +36,9 @@ class Comment(MPTTModel):
 
     objects = BaseCommentManager()
 
+    class MPTTMeta:
+        order_insertion_by = ("-created_at",)
+
     def __str__(self):
         return self.text
 

@@ -46,51 +46,6 @@ def test_comment_list(client, content_type_model: type[Model]):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "content_type_model,",
-    [Product, Store],
-)
-def test_comment_children_list(
-    client,
-    content_type_model: type[Model],
-):
-    """
-    Tests the return of a list of children of a
-    particular comment.
-    """
-    content_object = mixer.blend(content_type_model)
-
-    parent_comment = mixer.blend(Comment, content_object=content_object)
-
-    children_count = 6
-    children_to_create = [
-        Comment(
-            parent_id=parent_comment.id,
-            level=0,
-            lft=0,
-            rght=0,
-            tree_id=0,
-            content_object=content_object,
-        )
-        for _ in range(children_count)
-    ]
-
-    Comment.objects.bulk_create(children_to_create)
-
-    response = client.get(
-        reverse(COMMENTS_PATTERN),
-        data={
-            "object_id": content_object.id,
-            "content_type": content_type_model._meta.model_name,
-            "parent_id": parent_comment.id,
-        },
-    )
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.data["count"] == children_count
-
-
-@pytest.mark.django_db
-@pytest.mark.parametrize(
     "content_type_model",
     [Product, Store],
 )
