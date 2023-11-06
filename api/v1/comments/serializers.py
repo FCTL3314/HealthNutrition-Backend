@@ -28,8 +28,20 @@ class BaseCommentSerializer(serializers.ModelSerializer):
         )
 
 
-class CommentSerializer(BaseCommentSerializer):
+class CommentParentSerializer(BaseCommentSerializer):
     author = UserSerializer(read_only=True)
+
+    class Meta(BaseCommentSerializer.Meta):
+        fields = BaseCommentSerializer.Meta.fields + (
+            "id",
+            "text",
+            "author",
+            "edited",
+        )
+
+
+class CommentSerializer(CommentParentSerializer):
+    parent = CommentParentSerializer(read_only=True)
     has_replies = serializers.SerializerMethodField(read_only=True)
     replies_count = serializers.IntegerField(
         source="get_descendant_count", read_only=True
@@ -40,12 +52,9 @@ class CommentSerializer(BaseCommentSerializer):
         return not obj.is_leaf_node()
 
     class Meta(BaseCommentSerializer.Meta):
-        fields = BaseCommentSerializer.Meta.fields + (
-            "id",
-            "author",
-            "text",
+        fields = CommentParentSerializer.Meta.fields + (
+            "parent",
             "created_at",
-            "edited",
             "has_replies",
             "replies_count",
         )
