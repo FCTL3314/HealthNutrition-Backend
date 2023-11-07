@@ -227,7 +227,7 @@ SPECTACULAR_SETTINGS = {
 # Simple JWT
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
@@ -237,7 +237,8 @@ DJOSER = {
     "HIDE_USERS": False,
     "USER_ID_FIELD": "slug",
     "PERMISSIONS": {
-        "user": ("djoser.permissions.CurrentUserOrAdminOrReadOnly",),
+        "current_user": ("rest_framework.permissions.IsAuthenticated",),
+        "user": ("rest_framework.permissions.AllowAny",),
         "user_list": ("rest_framework.permissions.AllowAny",),
     },
     "SERIALIZERS": {

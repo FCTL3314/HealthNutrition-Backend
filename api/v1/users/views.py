@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
+from djoser.conf import ObjDict
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -35,6 +37,13 @@ User = get_user_model()
 
 class UserViewSet(DjoserUserViewSet):
     pagination_class = UserPageNumberPagination
+
+    def get_permissions(self):
+        super().get_permissions()
+        if self.action == "me":
+            djoser_permissions_settings = ObjDict(settings.DJOSER["PERMISSIONS"])
+            self.permission_classes = djoser_permissions_settings.current_user
+        return super(DjoserUserViewSet, self).get_permissions()
 
     def get_queryset(self) -> QuerySet[User]:
         queryset = super().get_queryset()
