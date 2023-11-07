@@ -7,7 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from api.v1.comments.models import Comment
 from api.v1.comments.paginators import CommentPageNumberPagination
-from api.v1.comments.serializers import CommentSerializer, CommentReadSerializer
+from api.v1.comments.serializers import DetailedCommentSerializer, CommentReadSerializer
 
 
 class CommentViewSet(
@@ -18,7 +18,7 @@ class CommentViewSet(
     GenericViewSet,
 ):
     model = Comment
-    serializer_class = CommentSerializer
+    serializer_class = DetailedCommentSerializer
     pagination_class = CommentPageNumberPagination
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
