@@ -3,16 +3,17 @@ from django.urls import reverse
 from faker import Faker
 
 from api.common.tests import (
-    CreateCommonTest,
-    DestroyCommonTest,
-    ListCommonTest,
-    RetrieveViewsCommonTest,
-    UpdateCommonTest,
+    CreateTest,
+    DestroyTest,
+    ListTest,
+    UpdateTest,
+    RetrieveTest,
 )
 from api.utils.tests import generate_test_image
-from api.v1.categories.tests.test_views import User
-from api.v1.products.models import Product
 from api.v1.categories.models import Category
+from api.v1.categories.tests.test_views import User
+from api.v1.nutrition.models import Nutrition
+from api.v1.products.models import Product
 
 
 class TestProductViewSet:
@@ -20,23 +21,19 @@ class TestProductViewSet:
 
     @pytest.mark.django_db
     def test_retrieve(self, client, product: Product):
-        path = product.get_absolute_url()
-
         assert product.views == 0
-        RetrieveViewsCommonTest(client, path, product).run_test(
-            (
+        RetrieveTest(client, product.get_absolute_url()).run_test(
+            expected_fields=(
                 "id",
-                "name",
-                "description",
-                "card_description",
                 "image",
+                "name",
+                "short_description",
+                "nutrition",
+                "category",
                 "views",
                 "slug",
-                "price",
                 "created_at",
                 "updated_at",
-                "store",
-                "product_type",
             ),
         )
         product.refresh_from_db()
@@ -45,13 +42,13 @@ class TestProductViewSet:
     @pytest.mark.django_db
     def test_list(self, client, products: list[Product]):
         path = reverse(self.PRODUCTS_LIST_PATTERN)
-
-        ListCommonTest(client, path).run_test()
+        ListTest(client, path).run_test(expected_count=len(products))
 
     @pytest.mark.django_db
     def test_create(
         self,
         client,
+        nutrition: Nutrition,
         category: Category,
         admin_user: User,
         faker: Faker,
@@ -59,38 +56,44 @@ class TestProductViewSet:
         path = reverse(self.PRODUCTS_LIST_PATTERN)
         data = {
             "name": faker.name(),
-            "price": faker.pyfloat(2, 2, positive=True),
-            "description": faker.text(),
-            "card_description": faker.text(64),
-            "product_type_id": category.id,
             "image": generate_test_image(),
+            "short_description": faker.text(
+                Product._meta.get_field("short_description").max_length,
+            ),
+            "nutrition_id": nutrition.id,
+            "category_id": category.id,
         }
 
-        CreateCommonTest(client, path, admin_user).run_test(
-            Product,
-            data,
+        CreateTest(client, path, admin_user).run_test(
+            model=Product,
+            data=data,
         )
 
     @pytest.mark.django_db
     def test_update(self, client, product: Product, admin_user: User, faker: Faker):
-        path = product.get_absolute_url()
-        fields = {
+        data = {
             "name": faker.name(),
-            "price": faker.pyfloat(2, 2, positive=True),
-            "description": faker.text(),
-            "card_description": faker.text(64),
+            "short_description": faker.text(
+                Product._meta.get_field("short_description").max_length,
+            ),
         }
 
-        UpdateCommonTest(client, path, admin_user).run_test(
-            product,
-            fields,
+        UpdateTest(
+            client,
+            product.get_absolute_url(),
+            admin_user,
+        ).run_test(
+            object_to_update=product,
+            data=data,
         )
 
     @pytest.mark.django_db
     def test_destroy(self, client, product: Product, admin_user: User):
-        path = product.get_absolute_url()
-
-        DestroyCommonTest(client, path, admin_user).run_test(Product)
+        DestroyTest(
+            client,
+            product.get_absolute_url(),
+            admin_user,
+        ).run_test(model=Product)
 
 
 if __name__ == "__main__":
