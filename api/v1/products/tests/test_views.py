@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from faker import Faker
 
@@ -11,74 +10,9 @@ from api.common.tests import (
     UpdateCommonTest,
 )
 from api.utils.tests import generate_test_image
-from api.v1.products.models import Product, ProductType
-from api.v1.stores.models import Store
-
-User = get_user_model()
-
-
-class TestProductTypeViewSet:
-    PRODUCT_TYPES_LIST_PATTERN = "api:v1:products:product-types-list"
-
-    @pytest.mark.django_db
-    def test_retrieve(self, client, product_type: ProductType):
-        path = product_type.get_absolute_url()
-
-        RetrieveViewsCommonTest(client, path, product_type).run_test(
-            (
-                "id",
-                "name",
-                "description",
-                "image",
-                "views",
-                "slug",
-                "product_price_max",
-                "product_price_avg",
-                "product_price_min",
-                "product_stores_count",
-            ),
-        )
-
-    @pytest.mark.django_db
-    def test_list(self, client, product_types: list[ProductType]):
-        path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
-
-        ListCommonTest(client, path).run_test()
-
-    @pytest.mark.django_db
-    def test_create(self, client, admin_user: User, faker: Faker):
-        path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
-        data = {
-            "name": faker.name(),
-            "description": faker.text(),
-            "image": generate_test_image(),
-        }
-
-        CreateCommonTest(client, path, admin_user).run_test(
-            ProductType,
-            data,
-        )
-
-    @pytest.mark.django_db
-    def test_update(
-        self, client, product_type: ProductType, admin_user: User, faker: Faker
-    ):
-        path = product_type.get_absolute_url()
-        fields = {
-            "name": faker.name(),
-            "description": faker.text(),
-        }
-
-        UpdateCommonTest(client, path, admin_user).run_test(
-            product_type,
-            fields,
-        )
-
-    @pytest.mark.django_db
-    def test_destroy(self, client, product_type: ProductType, admin_user: User):
-        path = product_type.get_absolute_url()
-
-        DestroyCommonTest(client, path, admin_user).run_test(ProductType)
+from api.v1.categories.tests.test_views import User
+from api.v1.products.models import Product
+from api.v1.categories.models import Category
 
 
 class TestProductViewSet:
@@ -118,8 +52,7 @@ class TestProductViewSet:
     def test_create(
         self,
         client,
-        product_type: ProductType,
-        store: Store,
+        category: Category,
         admin_user: User,
         faker: Faker,
     ):
@@ -129,8 +62,7 @@ class TestProductViewSet:
             "price": faker.pyfloat(2, 2, positive=True),
             "description": faker.text(),
             "card_description": faker.text(64),
-            "store_id": store.id,
-            "product_type_id": product_type.id,
+            "product_type_id": category.id,
             "image": generate_test_image(),
         }
 

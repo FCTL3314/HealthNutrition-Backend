@@ -8,23 +8,21 @@ from api.base.services import (
     AbstractConditionalIncreaseService,
 )
 from api.responses import APIResponse
-from api.v1.products.constants import (
-    PRODUCT_VIEW_CACHE_TIME,
-)
-from api.v1.products.models import Product
+from api.v1.categories.models import Category
+from api.v1.categories.constants import CATEGORY_VIEW_CACHE_TIME
 
 
-class ProductViewsIncreaseService(BaseViewsIncreaseService):
-    view_cache_time = PRODUCT_VIEW_CACHE_TIME
+class CategoryViewsIncreaseService(BaseViewsIncreaseService):
+    view_cache_time = CATEGORY_VIEW_CACHE_TIME
 
     def get_cache_key(self) -> str:
-        return f"ip:{self._user_ip_address}-product_id:{self._instance.id}"
+        return f"ip:{self._user_ip_address}-product_type_id:{self._instance.id}"
 
 
-class ProductRetrieveService(IRetrieveService):
+class CategoryRetrieveService(IRetrieveService):
     def __init__(
         self,
-        instance: Product,
+        instance: Category,
         serializer: type[Serializer],
         views_increase_service: AbstractConditionalIncreaseService,
     ):
