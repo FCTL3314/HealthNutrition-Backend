@@ -4,11 +4,11 @@ from django.urls import reverse
 from faker import Faker
 
 from api.common.tests import (
-    RetrieveViewsCommonTest,
-    ListCommonTest,
-    CreateCommonTest,
-    UpdateCommonTest,
-    DestroyCommonTest,
+    ListTest,
+    CreateTest,
+    UpdateTest,
+    DestroyTest,
+    RetrieveTest,
 )
 from api.utils.tests import generate_test_image
 from api.v1.categories.models import Category
@@ -17,62 +17,71 @@ User = get_user_model()
 
 
 class TestCategoryViewSet:
-    PRODUCT_TYPES_LIST_PATTERN = "api:v1:products:product-types-list"
+    PRODUCT_TYPES_LIST_PATTERN = "api:v1:categories:categories-list"
 
     @pytest.mark.django_db
     def test_retrieve(self, client, category: Category):
-        path = category.get_absolute_url()
-
-        RetrieveViewsCommonTest(client, path, category).run_test(
-            (
+        assert category.views == 0
+        RetrieveTest(
+            client,
+            category.get_absolute_url(),
+        ).run_test(
+            expected_fields=(
                 "id",
+                "image",
                 "name",
                 "description",
-                "image",
                 "views",
                 "slug",
-                "product_price_max",
-                "product_price_avg",
-                "product_price_min",
-                "product_stores_count",
             ),
         )
+        category.refresh_from_db()
+        assert category.views == 1
 
     @pytest.mark.django_db
-    def test_list(self, client, categories):
+    def test_list(self, client, categories: list[Category]):
         path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
 
-        ListCommonTest(client, path).run_test()
+        ListTest(client, path).run_test(expected_count=len(categories))
 
     @pytest.mark.django_db
     def test_create(self, client, admin_user: User, faker: Faker):
         path = reverse(self.PRODUCT_TYPES_LIST_PATTERN)
         data = {
             "name": faker.name(),
-            "description": faker.text(),
             "image": generate_test_image(),
+            "description": faker.text(),
         }
 
-        CreateCommonTest(client, path, admin_user).run_test(
-            Category,
-            data,
+        CreateTest(client, path, admin_user).run_test(
+            model=Category,
+            data=data,
         )
 
     @pytest.mark.django_db
     def test_update(self, client, category: Category, admin_user: User, faker: Faker):
-        path = category.get_absolute_url()
-        fields = {
+        data = {
             "name": faker.name(),
             "description": faker.text(),
         }
 
-        UpdateCommonTest(client, path, admin_user).run_test(
-            category,
-            fields,
+        UpdateTest(
+            client,
+            category.get_absolute_url(),
+            admin_user,
+        ).run_test(
+            object_to_update=category,
+            data=data,
         )
 
     @pytest.mark.django_db
     def test_destroy(self, client, category: Category, admin_user: User):
-        path = category.get_absolute_url()
+        DestroyTest(
+            client,
+            category.get_absolute_url(),
+            admin_user,
+        ).run_test(Category)
 
-        DestroyCommonTest(client, path, admin_user).run_test(Category)
+
+if __name__ == "__main__":
+    pytest.main()
