@@ -1,6 +1,8 @@
 from django.db.models import QuerySet
+from requests import Request
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.viewsets import GenericViewSet
 
@@ -57,12 +59,15 @@ class ComparisonsViewSet(
         queryset = Comparison.objects.all()
         if self.action != "list":
             return queryset
+        queryset = queryset.products(self.request.query_params["comparison_group_id"])
+        return queryset.order_by(*PRODUCTS_ORDERING)
+
+    def list(self, request: Request, *args, **kwargs) -> Response:
         ComparisonReadSerializer(
             data=self.request.query_params,
             context=self.get_serializer_context(),
         ).is_valid(raise_exception=True)
-        queryset = queryset.products(self.request.query_params["comparison_group_id"])
-        return queryset.order_by(*PRODUCTS_ORDERING)
+        return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(creator=self.request.user)
