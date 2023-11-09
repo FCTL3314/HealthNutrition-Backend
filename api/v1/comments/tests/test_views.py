@@ -10,7 +10,6 @@ from api.utils.tests import get_auth_header
 from api.v1.comments.constants import COMMENTS_PAGINATE_BY
 from api.v1.comments.models import Comment
 from api.v1.products.models import Product
-from api.v1.stores.models import Store
 
 User = get_user_model()
 
@@ -21,7 +20,7 @@ COMMENTS_PATTERN = "api:v1:comments:comments-list"
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "content_type_model,",
-    [Product, Store],
+    [Product],
 )
 def test_comment_list(client, content_type_model: type[Model]):
     content_object = mixer.blend(content_type_model)
@@ -47,7 +46,7 @@ def test_comment_list(client, content_type_model: type[Model]):
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "content_type_model",
-    [Product, Store],
+    [Product],
 )
 def test_comment_create(
     client,
@@ -89,7 +88,7 @@ def test_comment_update(
     assert response.status_code == HTTPStatus.OK
     comment.refresh_from_db()
     assert comment.text == comment_text
-    assert comment.edited is True
+    assert comment.is_edited is True
 
 
 @pytest.mark.django_db

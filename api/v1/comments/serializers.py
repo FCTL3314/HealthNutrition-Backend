@@ -36,7 +36,7 @@ class CommentSerializer(BaseCommentSerializer):
             "id",
             "text",
             "author",
-            "edited",
+            "is_edited",
         )
 
 
@@ -58,7 +58,7 @@ class DetailedCommentSerializer(CommentSerializer):
             "has_replies",
             "replies_count",
         )
-        read_only_fields = ("created_at", "edited")
+        read_only_fields = ("created_at", "is_edited")
 
 
 class CommentReadSerializer(BaseCommentSerializer):

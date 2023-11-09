@@ -37,10 +37,11 @@ class CommentViewSet(
 
     def list(self, request, *args, **kwargs) -> Response:
         CommentReadSerializer(data=request.query_params).is_valid(raise_exception=True)
+        # TODO: Move serializer validation to the get_queryset method
         return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
 
     def perform_update(self, serializer: Serializer) -> None:
-        serializer.save(edited=True)
+        serializer.save(is_edited=True)

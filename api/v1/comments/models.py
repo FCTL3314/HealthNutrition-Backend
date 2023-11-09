@@ -7,14 +7,11 @@ from mptt.models import MPTTModel
 
 from api.v1.comments.managers import BaseCommentManager
 from api.v1.products.models import Product
-from api.v1.stores.models import Store
 
 
 class Comment(MPTTModel):
-    author = models.ForeignKey(to="users.User", null=True, on_delete=models.CASCADE)
     text = models.CharField(max_length=516)
-    created_at = models.DateTimeField(auto_now_add=True)
-    edited = models.BooleanField(default=False)
+    author = models.ForeignKey(to="users.User", null=True, on_delete=models.CASCADE)
     parent = TreeForeignKey(
         to="self",
         null=True,
@@ -23,12 +20,13 @@ class Comment(MPTTModel):
         on_delete=models.CASCADE,
     )
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
+    object_id = models.PositiveIntegerField()
+    is_edited = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     ALLOWED_CONTENT_TYPE_MODEL_NAMES = {
         Product._meta.model_name,
-        Store._meta.model_name,
     }
     ALLOWED_CONTENT_TYPES_QUERYSET = ContentType.objects.filter(
         model__in=ALLOWED_CONTENT_TYPE_MODEL_NAMES
