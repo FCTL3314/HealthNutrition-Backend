@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 from api.common.models.mixins import ViewsModelMixin
-from api.v1.products.managers import ProductManager
 
 
 class Product(ViewsModelMixin, models.Model):
@@ -18,8 +17,6 @@ class Product(ViewsModelMixin, models.Model):
     slug = models.SlugField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    objects = ProductManager()
 
     def __str__(self):
         return self.name

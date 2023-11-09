@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
-from api.v1.categories.serializers import CategoryModelSerializer
+from api.v1.categories.models import Category
+from api.v1.categories.serializers import CategorySerializer
 from api.v1.nutrition.models import Nutrition
 from api.v1.nutrition.serializers import NutritionSerializer
 from api.v1.products.models import Product
-from api.v1.categories.models import Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategoryModelSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Category.objects.all(),
