@@ -10,7 +10,9 @@ class Product(ViewsModelMixin, models.Model):
     image = models.ImageField(upload_to="products")
     name = models.CharField(max_length=128, unique=True)
     short_description = models.CharField(max_length=128)
-    nutrition = models.OneToOneField(to="nutrition.Nutrition", on_delete=models.CASCADE)
+    nutrition = models.OneToOneField(
+        to="nutrition.Nutrition", related_name="product", on_delete=models.CASCADE
+    )
     category = models.ForeignKey(to="categories.Category", on_delete=models.CASCADE)
     comments = GenericRelation("comments.Comment")
     views = models.PositiveIntegerField(default=0)

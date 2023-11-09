@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from api.v1.comments.admin import CommentInlineAdmin
-from api.v1.comparisons.admin import ComparisonInlineAdmin
+from api.v1.comparisons.admin import ComparisonInlineAdmin, ComparisonGroupInlineAdmin
 from api.v1.users.models import EmailVerification, User
 
 
@@ -19,7 +18,7 @@ class UserAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("username",)}
     readonly_fields = ("email", "date_joined", "last_login")
     inlines = (
+        ComparisonGroupInlineAdmin,
         ComparisonInlineAdmin,
-        CommentInlineAdmin,
         EmailVerificationAdmin,
     )

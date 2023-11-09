@@ -18,10 +18,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryWithNutritionAveragesSerializer(CategorySerializer):
-    calories_avg = serializers.IntegerField(source="product__nutrition__calories__avg")
-    protein_avg = serializers.FloatField(source="product__nutrition__protein__avg")
-    fat_avg = serializers.FloatField(source="product__nutrition__fat__avg")
-    carbs_avg = serializers.FloatField(source="product__nutrition__carbs__avg")
+    calories_avg = serializers.IntegerField(
+        source="product__nutrition__calories__avg", read_only=True
+    )
+    protein_avg = serializers.FloatField(
+        source="product__nutrition__protein__avg", read_only=True
+    )
+    fat_avg = serializers.FloatField(
+        source="product__nutrition__fat__avg", read_only=True
+    )
+    carbs_avg = serializers.FloatField(
+        source="product__nutrition__carbs__avg", read_only=True
+    )
 
     class Meta(CategorySerializer.Meta):
         fields = CategorySerializer.Meta.fields + (

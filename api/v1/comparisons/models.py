@@ -13,7 +13,7 @@ class ComparisonGroup(models.Model):
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} | {self.author.username}"
+        return f"Name: {self.name} | Author: {self.author.username}"
 
 
 class Comparison(models.Model):
@@ -34,4 +34,4 @@ class Comparison(models.Model):
     objects = ComparisonManager()
 
     def __str__(self):
-        return f"{self.comparison_group.name} | {self.product.name}"
+        return f"Group: {self.comparison_group.name} | Product: {self.product.name}"
