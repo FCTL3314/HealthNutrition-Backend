@@ -25,7 +25,9 @@ class Comparison(models.Model):
     product = models.ForeignKey(to="products.Product", on_delete=models.CASCADE)
     creator = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     comparison_group = models.ForeignKey(
-        to="comparisons.ComparisonGroup", on_delete=models.CASCADE
+        to="comparisons.ComparisonGroup",
+        related_name="comparisons",
+        on_delete=models.CASCADE,
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
