@@ -1,28 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from api.v1.comparisons import views
+from api.v1.comparisons.views import ComparisonsViewSet, ComparisonGroupViewSet
 
 app_name = "comparisons"
 
+router = DefaultRouter()
+router.register("groups", ComparisonGroupViewSet, basename="comparison-groups")
+router.register("", ComparisonsViewSet, basename="comparisons")
+
 urlpatterns = [
-    path(
-        "product-types/",
-        views.ComparedProductTypesListView.as_view(),
-        name="product-types",
-    ),
-    path(
-        "products/<slug:product_type_slug>/",
-        views.ComparedProductsListView.as_view(),
-        name="products",
-    ),
-    path(
-        "add/<int:product_id>/",
-        views.ComparisonCreateView.as_view(),
-        name="add",
-    ),
-    path(
-        "remove/<int:product_id>/",
-        views.ComparisonDestroyView.as_view(),
-        name="remove",
-    ),
+    path("", include(router.urls)),
 ]

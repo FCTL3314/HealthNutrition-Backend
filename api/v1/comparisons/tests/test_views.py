@@ -5,70 +5,116 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from api.utils.tests import get_auth_header
-from api.v1.comparisons.models import Comparison
-from api.v1.comparisons.tests.conftest import create_user_comparisons
+from api.v1.comparisons.models import Comparison, ComparisonGroup
+from api.v1.comparisons.tests.conftest import create_comparisons_for_comparison_group
 from api.v1.products.models import Product
 
 User = get_user_model()
 
-COMPARISON_ADD_PATTERN = "api:v1:comparisons:add"
-COMPARISON_REMOVE_PATTERN = "api:v1:comparisons:remove"
 
-COMPARISON_PRODUCT_TYPES_PATTERN = "api:v1:comparisons:product-types"
-COMPARISON_PRODUCTS_PATTERN = "api:v1:comparisons:products"
-
-
-def _is_comparison_exists(user: User, product: Product):
+def _is_comparison_exists(comparison_group: ComparisonGroup, product: Product) -> bool:
     return Comparison.objects.filter(
-        user=user,
+        comparison_group=comparison_group,
         product=product,
     ).exists()
 
 
-@pytest.mark.django_db
-def test_comparison_create_view(client, product: Product, admin_user: User):
-    path = reverse(COMPARISON_ADD_PATTERN, args=(product.id,))
+class TestComparisonsViewSet:
+    COMPARISONS_PATTERN = "api:v1:comparisons:comparisons-list"
+    COMPARISONS_DETAIL_PATTERN = "api:v1:comparisons:comparisons-detail"
 
-    response = client.post(path, **get_auth_header(admin_user))
+    @pytest.mark.django_db
+    @pytest.mark.parametrize(
+        "is_comparison_group_author, expected_status",
+        [
+            (True, HTTPStatus.CREATED),
+            (False, HTTPStatus.FORBIDDEN),
+        ],
+    )
+    def test_comparison_create_view(
+        self,
+        client,
+        comparison_group: ComparisonGroup,
+        product: Product,
+        user: User,
+        is_comparison_group_author: bool,
+        expected_status: HTTPStatus,
+    ):
+        """
+        Tests the ability to add a product to a
+        comparison group if the user is the author
+        of this comparison group.
+        """
+        path = reverse(self.COMPARISONS_PATTERN)
+        data = {
+            "product_id": product.id,
+            "comparison_group_id": comparison_group.id,
+        }
 
-    assert response.status_code == HTTPStatus.CREATED
-    assert _is_comparison_exists(admin_user, product)
+        if is_comparison_group_author:
+            user = comparison_group.author
 
+        response = client.post(path, data=data, **get_auth_header(user))
 
-@pytest.mark.django_db
-def test_comparison_remove_view(client, product: Product, admin_user: User):
-    Comparison.objects.create(user=admin_user, product=product)
-    assert _is_comparison_exists(admin_user, product)
+        assert response.status_code == expected_status
+        if expected_status == HTTPStatus.CREATED:
+            assert _is_comparison_exists(comparison_group, product)
 
-    path = reverse(COMPARISON_REMOVE_PATTERN, args=(product.id,))
+    @pytest.mark.django_db
+    @pytest.mark.parametrize(
+        "is_comparison_group_author, expected_status",
+        [
+            (True, HTTPStatus.NO_CONTENT),
+            (False, HTTPStatus.FORBIDDEN),
+        ],
+    )
+    def test_comparison_remove_view(
+        self,
+        client,
+        comparison_group: ComparisonGroup,
+        product: Product,
+        user: User,
+        is_comparison_group_author: bool,
+        expected_status: HTTPStatus,
+    ):
+        if is_comparison_group_author:
+            user = comparison_group.author
 
-    response = client.delete(path, **get_auth_header(admin_user))
+        comparison = Comparison.objects.create(
+            creator=comparison_group.author,
+            product=product,
+            comparison_group=comparison_group,
+        )
+        assert _is_comparison_exists(comparison_group, product)
 
-    assert response.status_code == HTTPStatus.NO_CONTENT
-    assert not _is_comparison_exists(admin_user, product)
+        path = reverse(self.COMPARISONS_DETAIL_PATTERN, args=(comparison.id,))
 
+        response = client.delete(path, **get_auth_header(user))
 
-@pytest.mark.django_db
-def test_compared_product_types_list_view(client, admin_user: User):
-    create_user_comparisons(admin_user)
-    path = reverse(COMPARISON_PRODUCT_TYPES_PATTERN)
+        assert response.status_code == expected_status
+        if expected_status == HTTPStatus.NO_CONTENT:
+            assert not _is_comparison_exists(comparison_group, product)
 
-    response = client.get(path, **get_auth_header(admin_user))
+    @pytest.mark.django_db
+    def test_compared_products_list_view(
+        self,
+        client,
+        comparison_group: ComparisonGroup,
+        user: User,
+    ):
+        comparisons = create_comparisons_for_comparison_group(comparison_group.id)
+        path = reverse(self.COMPARISONS_PATTERN)
 
-    assert response.status_code == HTTPStatus.OK
-    assert len(response.data["results"]) > 0
+        response = client.get(
+            path,
+            **get_auth_header(user),
+            data={
+                "comparison_group_id": comparison_group.id,
+            }
+        )
 
-
-@pytest.mark.django_db
-def test_compared_products_list_view(client, admin_user: User):
-    comparisons = create_user_comparisons(admin_user)
-    product_type = comparisons[0].product.product_type
-    path = reverse(COMPARISON_PRODUCTS_PATTERN, args=(product_type.slug,))
-
-    response = client.get(path, **get_auth_header(admin_user))
-
-    assert response.status_code == HTTPStatus.OK
-    assert len(response.data["results"]) > 0
+        assert response.status_code == HTTPStatus.OK
+        assert response.data["count"] == len(comparisons)
 
 
 if __name__ == "__main__":

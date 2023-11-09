@@ -1,82 +1,68 @@
 from django.db.models import QuerySet
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    get_object_or_404,
-)
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import Serializer
+from rest_framework.viewsets import GenericViewSet
 
-from api.decorators import order_queryset
-from api.v1.comparisons.docs import (
-    comparison_create_view_docs,
-    comparison_delete_view_docs,
+from api.v1.comparisons.models import Comparison, ComparisonGroup
+from api.v1.comparisons.permissions import (
+    IsComparisonCreatorOrReadOnly,
+    IsComparisonGroupAuthorOrReadOnly,
+    CanCreateComparisonIfComparisonGroupAuthor,
 )
-from api.v1.comparisons.models import Comparison
-from api.v1.comparisons.serializers import ComparisonSerializer
-from api.v1.products.constants import PRODUCT_TYPES_ORDERING, PRODUCTS_ORDERING
-from api.v1.products.models import Product, ProductType
+from api.v1.comparisons.serializers import (
+    ComparisonSerializer,
+    ComparisonReadSerializer,
+    ComparisonGroupSerializer,
+)
+from api.v1.products.constants import PRODUCTS_ORDERING
+from api.v1.products.models import Product
 from api.v1.products.paginators import (
     ProductPageNumberPagination,
-    ProductTypePageNumberPagination,
 )
 from api.v1.products.serializers import (
     ProductSerializer,
-    ProductTypeAggregatedSerializer,
 )
 
 
-# TODO: Move view logic to services
+class ComparisonGroupViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = ComparisonGroup.objects.all()
+    permission_classes = (IsAuthenticated, IsComparisonGroupAuthorOrReadOnly)
+    serializer_class = ComparisonGroupSerializer
 
 
-@comparison_create_view_docs()
-class ComparisonCreateView(CreateAPIView):
-    model = Comparison
-    serializer_class = ComparisonSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def perform_create(self, serializer: Serializer) -> None:
-        product = Product.objects.get(id=self.kwargs["product_id"])
-        serializer.save(user=self.request.user, product=product)
-
-
-@comparison_delete_view_docs()
-class ComparisonDestroyView(DestroyAPIView):
-    model = Comparison
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self) -> Product:
-        return Product.objects.get(id=self.kwargs["product_id"])
-
-    def perform_destroy(self, instance: Product) -> None:
-        self.model.objects.filter(
-            user=self.request.user,
-            product=instance,
-        ).delete()
-
-
-class ComparedProductTypesListView(ListAPIView):
-    queryset = Comparison.objects.all()
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ProductTypeAggregatedSerializer
-    pagination_class = ProductTypePageNumberPagination
-
-    @order_queryset(*PRODUCT_TYPES_ORDERING)
-    def get_queryset(self) -> QuerySet[ProductType]:
-        product_types = self.queryset.product_types(self.request.user)
-        return product_types.products_annotation()
-
-
-class ComparedProductsListView(ListAPIView):
-    queryset = Comparison.objects.all()
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ProductSerializer
+class ComparisonsViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    permission_classes = (
+        IsAuthenticated,
+        IsComparisonCreatorOrReadOnly,
+        CanCreateComparisonIfComparisonGroupAuthor,
+    )
     pagination_class = ProductPageNumberPagination
 
-    @order_queryset(*PRODUCTS_ORDERING)
+    def get_serializer_class(self) -> type[Serializer]:
+        if self.action != "list":
+            return ComparisonSerializer
+        return ProductSerializer
+
     def get_queryset(self) -> QuerySet[Product]:
-        product_type = get_object_or_404(
-            ProductType, slug=self.kwargs["product_type_slug"]
-        )
-        return self.queryset.products(product_type, self.request.user)
+        queryset = Comparison.objects.all()
+        if self.action != "list":
+            return queryset
+        ComparisonReadSerializer(
+            data=self.request.query_params,
+            context=self.get_serializer_context(),
+        ).is_valid(raise_exception=True)
+        queryset = queryset.products(self.request.query_params["comparison_group_id"])
+        return queryset.order_by(*PRODUCTS_ORDERING)
+
+    def perform_create(self, serializer: Serializer) -> None:
+        serializer.save(creator=self.request.user)
