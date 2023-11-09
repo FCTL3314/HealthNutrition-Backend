@@ -49,10 +49,10 @@ INSTALLED_APPS = [
     "api",
     "api.v1",
     "api.v1.users",
-    "api.v1.stores",
     "api.v1.categories",
     "api.v1.nutrition",
     "api.v1.products",
+    "api.v1.diets",
     "api.v1.comparisons",
     "api.v1.comments",
 ]
@@ -229,7 +229,7 @@ SPECTACULAR_SETTINGS = {
 # Simple JWT
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 

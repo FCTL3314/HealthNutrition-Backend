@@ -18,8 +18,10 @@ class User(AbstractUser):
     image = models.ImageField(upload_to="users", null=True, blank=True)
     about = models.TextField(max_length=516, null=True, blank=True)
     slug = models.SlugField(unique=True)
-    comparisons = models.ManyToManyField(
-        "products.Product", through="comparisons.Comparison", blank=True
+    comparisons = models.ManyToManyField(  # TODO: Change to comparisons group
+        "products.Product",
+        through="comparisons.Comparison",
+        blank=True,
     )
     is_verified = models.BooleanField(default=False)
 

@@ -10,18 +10,10 @@ from api.common.models.mixins import ViewsModelMixin
 from api.utils.tests import get_auth_header
 
 User = get_user_model()
-
-
 faker = Faker()
 
 
-class ICommonTest(ABC):
-    @abstractmethod
-    def run_test(self, *args, **kwargs):
-        ...
-
-
-class BaseCommonTest(ICommonTest, ABC):
+class BaseCommonTest(ABC):
     def __init__(
         self,
         client,
@@ -34,12 +26,16 @@ class BaseCommonTest(ICommonTest, ABC):
         self._user = user
         self._expected_status = expected_status
 
+    @abstractmethod
+    def run_test(self, *args, **kwargs):
+        ...
+
     @property
     def headers(self) -> dict:
         return get_auth_header(self._user) if self._user else {}
 
 
-class RetrieveCommonTest(BaseCommonTest):
+class RetrieveTest(BaseCommonTest):
     def run_test(self, expected_fields: Iterable[str]):
         response = self._client.get(self._path, **self.headers)
 
@@ -49,35 +45,39 @@ class RetrieveCommonTest(BaseCommonTest):
         return response
 
 
-class RetrieveViewsCommonTest(RetrieveCommonTest):
+class RetrieveViewsIncreaseTest(RetrieveTest):
     def __init__(
         self,
         client,
         path: str,
-        views_model_object: ViewsModelMixin,
+        model_object: ViewsModelMixin,
         user: User | None = None,
         expected_status: int | None = None,
     ):
         super().__init__(client, path, user, expected_status)
-        self._views_model_object = views_model_object
+        self._model_object = model_object
 
     def run_test(self, expected_fields: Iterable[str]):
-        assert self._views_model_object.views == 0
+        assert self._model_object.views == 0
         super().run_test(expected_fields)
-        self._views_model_object.refresh_from_db()
-        assert self._views_model_object.views == 1
+        self._model_object.refresh_from_db()
+        assert self._model_object.views == 1
 
 
-class ListCommonTest(BaseCommonTest):
-    def run_test(self):
+class ListTest(BaseCommonTest):
+    def run_test(self, expected_count: int | None = None):
         response = self._client.get(self._path, **self.headers)
 
         assert response.status_code == self._expected_status or HTTPStatus.OK
-        assert len(response.data["results"]) > 0
+        objects_count = response.data["count"]
+        if expected_count is not None:
+            assert objects_count == expected_count
+        else:
+            assert objects_count > 0
         return response
 
 
-class CreateCommonTest(BaseCommonTest):
+class CreateTest(BaseCommonTest):
     def run_test(
         self,
         model: type[Model],
@@ -96,15 +96,15 @@ class CreateCommonTest(BaseCommonTest):
         return response
 
 
-class UpdateCommonTest(BaseCommonTest):
+class UpdateTest(BaseCommonTest):
     def run_test(
         self,
         object_to_update: Model,
-        fields: dict[str, Any],
+        data: dict[str, Any],
     ):
         response = self._client.patch(
             self._path,
-            data=fields,
+            data=data,
             content_type="application/json",
             **self.headers,
         )
@@ -112,12 +112,12 @@ class UpdateCommonTest(BaseCommonTest):
         object_to_update.refresh_from_db()
 
         assert response.status_code == self._expected_status or HTTPStatus.OK
-        for field in fields:
-            assert getattr(object_to_update, field) == fields[field]
+        for field in data:
+            assert getattr(object_to_update, field) == data[field]
         return response
 
 
-class DestroyCommonTest(BaseCommonTest):
+class DestroyTest(BaseCommonTest):
     def run_test(self, model: type[Model]):
         assert model.objects.count() == 1
 

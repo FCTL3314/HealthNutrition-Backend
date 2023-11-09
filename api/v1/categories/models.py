@@ -24,4 +24,4 @@ class Category(ViewsModelMixin, models.Model):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("api:v1:products:product-types-detail", args=(self.slug,))
+        return reverse("api:v1:categories:categories-detail", args=(self.slug,))
