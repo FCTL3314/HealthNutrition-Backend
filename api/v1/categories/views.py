@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from rest_framework import filters
 from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
@@ -10,7 +12,6 @@ from api.v1.categories.models import Category
 from api.v1.categories.paginators import CategoryPageNumberPagination
 from api.v1.categories.serializers import CategoryModelSerializer
 from api.v1.categories.services import (
-    CategoryRetrieveService,
     CategoryViewsIncreaseService,
 )
 
@@ -26,8 +27,6 @@ class CategoryViewSet(ModelViewSet):
 
     def retrieve(self, request: Request, *args, **kwargs) -> APIResponse:
         instance = self.get_object()
-        return CategoryRetrieveService(
-            instance,
-            self.serializer_class,
-            CategoryViewsIncreaseService(instance, get_client_address(request)),
-        ).retrieve()
+        CategoryViewsIncreaseService(instance, get_client_address(request)).execute()
+        serializer = self.get_serializer(instance)
+        return APIResponse(serializer.data, status=HTTPStatus.OK)

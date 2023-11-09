@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.request import Request
@@ -17,7 +19,6 @@ from api.v1.products.serializers import (
 )
 from api.v1.products.services import (
     ProductViewsIncreaseService,
-    ProductRetrieveService,
 )
 
 
@@ -36,8 +37,6 @@ class ProductViewSet(ModelViewSet):
 
     def retrieve(self, request: Request, *args, **kwargs) -> APIResponse:
         instance = self.get_object()
-        return ProductRetrieveService(
-            instance,
-            self.serializer_class,
-            ProductViewsIncreaseService(instance, get_client_address(request)),
-        ).retrieve()
+        ProductViewsIncreaseService(instance, get_client_address(request)).execute()
+        serializer = self.get_serializer(instance)
+        return APIResponse(serializer.data, status=HTTPStatus.OK)
