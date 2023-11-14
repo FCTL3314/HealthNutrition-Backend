@@ -10,18 +10,18 @@ from api.utils.network import get_client_address
 from api.v1.categories.constants import CATEGORIES_ORDERING
 from api.v1.categories.models import Category
 from api.v1.categories.paginators import CategoryPageNumberPagination
-from api.v1.categories.serializers import CategoryWithNutritionAveragesSerializer
+from api.v1.categories.serializers import CategoryDetailedSerializer
 from api.v1.categories.services import (
     CategoryViewsIncreaseService,
 )
 
 
 class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.with_nutrition_averages().order_by(*CATEGORIES_ORDERING)
+    queryset = Category.objects.with_nutrition_details().order_by(*CATEGORIES_ORDERING)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name", "description")
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = CategoryWithNutritionAveragesSerializer
+    serializer_class = CategoryDetailedSerializer
     pagination_class = CategoryPageNumberPagination
     lookup_field = "slug"
 
