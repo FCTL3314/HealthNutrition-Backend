@@ -18,7 +18,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to="users", null=True, blank=True)
     about = models.TextField(max_length=516, null=True, blank=True)
-    slug = models.SlugField(unique=True)
     comparison_groups = models.ManyToManyField(
         "comparisons.ComparisonGroup",
         through="comparisons.Comparison",
@@ -26,6 +25,7 @@ class User(AbstractUser):
     )
     comments = GenericRelation("comments.Comment")
     is_verified = models.BooleanField(default=False)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.username
