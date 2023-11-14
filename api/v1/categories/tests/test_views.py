@@ -33,6 +33,18 @@ class TestCategoryViewSet:
                 "description",
                 "views",
                 "slug",
+                "calories_max",
+                "protein_max",
+                "fat_max",
+                "carbs_max",
+                "calories_avg",
+                "protein_avg",
+                "fat_avg",
+                "carbs_avg",
+                "calories_min",
+                "protein_min",
+                "fat_min",
+                "carbs_min",
             ),
         )
         category.refresh_from_db()

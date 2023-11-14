@@ -30,6 +30,7 @@ class TestProductViewSet:
                 "short_description",
                 "nutrition",
                 "category",
+                "healthfulness",
                 "views",
                 "slug",
                 "created_at",

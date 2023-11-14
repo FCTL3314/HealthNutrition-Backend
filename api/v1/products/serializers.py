@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
         queryset=Category.objects.all(),
         source="category",
     )
-    nutrition = NutritionSerializer()
+    nutrition = NutritionSerializer(read_only=True)
     nutrition_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Nutrition.objects.all(),
@@ -46,7 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductWithHealthfulnessSerializer(ProductSerializer):
-    healthfulness = serializers.IntegerField()
+    healthfulness = serializers.IntegerField(read_only=True)
 
     class Meta(ProductSerializer.Meta):
         fields = ProductSerializer.Meta.fields + ("healthfulness",)
