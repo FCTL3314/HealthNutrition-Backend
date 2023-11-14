@@ -15,7 +15,7 @@ from api.v1.products.paginators import (
     ProductPageNumberPagination,
 )
 from api.v1.products.serializers import (
-    ProductSerializer,
+    ProductWithHealthfulnessSerializer,
 )
 from api.v1.products.services import (
     ProductViewsIncreaseService,
@@ -23,15 +23,15 @@ from api.v1.products.services import (
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.order_by(*PRODUCTS_ORDERING)
+    queryset = Product.objects.with_healthfulness().order_by(*PRODUCTS_ORDERING)
     filterset_class = ProductFilter
     filter_backends = (
         DjangoFilterBackend,
         filters.SearchFilter,
     )
-    search_fields = ("name", "card_description")
+    search_fields = ("name", "short_description")
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = ProductSerializer
+    serializer_class = ProductWithHealthfulnessSerializer
     pagination_class = ProductPageNumberPagination
     lookup_field = "slug"
 
