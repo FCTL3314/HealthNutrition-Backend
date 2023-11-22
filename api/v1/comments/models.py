@@ -34,6 +34,9 @@ class Comment(MPTTModel):
 
     objects = BaseCommentManager()
 
+    class Meta:
+        indexes = (models.Index(fields=("created_at",)),)
+
     class MPTTMeta:
         order_insertion_by = ("-created_at",)
 

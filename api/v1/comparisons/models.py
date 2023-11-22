@@ -11,6 +11,14 @@ class ComparisonGroup(models.Model):
 
     name = models.CharField(max_length=32)
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = (
+            models.Index(
+                fields=("created_at",),
+            ),
+        )
 
     def __str__(self):
         return f"Name: {self.name} | Author: {self.author.username}"

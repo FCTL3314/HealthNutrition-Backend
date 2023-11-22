@@ -27,6 +27,16 @@ class Product(ViewsModelMixin, models.Model):
 
     objects = ProductManager()
 
+    class Meta:
+        indexes = (
+            models.Index(
+                fields=("name",),
+            ),
+            models.Index(
+                fields=("short_description",),
+            ),
+        )
+
     def __str__(self):
         return self.name
 

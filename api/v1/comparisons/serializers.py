@@ -19,7 +19,7 @@ class ComparisonGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComparisonGroup
-        fields = ("id", "name", "author_id", "author")
+        fields = ("id", "name", "author_id", "author", "created_at")
 
 
 class ComparisonReadSerializer(serializers.ModelSerializer):

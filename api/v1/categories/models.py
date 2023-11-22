@@ -17,6 +17,14 @@ class Category(ViewsModelMixin, models.Model):
 
     class Meta:
         verbose_name_plural = "categories"
+        indexes = (
+            models.Index(
+                fields=("name",),
+            ),
+            models.Index(
+                fields=("description",),
+            ),
+        )
 
     def __str__(self):
         return self.name
