@@ -28,13 +28,19 @@ from api.v1.products.serializers import (
 
 
 class ComparisonGroupViewSet(
+    mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
-    queryset = ComparisonGroup.objects.all()
     permission_classes = (IsAuthenticated, IsComparisonGroupAuthorOrReadOnly)
     serializer_class = ComparisonGroupSerializer
+
+    def get_queryset(self) -> QuerySet[ComparisonGroup]:
+        return ComparisonGroup.objects.filter(author=self.request.user)
+
+    def perform_create(self, serializer) -> None:
+        serializer.save(author=self.request.user)
 
 
 class ComparisonsViewSet(

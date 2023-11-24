@@ -10,16 +10,9 @@ User = get_user_model()
 
 
 class ComparisonGroupSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    author_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-        source="author",
-        write_only=True,
-    )
-
     class Meta:
         model = ComparisonGroup
-        fields = ("id", "name", "author_id", "author", "created_at")
+        fields = ("id", "name", "author_id", "created_at")
 
 
 class ComparisonReadSerializer(serializers.ModelSerializer):
