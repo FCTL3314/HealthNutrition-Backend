@@ -60,28 +60,21 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Product categories
 
-![firefox_pX9TIczsd0](https://github.com/FCTL3314/StoreTracker/assets/97694131/0a317d57-0ede-492e-96f6-ec11aa65ab57)
+![firefox_10jaBILjcl](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/539d90ea-aea4-40aa-b18b-fa13e615dbb8)
+![firefox_QmlP2aM3dD](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/f8d05cce-5882-4d80-ba48-ec160446e4cf)
 
 ### Products
 
-![firefox_bqUjAA9ide](https://github.com/FCTL3314/StoreTracker/assets/97694131/fd7127c4-67b4-4e47-9255-484a135c6564)
-![firefox_2dl7DEif7Y](https://github.com/FCTL3314/StoreTracker/assets/97694131/b65f226a-31af-4d84-8cf9-cc7682174a99)
-![firefox_WxEaOrMs8h](https://github.com/FCTL3314/StoreTracker/assets/97694131/6f451ff2-662e-4295-a82e-ab3cdaad8be5)
+![firefox_6f5Tdgr0ay](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/f46c558a-416a-4123-848d-9e3e0e88e46d)
+![firefox_Olg88utAbr](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/fc35ae0d-a3f7-4e23-8645-d9e2fee139ef)
 
-<hr/>
+### Product detail
 
-![firefox_layhXd2u7v](https://github.com/FCTL3314/StoreTracker/assets/97694131/5d1de7aa-ec12-445a-a29d-1d27108d793d)
-![firefox_Bgqw3rnQv3](https://github.com/FCTL3314/StoreTracker/assets/97694131/cd68ed5b-86fd-484e-b8ad-aadef8fd6136)
-
-### Store detail
-
-![firefox_SGbt1I9nCi](https://github.com/FCTL3314/StoreTracker/assets/97694131/f31c0e2f-2ebb-422a-943a-55072dab0530)
-![firefox_Qw2Pyi34hz](https://github.com/FCTL3314/StoreTracker/assets/97694131/7ee295c8-fcf6-489f-ad57-68a55a298030)
+![firefox_QwTKm3VfCH](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/74a0ab94-f09e-4109-94c5-a58d0c3bf9e3)
 
 ### Profile
 
-![firefox_4HtesbsbBG](https://github.com/FCTL3314/StoreTracker/assets/97694131/7e404765-9adf-4505-b8d2-302eb7952e53)
-![firefox_IRjbXLaWtk](https://github.com/FCTL3314/StoreTracker/assets/97694131/99094345-4b41-4acc-b5c4-247e17031c0b)
+![firefox_CQq7BE99mp](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/2ca3a7d0-5ada-4bf2-b1f7-ded73de191a1)
 
 </details>
 
