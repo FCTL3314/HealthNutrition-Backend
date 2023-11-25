@@ -16,12 +16,6 @@
 
   <li>
     <b>
-      <a href="#-endpoints">Endpoints</a>
-    </b>
-  </li>
-
-  <li>
-    <b>
       <a href="#-demonstration">Demonstration</a>
     </b>
   </li>
@@ -60,21 +54,26 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Product categories
 
-![firefox_10jaBILjcl](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/539d90ea-aea4-40aa-b18b-fa13e615dbb8)
-![firefox_QmlP2aM3dD](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/f8d05cce-5882-4d80-ba48-ec160446e4cf)
+![firefox_JWbM1HN5xz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/68e1b64e-5661-4db0-abb6-ec3fe24d37b0)
+![firefox_4F10GQVCyO](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/bcb573d5-348c-48b2-b624-dc80ead722e8)
+![firefox_3mMFuAopuz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/afc7a7bc-5508-45dd-95bd-5db4efb7da8b)
 
 ### Products
 
-![firefox_6f5Tdgr0ay](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/f46c558a-416a-4123-848d-9e3e0e88e46d)
-![firefox_Olg88utAbr](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/fc35ae0d-a3f7-4e23-8645-d9e2fee139ef)
+![firefox_B7uNa9vFMV](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/3a5f76a1-3441-445c-8b33-78eed2ea7733)
 
 ### Product detail
 
-![firefox_QwTKm3VfCH](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/74a0ab94-f09e-4109-94c5-a58d0c3bf9e3)
+![firefox_POkjZJpu1b](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9b7af03e-875a-41e7-9ce7-f81c000f9dc3)
 
 ### Profile
 
-![firefox_CQq7BE99mp](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/2ca3a7d0-5ada-4bf2-b1f7-ded73de191a1)
+![firefox_HWOgotnpVP](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a444a1ef-0eae-4926-823a-6d6d148b868d)
+
+
+### Settings
+
+![firefox_pQOdHvUkf6](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/cdcf18b1-af67-4fdf-9558-0d68d4bb97ab)
 
 </details>
 
