@@ -10,9 +10,17 @@ User = get_user_model()
 
 
 class ComparisonGroupSerializer(serializers.ModelSerializer):
+    is_contains_selected_product = serializers.BooleanField(required=False)
+
     class Meta:
         model = ComparisonGroup
-        fields = ("id", "name", "author_id", "created_at")
+        fields = (
+            "id",
+            "name",
+            "author_id",
+            "created_at",
+            "is_contains_selected_product",
+        )
 
 
 class ComparisonReadSerializer(serializers.ModelSerializer):
