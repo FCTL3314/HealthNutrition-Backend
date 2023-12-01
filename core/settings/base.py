@@ -121,19 +121,11 @@ CACHEOPS = {
         "ops": "all",
         "timeout": 60 * 60,
     },
-    "products.ProductType": {
+    "categories.Category": {
         "ops": "all",
         "timeout": (60 * 60) * 2,
     },
-    "stores.Store": {
-        "ops": "all",
-        "timeout": (60 * 60) * 2,
-    },
-    "comments.ProductComment": {
-        "ops": "all",
-        "timeout": 60 * 30,
-    },
-    "comments.StoreComment": {
+    "comments.Comment": {
         "ops": "all",
         "timeout": 60 * 30,
     },
