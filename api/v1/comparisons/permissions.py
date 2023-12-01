@@ -24,10 +24,8 @@ class IsComparisonCreatorOrReadOnly(BasePermission):
         )
 
 
-class CanCreateComparisonIfComparisonGroupAuthor(BasePermission):
+class IsAuthorOfComparisonPassedInBodyIfExists(BasePermission):
     def has_permission(self, request: Request, view: GenericViewSet) -> bool:
-        if view.action != "create":
-            return True
         try:
             comparison_group = ComparisonGroup.objects.get(
                 id=request.data["comparison_group_id"]

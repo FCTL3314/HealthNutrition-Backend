@@ -12,7 +12,7 @@ from api.v1.comparisons.models import Comparison, ComparisonGroup
 from api.v1.comparisons.paginators import ComparisonGroupPageNumberPagination
 from api.v1.comparisons.permissions import (
     IsComparisonGroupAuthorOrReadOnly,
-    CreateOrDeleteComparisonIfComparisonGroupAuthor,
+    IsAuthorOfComparisonPassedInBodyIfExists,
 )
 from api.v1.comparisons.serializers import (
     ComparisonSerializer,
@@ -55,7 +55,7 @@ class ComparisonCreateView(CreateAPIView):
     serializer_class = ComparisonSerializer
     permission_classes = (
         IsAuthenticated,
-        CreateOrDeleteComparisonIfComparisonGroupAuthor,
+        IsAuthorOfComparisonPassedInBodyIfExists,
     )
 
     def create(self, request: Request, *args, **kwargs) -> Response | APIResponse:
@@ -89,7 +89,7 @@ class ComparisonsDestroyView(DestroyAPIView):
     serializer_class = ComparisonSerializer
     permission_classes = (
         IsAuthenticated,
-        CreateOrDeleteComparisonIfComparisonGroupAuthor,
+        IsAuthorOfComparisonPassedInBodyIfExists,
     )
 
     def destroy(self, request: Request, *args, **kwargs) -> Response:
