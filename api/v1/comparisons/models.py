@@ -1,6 +1,6 @@
 from django.db import models
 
-from api.v1.comparisons.managers import ComparisonManager
+from api.v1.comparisons.managers import ComparisonManager, ComparisonGroupManager
 
 
 class ComparisonGroup(models.Model):
@@ -12,6 +12,8 @@ class ComparisonGroup(models.Model):
     name = models.CharField(max_length=32)
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = ComparisonGroupManager()
 
     class Meta:
         indexes = (
@@ -40,6 +42,9 @@ class Comparison(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = ComparisonManager()
+
+    class Meta:
+        unique_together = ("product", "comparison_group", "creator")
 
     def __str__(self):
         return f"Group: {self.comparison_group.name} | Product: {self.product.name}"
