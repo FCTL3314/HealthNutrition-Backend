@@ -42,7 +42,9 @@ class ComparisonCreateService(IService):
 
     def _is_comparison_already_exists(self) -> bool:
         return Comparison.objects.filter(
-            comparison_group_id=self._comparison_group_id, product_id=self._product_id
+            comparison_group_id=self._comparison_group_id,
+            product_id=self._product_id,
+            creator=self._user,
         ).exists()
 
     def _successfully_created_response(self):
