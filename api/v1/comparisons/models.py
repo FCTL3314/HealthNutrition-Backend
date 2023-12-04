@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 from api.v1.comparisons.managers import ComparisonManager, ComparisonGroupManager
 
@@ -12,6 +13,7 @@ class ComparisonGroup(models.Model):
     name = models.CharField(max_length=32)
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(unique=True)
 
     objects = ComparisonGroupManager()
 
@@ -24,6 +26,11 @@ class ComparisonGroup(models.Model):
 
     def __str__(self):
         return f"Name: {self.name} | Author: {self.author.username}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
 
 class Comparison(models.Model):

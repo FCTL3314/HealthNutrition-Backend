@@ -17,7 +17,7 @@ class CategorySerializer(serializers.ModelSerializer):
         read_only_fields = ("views", "slug")
 
 
-class CategoryDetailedSerializer(CategorySerializer):
+class DetailedCategorySerializer(CategorySerializer):
     calories_max = serializers.IntegerField(
         source="product__nutrition__calories__max", read_only=True
     )

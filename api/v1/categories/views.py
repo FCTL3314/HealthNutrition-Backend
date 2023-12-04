@@ -10,7 +10,7 @@ from api.utils.network import get_client_address
 from api.v1.categories.constants import CATEGORIES_ORDERING
 from api.v1.categories.models import Category
 from api.v1.categories.paginators import CategoryPageNumberPagination
-from api.v1.categories.serializers import CategoryDetailedSerializer
+from api.v1.categories.serializers import DetailedCategorySerializer
 from api.v1.categories.services import (
     CategoryViewsIncreaseService,
 )
@@ -21,7 +21,7 @@ class CategoryViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name", "description")
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = CategoryDetailedSerializer
+    serializer_class = DetailedCategorySerializer
     pagination_class = CategoryPageNumberPagination
     lookup_field = "slug"
 

@@ -17,7 +17,8 @@ from api.v1.comparisons.permissions import (
 from api.v1.comparisons.serializers import (
     ComparisonSerializer,
     ComparisonReadSerializer,
-    ComparisonGroupSerializer,
+    ComparisonGroupReadSerializer,
+    DetailedComparisonGroupSerializer,
 )
 from api.v1.comparisons.services import ComparisonCreateService, ComparisonDeleteService
 from api.v1.products.constants import PRODUCTS_ORDERING
@@ -31,20 +32,31 @@ from api.v1.products.serializers import (
 
 
 class ComparisonGroupViewSet(
+    mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
     permission_classes = (IsAuthenticated, IsComparisonGroupAuthorOrReadOnly)
-    serializer_class = ComparisonGroupSerializer
+    serializer_class = DetailedComparisonGroupSerializer
     pagination_class = ComparisonGroupPageNumberPagination
+    lookup_field = "slug"
 
     def get_queryset(self) -> QuerySet[ComparisonGroup]:
-        queryset = ComparisonGroup.objects.newest()
-        if selected_product_id := self.request.query_params.get("selected_product_id"):
-            queryset = queryset.with_is_contains_selected_product(selected_product_id)
-        return queryset.filter(author=self.request.user)
+        serializer = ComparisonGroupReadSerializer(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+
+        queryset = ComparisonGroup.objects.for_user(self.request.user).newest()
+
+        if selected_product := serializer.validated_data.get("selected_product"):
+            queryset = queryset.with_is_contains_selected_product(selected_product.id)
+        if serializer.validated_data.get("with_products_count") is True:
+            queryset = queryset.with_products_count()
+        if self.action == "retrieve":
+            queryset = queryset.with_nutrition_details()
+
+        return queryset
 
     def perform_create(self, serializer) -> None:
         serializer.save(author=self.request.user)
