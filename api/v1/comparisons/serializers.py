@@ -11,10 +11,9 @@ User = get_user_model()
 
 class ComparisonGroupReadSerializer(serializers.Serializer):
     selected_product = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(),
-        required=False,
+        queryset=Product.objects.all()
     )
-    with_products_count = serializers.BooleanField(required=False)
+    with_products_count = serializers.BooleanField()
 
 
 class ComparisonGroupSerializer(serializers.ModelSerializer):
@@ -27,25 +26,22 @@ class ComparisonGroupSerializer(serializers.ModelSerializer):
             "created_at",
             "slug",
         )
+        read_only_fields = ("slug",)
 
 
 class DetailedComparisonGroupSerializer(ComparisonGroupSerializer):
-    is_contains_selected_product = serializers.BooleanField(
-        required=False, read_only=True
-    )
-    products_count = serializers.IntegerField(required=False, read_only=True)
-    calories_max = serializers.IntegerField(
-        source="comparisons__product__nutrition__calories__max", read_only=True
-    )
-    protein_max = serializers.FloatField(
-        source="comparisons__product__nutrition__protein__max", read_only=True
-    )
-    fat_max = serializers.FloatField(
-        source="comparisons__product__nutrition__fat__max", read_only=True
-    )
-    carbs_max = serializers.FloatField(
-        source="comparisons__product__nutrition__carbs__max", read_only=True
-    )
+    is_contains_selected_product = serializers.BooleanField(read_only=True)
+    products_count = serializers.IntegerField(read_only=True)
+    unique_categories_count = serializers.IntegerField(read_only=True)
+    last_added_product_datetime = serializers.DateTimeField(read_only=True)
+    max_calorie_product_id = serializers.IntegerField(read_only=True)
+    min_calorie_product_id = serializers.IntegerField(read_only=True)
+    max_protein_product_id = serializers.IntegerField(read_only=True)
+    min_protein_product_id = serializers.IntegerField(read_only=True)
+    max_fat_product_id = serializers.IntegerField(read_only=True)
+    min_fat_product_id = serializers.IntegerField(read_only=True)
+    max_carbs_product_id = serializers.IntegerField(read_only=True)
+    min_carbs_product_id = serializers.IntegerField(read_only=True)
 
     calories_avg = serializers.IntegerField(
         source="comparisons__product__nutrition__calories__avg", read_only=True
@@ -60,33 +56,22 @@ class DetailedComparisonGroupSerializer(ComparisonGroupSerializer):
         source="comparisons__product__nutrition__carbs__avg", read_only=True
     )
 
-    calories_min = serializers.IntegerField(
-        source="comparisons__product__nutrition__calories__min", read_only=True
-    )
-    protein_min = serializers.FloatField(
-        source="comparisons__product__nutrition__protein__min", read_only=True
-    )
-    fat_min = serializers.FloatField(
-        source="comparisons__product__nutrition__fat__min", read_only=True
-    )
-    carbs_min = serializers.FloatField(
-        source="comparisons__product__nutrition__carbs__min", read_only=True
-    )
-
     class Meta(ComparisonGroupSerializer.Meta):
         fields = ComparisonGroupSerializer.Meta.fields + (
-            "calories_max",
-            "protein_max",
-            "fat_max",
-            "carbs_max",
+            "unique_categories_count",
+            "last_added_product_datetime",
             "calories_avg",
             "protein_avg",
             "fat_avg",
             "carbs_avg",
-            "calories_min",
-            "protein_min",
-            "fat_min",
-            "carbs_min",
+            "max_calorie_product_id",
+            "min_calorie_product_id",
+            "max_protein_product_id",
+            "min_protein_product_id",
+            "max_fat_product_id",
+            "min_fat_product_id",
+            "max_carbs_product_id",
+            "min_carbs_product_id",
             "is_contains_selected_product",
             "products_count",
         )
