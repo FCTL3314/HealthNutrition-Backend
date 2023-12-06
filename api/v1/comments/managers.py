@@ -3,8 +3,8 @@ from mptt.managers import TreeManager
 from mptt.querysets import TreeQuerySet
 
 
-class BaseCommentQuerySet(TreeQuerySet):
-    def newest(self) -> QuerySet:
+class CommentQuerySet(TreeQuerySet):
+    def newest_first_order(self) -> QuerySet:
         """
         Returns newest comments by the date.
         """
@@ -18,5 +18,5 @@ class BaseCommentQuerySet(TreeQuerySet):
         return self.filter(level=0)
 
 
-class BaseCommentManager(TreeManager.from_queryset(BaseCommentQuerySet)):
+class CommentManager(TreeManager.from_queryset(CommentQuerySet)):
     ...
