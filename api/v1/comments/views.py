@@ -23,17 +23,23 @@ class CommentViewSet(
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self) -> QuerySet[Comment]:
-        queryset = self.model.objects.newest()
+        queryset = self.model.objects.select_related("author", "content_type")
+
         if self.action != "list":
             return queryset
+
         if parent_id := self.request.query_params.get("parent_id"):
             parent = Comment.objects.get(id=parent_id)
             return parent.get_descendants()
-        queryset = queryset.filter(
-            content_type__model=self.request.query_params.get("content_type"),
-            object_id=self.request.query_params.get("object_id"),
+
+        return (
+            queryset.filter(
+                content_type__model=self.request.query_params.get("content_type"),
+                object_id=self.request.query_params.get("object_id"),
+            )
+            .top_level()
+            .newest_first_order()
         )
-        return queryset.top_level()
 
     def list(self, request, *args, **kwargs) -> Response:
         CommentReadSerializer(data=request.query_params).is_valid(raise_exception=True)

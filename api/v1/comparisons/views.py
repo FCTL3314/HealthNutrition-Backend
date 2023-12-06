@@ -47,7 +47,7 @@ class ComparisonGroupViewSet(
         serializer = ComparisonGroupReadSerializer(data=self.request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        queryset = ComparisonGroup.objects.for_user(self.request.user).newest()
+        queryset = ComparisonGroup.objects.for_user(self.request.user)
 
         if selected_product := serializer.validated_data.get("selected_product"):
             queryset = queryset.with_is_contains_selected_product(selected_product.id)
@@ -56,7 +56,12 @@ class ComparisonGroupViewSet(
         if self.action == "retrieve":
             queryset = queryset.with_nutrition_details()
 
-        return queryset
+        return (
+            queryset.with_unique_categories_count()
+            .with_last_added_product_datetime()
+            .newest_first_order()
+            .with_extreme_nutrition_products()
+        )
 
     def perform_create(self, serializer) -> None:
         serializer.save(author=self.request.user)

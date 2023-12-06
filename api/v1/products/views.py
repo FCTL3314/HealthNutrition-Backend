@@ -23,7 +23,11 @@ from api.v1.products.services import (
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.with_healthfulness().order_by(*PRODUCTS_ORDERING)
+    queryset = (
+        Product.objects.select_related("nutrition", "category")
+        .with_healthfulness()
+        .order_by(*PRODUCTS_ORDERING)
+    )
     filterset_class = ProductFilter
     filter_backends = (
         DjangoFilterBackend,
