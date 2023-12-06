@@ -5,7 +5,7 @@ from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
-from api.v1.comments.managers import BaseCommentManager
+from api.v1.comments.managers import CommentManager
 from api.v1.products.models import Product
 
 
@@ -32,10 +32,14 @@ class Comment(MPTTModel):
         model__in=ALLOWED_CONTENT_TYPE_MODEL_NAMES
     )
 
-    objects = BaseCommentManager()
+    objects = CommentManager()
 
     class Meta:
-        indexes = (models.Index(fields=("created_at",)),)
+        indexes = (
+            models.Index(fields=("created_at",)),
+            models.Index(fields=("content_type", "object_id")),
+            models.Index(fields=("parent_id",)),
+        )
 
     class MPTTMeta:
         order_insertion_by = ("-created_at",)
