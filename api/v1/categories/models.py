@@ -19,6 +19,9 @@ class Category(ViewsModelMixin, models.Model):
         verbose_name_plural = "categories"
         indexes = (
             models.Index(
+                fields=("name", "description"),
+            ),
+            models.Index(
                 fields=("name",),
             ),
             models.Index(
