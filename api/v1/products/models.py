@@ -30,6 +30,9 @@ class Product(ViewsModelMixin, models.Model):
     class Meta:
         indexes = (
             models.Index(
+                fields=("name", "short_description"),
+            ),
+            models.Index(
                 fields=("name",),
             ),
             models.Index(
