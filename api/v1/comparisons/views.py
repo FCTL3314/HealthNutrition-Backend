@@ -9,7 +9,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from api.responses import APIResponse
 from api.v1.comparisons.models import Comparison, ComparisonGroup
-from api.v1.comparisons.paginators import ComparisonGroupPageNumberPagination
+from api.v1.comparisons.paginators import ComparisonGroupLimitOffsetPagination
 from api.v1.comparisons.permissions import (
     IsComparisonGroupAuthorOrReadOnly,
     IsAuthorOfComparisonPassedInBodyIfExists,
@@ -40,7 +40,7 @@ class ComparisonGroupViewSet(
 ):
     permission_classes = (IsAuthenticated, IsComparisonGroupAuthorOrReadOnly)
     serializer_class = DetailedComparisonGroupSerializer
-    pagination_class = ComparisonGroupPageNumberPagination
+    pagination_class = ComparisonGroupLimitOffsetPagination
     lookup_field = "slug"
 
     def get_queryset(self) -> QuerySet[ComparisonGroup]:
