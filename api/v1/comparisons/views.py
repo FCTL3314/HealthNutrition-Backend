@@ -60,7 +60,7 @@ class ComparisonGroupViewSet(
             queryset.with_unique_categories_count()
             .with_last_added_product_datetime()
             .newest_first_order()
-            .with_extreme_nutrition_products()
+            .with_standout_products()
         )
 
     def perform_create(self, serializer) -> None:

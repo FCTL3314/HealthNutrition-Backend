@@ -47,12 +47,12 @@ class ComparisonGroupQuerySet(models.QuerySet):
             )
         )
 
-    def with_extreme_nutrition_products(self):
+    def with_standout_products(self):
         comparison_model = apps.get_model(
             app_label="comparisons", model_name="Comparison"
         )
 
-        def product_with_specific_nutrition_subquery(order_by: str):
+        def product_with_specific_nutrition_subquery(order_by: str) -> Subquery:
             return Subquery(
                 comparison_model.objects.filter(comparison_group=OuterRef("pk"))  # noqa
                 .order_by(order_by)
