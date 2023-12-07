@@ -11,7 +11,7 @@ User = get_user_model()
 
 class ComparisonGroupReadSerializer(serializers.Serializer):
     selected_product = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all()
+        required=False, queryset=Product.objects.all()
     )
     with_products_count = serializers.BooleanField()
 
@@ -34,14 +34,14 @@ class DetailedComparisonGroupSerializer(ComparisonGroupSerializer):
     products_count = serializers.IntegerField(read_only=True)
     unique_categories_count = serializers.IntegerField(read_only=True)
     last_added_product_datetime = serializers.DateTimeField(read_only=True)
-    max_calorie_product_id = serializers.IntegerField(read_only=True)
-    min_calorie_product_id = serializers.IntegerField(read_only=True)
-    max_protein_product_id = serializers.IntegerField(read_only=True)
-    min_protein_product_id = serializers.IntegerField(read_only=True)
-    max_fat_product_id = serializers.IntegerField(read_only=True)
-    min_fat_product_id = serializers.IntegerField(read_only=True)
-    max_carbs_product_id = serializers.IntegerField(read_only=True)
-    min_carbs_product_id = serializers.IntegerField(read_only=True)
+    max_calorie_product_slug = serializers.SlugField(read_only=True)
+    min_calorie_product_slug = serializers.SlugField(read_only=True)
+    max_protein_product_slug = serializers.SlugField(read_only=True)
+    min_protein_product_slug = serializers.SlugField(read_only=True)
+    max_fat_product_slug = serializers.SlugField(read_only=True)
+    min_fat_product_slug = serializers.SlugField(read_only=True)
+    max_carbs_product_slug = serializers.SlugField(read_only=True)
+    min_carbs_product_slug = serializers.SlugField(read_only=True)
 
     calories_avg = serializers.IntegerField(
         source="comparisons__product__nutrition__calories__avg", read_only=True
@@ -64,14 +64,14 @@ class DetailedComparisonGroupSerializer(ComparisonGroupSerializer):
             "protein_avg",
             "fat_avg",
             "carbs_avg",
-            "max_calorie_product_id",
-            "min_calorie_product_id",
-            "max_protein_product_id",
-            "min_protein_product_id",
-            "max_fat_product_id",
-            "min_fat_product_id",
-            "max_carbs_product_id",
-            "min_carbs_product_id",
+            "max_calorie_product_slug",
+            "min_calorie_product_slug",
+            "max_protein_product_slug",
+            "min_protein_product_slug",
+            "max_fat_product_slug",
+            "min_fat_product_slug",
+            "max_carbs_product_slug",
+            "min_carbs_product_slug",
             "is_contains_selected_product",
             "products_count",
         )

@@ -56,32 +56,32 @@ class ComparisonGroupQuerySet(models.QuerySet):
             return Subquery(
                 comparison_model.objects.filter(comparison_group=OuterRef("pk"))  # noqa
                 .order_by(order_by)
-                .values_list("product_id", flat=True)[:1]
+                .values_list("product__slug", flat=True)[:1]
             )
 
         return self.annotate(
-            max_calorie_product_id=product_with_specific_nutrition_subquery(
+            max_calorie_product_slug=product_with_specific_nutrition_subquery(
                 "-product__nutrition__calories"
             ),
-            min_calorie_product_id=product_with_specific_nutrition_subquery(
+            min_calorie_product_slug=product_with_specific_nutrition_subquery(
                 "product__nutrition__calories"
             ),
-            max_protein_product_id=product_with_specific_nutrition_subquery(
+            max_protein_product_slug=product_with_specific_nutrition_subquery(
                 "-product__nutrition__protein"
             ),
-            min_protein_product_id=product_with_specific_nutrition_subquery(
+            min_protein_product_slug=product_with_specific_nutrition_subquery(
                 "product__nutrition__protein"
             ),
-            max_fat_product_id=product_with_specific_nutrition_subquery(
+            max_fat_product_slug=product_with_specific_nutrition_subquery(
                 "-product__nutrition__fat"
             ),
-            min_fat_product_id=product_with_specific_nutrition_subquery(
+            min_fat_product_slug=product_with_specific_nutrition_subquery(
                 "product__nutrition__fat"
             ),
-            max_carbs_product_id=product_with_specific_nutrition_subquery(
+            max_carbs_product_slug=product_with_specific_nutrition_subquery(
                 "-product__nutrition__carbs"
             ),
-            min_carbs_product_id=product_with_specific_nutrition_subquery(
+            min_carbs_product_slug=product_with_specific_nutrition_subquery(
                 "product__nutrition__carbs"
             ),
         )

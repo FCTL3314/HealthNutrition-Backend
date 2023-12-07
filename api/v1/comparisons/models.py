@@ -1,6 +1,6 @@
 from django.db import models
-from django.utils.text import slugify
 
+from api.utils.text import slugify_unique
 from api.v1.comparisons.managers import ComparisonManager, ComparisonGroupManager
 
 
@@ -29,7 +29,7 @@ class ComparisonGroup(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify_unique(self.name, ComparisonGroup)
         return super().save(*args, **kwargs)
 
 
