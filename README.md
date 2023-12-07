@@ -54,26 +54,45 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Product categories
 
-![firefox_JWbM1HN5xz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/68e1b64e-5661-4db0-abb6-ec3fe24d37b0)
-![firefox_4F10GQVCyO](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/bcb573d5-348c-48b2-b624-dc80ead722e8)
-![firefox_3mMFuAopuz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/afc7a7bc-5508-45dd-95bd-5db4efb7da8b)
+![firefox_89ntFwe2qN](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024)
+![firefox_4sltM6iRvZ](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/62c3826e-e53d-4066-a305-474149bf81af)
+![firefox_Ui60DrToDM](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/b5d102b1-fc6c-4d5d-86fe-831947e25e58)
 
 ### Products
 
-![firefox_B7uNa9vFMV](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/3a5f76a1-3441-445c-8b33-78eed2ea7733)
+![firefox_5LqGCmMgpA](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/4e5531ef-c7e6-4f05-b06b-da02661c1379)
+![firefox_UOP9nrGu5s](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/937136b1-1537-434b-ac84-8a705816c750)
+
+### Save product modal
+
+![firefox_69VGlA02Db](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/55ba0d9e-c62d-4b1b-b10d-49c02004f678)
 
 ### Product detail
 
-![firefox_POkjZJpu1b](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9b7af03e-875a-41e7-9ce7-f81c000f9dc3)
+![firefox_EuQFeLE3Tz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/07fe7e82-7b29-4277-bf86-5a017f85f8b8)
+
+### Comparison groups
+
+![firefox_TzlDDf9Q1R](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/67d52cbd-1266-4779-943b-4adcc029b3a5)
+
+### Compared products
+
+![firefox_OZk2yk3Pz0](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/cb4fd4e8-3e16-4cfe-91ee-6a1ce51d551c)
+![firefox_1OJModVCH4](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e7d18175-5a8d-41d4-af8d-c57982ab4482)
 
 ### Profile
 
-![firefox_HWOgotnpVP](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a444a1ef-0eae-4926-823a-6d6d148b868d)
-
+![firefox_sapn5yfi3E](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a85d43e6-29e0-4523-81d3-d591704f7fbc)
+![firefox_zaaLzBXq5O](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/d9a72a6f-ae5b-486f-a701-8403c8f7dba5)
 
 ### Settings
 
-![firefox_pQOdHvUkf6](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/cdcf18b1-af67-4fdf-9558-0d68d4bb97ab)
+![firefox_TwCMDgqiKa](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/0cb08f01-3266-4942-938b-cf75354d1049)
+
+### Authorization
+
+![firefox_XHWRWg7xE2](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/6457e274-f0da-4366-a9db-54c7a8bc0335)
+![firefox_7hsuTyXEhp](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e538d3aa-5f9b-4aae-99e0-87091377417f)
 
 </details>
 
