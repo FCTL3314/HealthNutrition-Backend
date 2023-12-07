@@ -54,7 +54,7 @@ class ComparisonGroupViewSet(
         if serializer.validated_data.get("with_products_count") is True:
             queryset = queryset.with_products_count()
         if self.action == "retrieve":
-            queryset = queryset.with_nutrition_details()
+            queryset = queryset.with_nutrition_averages_details()
 
         return (
             queryset.with_unique_categories_count()

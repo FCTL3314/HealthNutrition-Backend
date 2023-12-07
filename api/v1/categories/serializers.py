@@ -18,19 +18,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class DetailedCategorySerializer(CategorySerializer):
-    calories_max = serializers.IntegerField(
-        source="product__nutrition__calories__max", read_only=True
-    )
-    protein_max = serializers.FloatField(
-        source="product__nutrition__protein__max", read_only=True
-    )
-    fat_max = serializers.FloatField(
-        source="product__nutrition__fat__max", read_only=True
-    )
-    carbs_max = serializers.FloatField(
-        source="product__nutrition__carbs__max", read_only=True
-    )
-
     calories_avg = serializers.IntegerField(
         source="product__nutrition__calories__avg", read_only=True
     )
@@ -44,31 +31,10 @@ class DetailedCategorySerializer(CategorySerializer):
         source="product__nutrition__carbs__avg", read_only=True
     )
 
-    calories_min = serializers.IntegerField(
-        source="product__nutrition__calories__min", read_only=True
-    )
-    protein_min = serializers.FloatField(
-        source="product__nutrition__protein__min", read_only=True
-    )
-    fat_min = serializers.FloatField(
-        source="product__nutrition__fat__min", read_only=True
-    )
-    carbs_min = serializers.FloatField(
-        source="product__nutrition__carbs__min", read_only=True
-    )
-
     class Meta(CategorySerializer.Meta):
         fields = CategorySerializer.Meta.fields + (
-            "calories_max",
-            "protein_max",
-            "fat_max",
-            "carbs_max",
             "calories_avg",
             "protein_avg",
             "fat_avg",
             "carbs_avg",
-            "calories_min",
-            "protein_min",
-            "fat_min",
-            "carbs_min",
         )

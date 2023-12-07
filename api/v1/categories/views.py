@@ -17,7 +17,9 @@ from api.v1.categories.services import (
 
 
 class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.with_nutrition_details().order_by(*CATEGORIES_ORDERING)
+    queryset = Category.objects.with_nutrition_averages_details().order_by(
+        *CATEGORIES_ORDERING
+    )
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name", "description")
     permission_classes = (IsAdminOrReadOnly,)
