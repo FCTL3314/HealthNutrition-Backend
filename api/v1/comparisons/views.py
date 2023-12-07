@@ -24,10 +24,10 @@ from api.v1.comparisons.services import ComparisonCreateService, ComparisonDelet
 from api.v1.products.constants import PRODUCTS_ORDERING
 from api.v1.products.models import Product
 from api.v1.products.paginators import (
-    ProductPageNumberPagination,
+    ProductPageLimitOffsetPagination,
 )
 from api.v1.products.serializers import (
-    ProductSerializer,
+    DetailProductSerializer,
 )
 
 
@@ -82,15 +82,15 @@ class ComparisonCreateView(CreateAPIView):
 
 
 class ComparisonListView(ListAPIView):
-    serializer_class = ProductSerializer
+    serializer_class = DetailProductSerializer
     permission_classes = (IsAuthenticated,)
-    pagination_class = ProductPageNumberPagination
+    pagination_class = ProductPageLimitOffsetPagination
 
     def get_queryset(self) -> QuerySet[Product]:
         queryset = Comparison.objects.products(
             self.request.query_params["comparison_group_id"]
         )
-        return queryset.order_by(*PRODUCTS_ORDERING)
+        return queryset.with_healthfulness().order_by(*PRODUCTS_ORDERING)
 
     @override_settings(CACHEOPS_ENABLED=False)
     def list(self, request: Request, *args, **kwargs) -> Response:

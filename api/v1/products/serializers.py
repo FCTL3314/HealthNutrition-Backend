@@ -45,7 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
 
-class ProductWithHealthfulnessSerializer(ProductSerializer):
+class DetailProductSerializer(ProductSerializer):
     healthfulness = serializers.IntegerField(read_only=True)
 
     class Meta(ProductSerializer.Meta):

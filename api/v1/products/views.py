@@ -15,7 +15,7 @@ from api.v1.products.paginators import (
     ProductPageNumberPagination,
 )
 from api.v1.products.serializers import (
-    ProductWithHealthfulnessSerializer,
+    DetailProductSerializer,
 )
 from api.v1.products.services import (
     ProductViewsIncreaseService,
@@ -35,7 +35,7 @@ class ProductViewSet(ModelViewSet):
     )
     search_fields = ("name", "short_description")
     permission_classes = (IsAdminOrReadOnly,)
-    serializer_class = ProductWithHealthfulnessSerializer
+    serializer_class = DetailProductSerializer
     pagination_class = ProductPageNumberPagination
     lookup_field = "slug"
 
