@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 from djoser.views import UserViewSet as DjoserUserViewSet
@@ -21,6 +23,7 @@ from api.v1.users.serializers import (
     EmailVerificationSerializer,
     UserChangeEmailSerializer,
     UserVerificationSerializer,
+    UIDAndTokenSerializer,
 )
 from api.v1.users.services.infrastructure.user_change_email import (
     UserChangeEmailService,
@@ -93,3 +96,12 @@ class UserEmailVerifierView(APIView):
             request.user,
             request.data,
         ).execute()
+
+
+class CheckUIDAndToken(APIView):
+    @staticmethod
+    def post(request: Request) -> Response:
+        serializer = UIDAndTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(status=HTTPStatus.NO_CONTENT)
+        return Response(status=HTTPStatus.NOT_FOUND, data=serializer.errors)
