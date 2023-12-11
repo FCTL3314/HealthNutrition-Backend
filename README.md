@@ -54,18 +54,15 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Product categories
 
-![firefox_89ntFwe2qN](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024)
-![firefox_4sltM6iRvZ](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/62c3826e-e53d-4066-a305-474149bf81af)
-![firefox_Ui60DrToDM](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/b5d102b1-fc6c-4d5d-86fe-831947e25e58)
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/62c3826e-e53d-4066-a305-474149bf81af" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/b5d102b1-fc6c-4d5d-86fe-831947e25e58" style="width: 49%;"/>
 
 ### Products
 
-![firefox_5LqGCmMgpA](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/4e5531ef-c7e6-4f05-b06b-da02661c1379)
-![firefox_UOP9nrGu5s](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/937136b1-1537-434b-ac84-8a705816c750)
-
-### Save product modal
-
-![firefox_JuR1UvphbT](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9d5c5bbc-449b-4fee-ac40-a9cb0d326b7c)
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/4e5531ef-c7e6-4f05-b06b-da02661c1379" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/937136b1-1537-434b-ac84-8a705816c750" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9d5c5bbc-449b-4fee-ac40-a9cb0d326b7c" style="width: 49%;"/>
 
 ### Product detail
 
@@ -77,13 +74,13 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Compared products
 
-![firefox_x4N1byfqUV](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/02175a3a-6dfe-4691-87be-f79d5d70e656)
-![firefox_yQyTkIUw4c](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/66e0b741-c51e-426c-92c0-95658df62db4)
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/02175a3a-6dfe-4691-87be-f79d5d70e656" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/66e0b741-c51e-426c-92c0-95658df62db4" style="width: 49%;"/>
 
 ### Profile
 
-![firefox_sapn5yfi3E](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a85d43e6-29e0-4523-81d3-d591704f7fbc)
-![firefox_zaaLzBXq5O](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/d9a72a6f-ae5b-486f-a701-8403c8f7dba5)
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a85d43e6-29e0-4523-81d3-d591704f7fbc" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/d9a72a6f-ae5b-486f-a701-8403c8f7dba5" style="width: 49%;"/>
 
 ### Settings
 
@@ -91,8 +88,8 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Authorization
 
-![firefox_XHWRWg7xE2](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/6457e274-f0da-4366-a9db-54c7a8bc0335)
-![firefox_7hsuTyXEhp](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e538d3aa-5f9b-4aae-99e0-87091377417f)
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/6457e274-f0da-4366-a9db-54c7a8bc0335" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e538d3aa-5f9b-4aae-99e0-87091377417f" style="width: 49%;"/>
 
 ### Responsive design
 
