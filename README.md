@@ -65,7 +65,7 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Save product modal
 
-![firefox_69VGlA02Db](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/55ba0d9e-c62d-4b1b-b10d-49c02004f678)
+![firefox_JuR1UvphbT](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9d5c5bbc-449b-4fee-ac40-a9cb0d326b7c)
 
 ### Product detail
 
@@ -77,8 +77,8 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 ### Compared products
 
-![firefox_OZk2yk3Pz0](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/cb4fd4e8-3e16-4cfe-91ee-6a1ce51d551c)
-![firefox_1OJModVCH4](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e7d18175-5a8d-41d4-af8d-c57982ab4482)
+![firefox_x4N1byfqUV](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/02175a3a-6dfe-4691-87be-f79d5d70e656)
+![firefox_yQyTkIUw4c](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/66e0b741-c51e-426c-92c0-95658df62db4)
 
 ### Profile
 
