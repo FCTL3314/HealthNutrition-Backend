@@ -94,6 +94,13 @@ This API empowers developers to integrate **nutritional comparison functionality
 ![firefox_XHWRWg7xE2](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/6457e274-f0da-4366-a9db-54c7a8bc0335)
 ![firefox_7hsuTyXEhp](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/e538d3aa-5f9b-4aae-99e0-87091377417f)
 
+### Responsive design
+
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/d6ee66d9-806a-48d4-8bcb-1cce21bfd4a6" style="width: 40%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/3d267f75-4404-4c50-9fac-613d965df3e8" style="width: 40%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/be072afe-1439-46fa-8780-8156ff97979f" style="width: 40%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/ea60c507-0d12-487d-a5c2-3d18abd4c9ca" style="width: 40%;"/>
+
 </details>
 
 <details><summary><h1>🔥 Features</h1></summary>
