@@ -10,7 +10,7 @@
   [![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
   [![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
-  <img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 80%;"/>
+  <img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/02175a3a-6dfe-4691-87be-f79d5d70e656" style="width: 80%;"/>
 </div>
 
 # 📖 Table of contents
