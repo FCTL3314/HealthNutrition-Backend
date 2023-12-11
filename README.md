@@ -1,11 +1,19 @@
-# 📖 Table of contents
+<div align="center">
+  <img width="148" height="148" src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/8025cf3d-612d-4a30-bd69-e8bfcc5d5b2b"/>
+  <h1>Health Nutrition</h1>
+  <p>Django / DRF based app for comparing the nutritional value of products.</p>
+  
+  [![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
+  [![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
+  [![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
+  [![Poetry](https://img.shields.io/badge/Poetry-1.5.1-0992E1?style=flat-square)](https://python-poetry.org/)
+  [![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
+  [![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
-[![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
-[![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
-[![Poetry](https://img.shields.io/badge/Poetry-1.5.1-0992E1?style=flat-square)](https://python-poetry.org/)
-[![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
-[![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
+  <img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 80%;"/>
+</div>
+
+# 📖 Table of contents
 
 <ul>
   <li>
