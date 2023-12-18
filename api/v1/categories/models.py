@@ -1,3 +1,4 @@
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -17,17 +18,7 @@ class Category(ViewsModelMixin, models.Model):
 
     class Meta:
         verbose_name_plural = "categories"
-        indexes = (
-            models.Index(
-                fields=("name", "description"),
-            ),
-            models.Index(
-                fields=("name",),
-            ),
-            models.Index(
-                fields=("description",),
-            ),
-        )
+        indexes = (GinIndex(fields=("name", "description")),)
 
     def __str__(self):
         return self.name

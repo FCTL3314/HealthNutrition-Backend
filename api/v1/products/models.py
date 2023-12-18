@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -29,17 +30,7 @@ class Product(ViewsModelMixin, models.Model):
     objects = ProductManager()
 
     class Meta:
-        indexes = (
-            models.Index(
-                fields=("name", "short_description"),
-            ),
-            models.Index(
-                fields=("name",),
-            ),
-            models.Index(
-                fields=("short_description",),
-            ),
-        )
+        indexes = (GinIndex(fields=("name", "short_description")),)
 
     def __str__(self):
         return self.name
