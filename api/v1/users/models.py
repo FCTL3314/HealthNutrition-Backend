@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
@@ -26,6 +27,12 @@ class User(AbstractUser):
     comments = GenericRelation("comments.Comment")
     is_verified = models.BooleanField(default=False)
     slug = models.SlugField(unique=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._meta.get_field(self.USERNAME_FIELD).validators = (
+            ASCIIUsernameValidator(),
+        )
 
     def __str__(self):
         return self.username

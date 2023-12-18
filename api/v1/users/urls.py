@@ -7,7 +7,6 @@ from api.v1.users.views import (
     UserEmailVerifierView,
     UserSendEmailVerificationView,
     UserViewSet,
-    CheckUIDAndToken,
 )
 
 app_name = "users"
@@ -27,6 +26,5 @@ verification_paths = [
 urlpatterns = [
     path("verification/", include(verification_paths)),
     path("change-email/", UserChangeEmailView.as_view(), name="change-email"),
-    path("uid-token-check/", CheckUIDAndToken.as_view(), name="uid-token-check"),
     path("", include(djoser_paths)),
 ]

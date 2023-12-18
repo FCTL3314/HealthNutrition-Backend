@@ -61,6 +61,7 @@ class TestProductViewSet:
             "short_description": faker.text(
                 Product._meta.get_field("short_description").max_length,
             ),
+            "description": faker.text(),
             "nutrition_id": nutrition.id,
             "category_id": category.id,
         }

@@ -10,6 +10,7 @@ urlpatterns = [
     path("products/", include("api.v1.products.urls", namespace="products")),
     path("comparisons/", include("api.v1.comparisons.urls", namespace="comparisons")),
     path("users/", include("api.v1.users.urls", namespace="users")),
+    path("auth/", include("api.v1.auth.urls", namespace="auth")),
     path("comments/", include("api.v1.comments.urls", namespace="comments")),
     path("token/", TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),

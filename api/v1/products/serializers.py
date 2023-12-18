@@ -27,6 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "id",
             "image",
             "name",
+            "description",
             "short_description",
             "nutrition",
             "nutrition_id",
