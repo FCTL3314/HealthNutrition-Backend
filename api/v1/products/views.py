@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
 
 from api.common.permissions import IsAdminOrReadOnly
+from api.filters import TrigramSimilaritySearchFilter
 from api.responses import APIResponse
 from api.utils.network import get_client_address
 from api.v1.products.constants import PRODUCTS_ORDERING
@@ -31,7 +31,7 @@ class ProductViewSet(ModelViewSet):
     filterset_class = ProductFilter
     filter_backends = (
         DjangoFilterBackend,
-        filters.SearchFilter,
+        TrigramSimilaritySearchFilter,
     )
     search_fields = ("name", "short_description")
     permission_classes = (IsAdminOrReadOnly,)
