@@ -20,13 +20,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 CORS_ALLOW_CREDENTIALS = True
 
-# Frontend
-
-FRONTEND_URL = env.str("FRONTEND_URL", default="http://localhost:5173")
-FRONTEND_PASSWORD_RESET_CONFIRM_URL = env.str(
-    "FRONTEND_PASSWORD_RESET_URL", default="password-reset/confirm/{uid}/{token}/"
-)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,9 +39,11 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "silk",
     "mptt",
+    "django_summernote",
     "api",
     "api.v1",
     "api.v1.users",
+    "api.v1.auth",
     "api.v1.categories",
     "api.v1.nutrition",
     "api.v1.products",
@@ -105,6 +100,8 @@ RABBITMQ_AMQP_URI = f"amqp{BASE_RABBITMQ_URI}"
 RABBITMQ_RPC_URI = f"rpc{BASE_RABBITMQ_URI}"
 
 # Cache
+
+CACHEOPS_ENABLED = env.bool("IS_CACHE_ENABLED", True)
 
 CACHEOPS_REDIS = {
     "host": REDIS_HOST,
@@ -170,6 +167,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Frontend
+
+FRONTEND_URL = env.str("FRONTEND_URL", default="http://localhost:5173")
+FRONTEND_PASSWORD_RESET_CONFIRM_URL = env.str(
+    "FRONTEND_PASSWORD_RESET_URL",
+    default="users/auth/password-reset/confirm/{uid}/{token}/",
+)
 
 # Users
 
