@@ -113,8 +113,10 @@ This API empowers developers to integrate **nutritional comparison functionality
 * **RESTful API**
 * **Domain Driven Design**
 * **CI/CD**
+* **Comments reply / Tree structure (Django MPTT)**
+* **Custom objects ordering**
 * **Celery / Postponed Tasks**
-* **Email sending**
+* **Email Verification**
 * **JWT Authentication / Authorization**
 * **Code Documentation**
 * **Tests (PyTest)**
