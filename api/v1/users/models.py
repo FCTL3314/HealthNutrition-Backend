@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.contrib.contenttypes.fields import GenericRelation
@@ -9,8 +7,11 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 
 from api.utils.codes import generate_digits_code
-from api.v1.users.constants import EV_CODE_LENGTH, EV_EXPIRATION_TIMEDELTA
+from api.v1.users.constants import EV_CODE_LENGTH
 from api.v1.users.managers import EmailVerificationManager
+from api.v1.users.services.infrastructure.get_email_verification_expiration import (
+    get_email_verification_expiration,
+)
 
 USER_SLUG_RELATED_FIELD = "username"
 
@@ -60,10 +61,6 @@ class User(AbstractUser):
 
     def get_absolute_url(self) -> str:
         return reverse("api:v1:users:users-detail", args=(self.slug,))
-
-
-def get_email_verification_expiration() -> datetime:
-    return now() + EV_EXPIRATION_TIMEDELTA
 
 
 class EmailVerification(models.Model):
