@@ -107,7 +107,7 @@ class EVSenderService(IService):
         return APIResponse(
             detail=EVSendErrors.SENDING_LIMIT_REACHED.message,
             code=EVSendErrors.SENDING_LIMIT_REACHED.code,
-            messages=(f"Retry after {ev_next_sending_datetime}",),
+            messages={"retry_after": ev_next_sending_datetime},
             status=status.HTTP_429_TOO_MANY_REQUESTS,
         )
 

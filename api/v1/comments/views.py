@@ -1,3 +1,4 @@
+from cacheops import invalidate_obj
 from django.db.models import QuerySet
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -47,6 +48,8 @@ class CommentViewSet(
 
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
+        if parent := serializer.instance.parent:
+            invalidate_obj(parent)
 
     def perform_update(self, serializer: Serializer) -> None:
         serializer.save(is_edited=True)
