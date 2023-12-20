@@ -1,11 +1,11 @@
 from django.db import models
 
-from api.utils.text import slugify_unique
+from api.common.models.mixins import AutoSlugModelMixin
 from api.v1.comparisons.managers import ComparisonManager, ComparisonGroupManager
 from api.v1.comparisons.services.models import calculate_new_comparison_group_position
 
 
-class ComparisonGroup(models.Model):
+class ComparisonGroup(AutoSlugModelMixin, models.Model):
     """
     Unites compared products into a specific
     comparison group.
@@ -14,10 +14,11 @@ class ComparisonGroup(models.Model):
     name = models.CharField(max_length=32)
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(unique=True)
     position = models.IntegerField(null=True)
 
     objects = ComparisonGroupManager()
+
+    SLUG_RELATED_FIELD = "name"
 
     class Meta:
         indexes = (
@@ -33,8 +34,6 @@ class ComparisonGroup(models.Model):
         return f"Name: {self.name} | Author: {self.author.username}"
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify_unique(self.name, ComparisonGroup)
         if self.position is None:
             self.position = calculate_new_comparison_group_position(self.author)
         return super().save(*args, **kwargs)

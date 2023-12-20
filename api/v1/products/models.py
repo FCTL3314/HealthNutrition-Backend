@@ -2,13 +2,12 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
 
-from api.common.models.mixins import ViewsModelMixin
+from api.common.models.mixins import ViewsModelMixin, AutoSlugModelMixin
 from api.v1.products.managers import ProductManager
 
 
-class Product(ViewsModelMixin, models.Model):
+class Product(AutoSlugModelMixin, ViewsModelMixin, models.Model):
     image = models.ImageField(upload_to="products")
     name = models.CharField(max_length=128, unique=True)
     description = models.TextField()
@@ -23,22 +22,18 @@ class Product(ViewsModelMixin, models.Model):
     )
     comments = GenericRelation("comments.Comment")
     views = models.PositiveIntegerField(default=0)
-    slug = models.SlugField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = ProductManager()
+
+    SLUG_RELATED_FIELD = "name"
 
     class Meta:
         indexes = (GinIndex(fields=("name", "short_description")),)
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
         return reverse("api:v1:products:products-detail", args=(self.slug,))

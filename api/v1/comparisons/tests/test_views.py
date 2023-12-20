@@ -19,6 +19,9 @@ def _is_comparison_exists(comparison_group: ComparisonGroup, product: Product) -
     ).exists()
 
 
+# TODO: Comparison group tests
+
+
 @pytest.mark.django_db
 def test_compared_products_list_view(
     client,

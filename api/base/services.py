@@ -1,11 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Protocol
 
 from cacheops import CacheMiss, cache
 from django.db.models import Model
-from rest_framework.serializers import Serializer
 
-from api.utils.errors import ATTRIBUTE_MUST_BE_OVERRIDDEN
+from api.utils.errors import (
+    ATTRIBUTE_MUST_BE_OVERRIDDEN,
+    ATTRIBUTE_OR_METHOD_MUST_BE_OVERRIDDEN,
+)
 
 
 class IService(Protocol):
@@ -32,16 +34,6 @@ class IService(Protocol):
     """
 
     def execute(self):
-        ...
-
-
-class IRetrieveService(ABC):
-    def __init__(self, instance: Model, serializer: type[Serializer]):
-        self._instance = instance
-        self._serializer = serializer
-
-    @abstractmethod
-    def retrieve(self, *args, **kwargs):
         ...
 
 
@@ -104,7 +96,7 @@ class BaseViewsIncreaseService(AbstractConditionalIncreaseService):
 
     field = "views"
     view_cache_time: int | None = None
-    cache_key: str | None = None
+    view_cache_key: str | None = None
 
     def __init__(
         self,
@@ -112,24 +104,26 @@ class BaseViewsIncreaseService(AbstractConditionalIncreaseService):
         user_ip_address: str,
         increase_by: int = 1,
     ):
+        super().__init__(instance, increase_by)
         assert self.view_cache_time is not None, ATTRIBUTE_MUST_BE_OVERRIDDEN.format(
             attribute_name="view_cache_time", class_name=self.__class__.__name__
         )
-        super().__init__(instance, increase_by)
         self._user_ip_address = user_ip_address
-        self._key = self.get_cache_key()
+        self._key = self.get_view_cache_key()
 
-    def get_cache_key(self) -> str:
+    def get_view_cache_key(self) -> str:
         """
         Returns the cache used to store the user's
         unique view.
         """
-        assert self.cache_key is not None, (
-            f"'{self.__class__.__name__}' should either "
-            "override a `cache_key` attribute, or override "
-            "the `get_cache_key()` method."
+        assert (
+            self.view_cache_key is not None
+        ), ATTRIBUTE_OR_METHOD_MUST_BE_OVERRIDDEN.format(
+            class_name=self.__class__.__name__,
+            attribute_name="view_cache_key",
+            method_name=self.get_view_cache_key.__name__,
         )
-        return self.cache_key
+        return self.view_cache_key
 
     def _should_be_increased(self) -> bool:
         """
