@@ -3,13 +3,15 @@ from django.core.mail import send_mail as django_send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from api.common.constants import PROJECT_NAME
+
 
 def convert_mail_subject(subject: str) -> str:
     """
     Adds the title of the project to the end of the
     message title.
     """
-    return f"{subject} | Store Tracker"
+    return f"{subject} | {PROJECT_NAME}"
 
 
 def send_mail(

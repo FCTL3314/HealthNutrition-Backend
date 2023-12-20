@@ -1,6 +1,12 @@
+"""
+Module for overriding, customizing the Djoser library
+"""
+
 import copy
 
 from djoser.conf import default_settings, LazySettings, Settings
+
+_all__ = ("extended_settings",)
 
 extended_default_settings = copy.copy(default_settings)
 extended_default_settings["PERMISSIONS"].update(

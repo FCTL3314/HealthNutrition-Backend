@@ -1,5 +1,6 @@
 from djoser.email import PasswordResetEmail as DjoserPasswordResetEmail
 
+from api.common.constants import PROJECT_NAME
 from api.common.tasks import send_html_mail
 
 
@@ -14,5 +15,6 @@ class PasswordResetEmail(DjoserPasswordResetEmail):
             context={
                 "username": user.username,
                 "url": context["url"],
+                "project_name": PROJECT_NAME,
             },
         )

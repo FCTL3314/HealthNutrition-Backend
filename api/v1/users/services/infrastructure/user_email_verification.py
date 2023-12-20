@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.serializers import Serializer
 
 from api.base.services import IService
+from api.common.constants import PROJECT_NAME
 from api.common.tasks import send_html_mail
 from api.responses import APIResponse
 from api.utils.errors import Error
@@ -88,6 +89,7 @@ class EVSenderService(IService):
             context={
                 "username": email_verification.user.username,
                 "verification_code": email_verification.code,
+                "project_name": PROJECT_NAME,
             },
         )
         return email_verification
