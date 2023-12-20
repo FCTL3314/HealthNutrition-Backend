@@ -1,4 +1,3 @@
-from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import (
@@ -8,8 +7,15 @@ from django.db.models import (
     Max,
     Avg,
     Subquery,
+    When,
+    Value,
+    Case,
+    IntegerField,
 )
 
+from api.v1.comparisons.services.models import (
+    get_comparison_model,
+)
 from api.v1.products.models import Product
 
 User = get_user_model()
@@ -22,15 +28,17 @@ class ComparisonGroupQuerySet(models.QuerySet):
     def newest_first_order(self):
         return self.order_by("-created_at")
 
+    def position_order(self):
+        return self.order_by("position")
+
     def with_is_contains_selected_product(self, selected_product_id: int):
-        comparison_model = apps.get_model(
-            app_label="comparisons", model_name="Comparison"
-        )
         return self.annotate(
             is_contains_selected_product=Exists(
-                comparison_model.objects.filter(  # noqa
+                get_comparison_model()  # noqa
+                .objects.filter(
                     comparison_group=OuterRef("pk"), product=selected_product_id
-                ).values("comparison_group")
+                )
+                .values("comparison_group")
             )
         )
 
@@ -48,13 +56,10 @@ class ComparisonGroupQuerySet(models.QuerySet):
         )
 
     def with_standout_products(self):
-        comparison_model = apps.get_model(
-            app_label="comparisons", model_name="Comparison"
-        )
-
         def product_with_specific_nutrition_subquery(order_by: str) -> Subquery:
             return Subquery(
-                comparison_model.objects.filter(comparison_group=OuterRef("pk"))  # noqa
+                get_comparison_model()  # noqa
+                .objects.filter(comparison_group=OuterRef("pk"))
                 .order_by(order_by)
                 .values_list("product__slug", flat=True)[:1]
             )
@@ -96,7 +101,22 @@ class ComparisonGroupQuerySet(models.QuerySet):
 
 
 class ComparisonGroupManager(models.Manager.from_queryset(ComparisonGroupQuerySet)):
-    ...
+    def update_position_order(self, ordered_ids: list[int]) -> None:
+        comparison_groups = self.filter(id__in=ordered_ids)  # noqa
+
+        if len(comparison_groups) != len(ordered_ids):
+            raise ValueError("One or more provided ids do not exist in the database.")
+
+        when_statements = [
+            When(id=group_id, then=Value(new_position))
+            for new_position, group_id in enumerate(ordered_ids)
+        ]
+        case_expression = Case(
+            *when_statements,
+            output_field=IntegerField(),
+        )
+
+        comparison_groups.update(position=case_expression)
 
 
 class ComparisonQuerySet(models.QuerySet):

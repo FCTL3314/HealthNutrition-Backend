@@ -2,6 +2,7 @@ from django.db import models
 
 from api.utils.text import slugify_unique
 from api.v1.comparisons.managers import ComparisonManager, ComparisonGroupManager
+from api.v1.comparisons.services.models import calculate_new_comparison_group_position
 
 
 class ComparisonGroup(models.Model):
@@ -14,11 +15,15 @@ class ComparisonGroup(models.Model):
     author = models.ForeignKey(to="users.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
+    position = models.IntegerField(null=True)
 
     objects = ComparisonGroupManager()
 
     class Meta:
         indexes = (
+            models.Index(
+                fields=("position",),
+            ),
             models.Index(
                 fields=("created_at",),
             ),
@@ -30,6 +35,8 @@ class ComparisonGroup(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify_unique(self.name, ComparisonGroup)
+        if self.position is None:
+            self.position = calculate_new_comparison_group_position(self.author)
         return super().save(*args, **kwargs)
 
 

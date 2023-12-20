@@ -25,6 +25,7 @@ class ComparisonGroupSerializer(serializers.ModelSerializer):
             "author_id",
             "created_at",
             "slug",
+            "position",
         )
         read_only_fields = ("slug",)
 
@@ -75,6 +76,10 @@ class DetailedComparisonGroupSerializer(ComparisonGroupSerializer):
             "is_contains_selected_product",
             "products_count",
         )
+
+
+class ComparisonGroupOrderSerializer(serializers.Serializer):
+    ordered_ids = serializers.ListField(child=serializers.IntegerField())
 
 
 class ComparisonReadSerializer(serializers.ModelSerializer):

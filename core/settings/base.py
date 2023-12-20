@@ -207,9 +207,9 @@ REST_FRAMEWORK = {
 # Spectacular API documentation
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Store Tracker API",
+    "TITLE": "Health Nutrition API",
     "DESCRIPTION": (
-        "Django / DRF based app for comparing prices between " "different stores."
+        "Django / DRF based app for comparing the nutritional value of products."
     ),
     "CONTACT": {
         "email": "solovev.nikita.05@gmail.com",

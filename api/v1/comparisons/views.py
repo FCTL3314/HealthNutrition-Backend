@@ -1,10 +1,17 @@
+from http import HTTPStatus
+
 from django.db.models import QuerySet
 from django.test import override_settings
 from requests import Request
 from rest_framework import mixins
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from api.responses import APIResponse
@@ -19,8 +26,12 @@ from api.v1.comparisons.serializers import (
     ComparisonReadSerializer,
     ComparisonGroupReadSerializer,
     DetailedComparisonGroupSerializer,
+    ComparisonGroupOrderSerializer,
 )
-from api.v1.comparisons.services import ComparisonCreateService, ComparisonDeleteService
+from api.v1.comparisons.services.views import (
+    ComparisonCreateService,
+    ComparisonDeleteService,
+)
 from api.v1.products.constants import PRODUCTS_ORDERING
 from api.v1.products.models import Product
 from api.v1.products.paginators import (
@@ -59,12 +70,31 @@ class ComparisonGroupViewSet(
         return (
             queryset.with_unique_categories_count()
             .with_last_added_product_datetime()
-            .newest_first_order()
             .with_standout_products()
+            .position_order()
         )
 
     def perform_create(self, serializer) -> None:
         serializer.save(author=self.request.user)
+
+
+class ComparisonGroupsChangeOrderView(APIView):
+    serializer_class = ComparisonGroupOrderSerializer
+
+    def patch(self, request: Request, *args, **kwargs) -> Response:
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            ComparisonGroup.objects.update_position_order(
+                serializer.validated_data["ordered_ids"]
+            )
+            return APIResponse(status=HTTPStatus.NO_CONTENT)
+        except ValueError:
+            return APIResponse(
+                detail="One or more provided ids do not exist in the database.",
+                code="ID_DOES_NOT_EXIST",
+                status=HTTPStatus.BAD_REQUEST,
+            )
 
 
 class ComparisonCreateView(CreateAPIView):
