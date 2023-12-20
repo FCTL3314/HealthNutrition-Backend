@@ -17,14 +17,9 @@ def generate_test_image() -> SimpleUploadedFile:
     )
 
 
-def get_access_token(user: User) -> AccessToken:
-    """Return an access token for provided user."""
-    return AccessToken.for_user(user)
-
-
 def get_auth_header(user: User) -> dict[str, str]:
     """Returns an authorization header based on received token."""
-    token = get_access_token(user)
+    token = AccessToken.for_user(user)
     return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
 

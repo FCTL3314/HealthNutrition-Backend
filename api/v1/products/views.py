@@ -5,7 +5,7 @@ from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
 
 from api.common.permissions import IsAdminOrReadOnly
-from api.filters import TrigramSimilaritySearchFilter
+from api.common.filters import TrigramSimilaritySearchFilter
 from api.responses import APIResponse
 from api.utils.network import get_client_address
 from api.v1.products.constants import PRODUCTS_ORDERING
