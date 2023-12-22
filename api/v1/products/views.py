@@ -21,7 +21,7 @@ from api.v1.products.serializers import (
     DetailedProductSerializer,
     ProductReadSerializer,
 )
-from api.v1.products.services import (
+from api.v1.products.services.infrastructure.views_increase import (
     ProductViewsIncreaseService,
 )
 

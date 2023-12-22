@@ -9,7 +9,7 @@ class NutritionSerializer(serializers.ModelSerializer):
         fields = ("id", "calories", "protein", "fat", "carbs")
 
 
-class CaloriesBurningTime(serializers.Serializer):
+class CaloriesBurningTimeSerializer(serializers.Serializer):
     walking = serializers.CharField(max_length=32)
     running = serializers.CharField(max_length=32)
     cycling = serializers.CharField(max_length=32)

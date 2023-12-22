@@ -53,6 +53,9 @@ class CyclingCalorieBurningCalculator(
 
 
 class CalorieBurningCalculatorForBasicExercisesProto(Protocol):
+    def calculate_all(self, calories: int | float) -> dict[str, str]:
+        ...
+
     def calculate_walking(self, calories: int | float) -> str:
         ...
 
@@ -69,9 +72,10 @@ class CalorieBurningCalculatorForBasicExercises(
     """
     Implementation of a façade pattern for combining
     basic exercises for burning calories: Walking,
-    running, cycling. Implements calculate_walking,
-    calculate_running, calculate_cycling methods that
-    return humanized time value.
+    running, cycling. Implements calculate_all,
+    calculate_walking, calculate_running,
+    calculate_cycling methods that return humanized
+    time value.
     """
 
     def __init__(
@@ -86,6 +90,17 @@ class CalorieBurningCalculatorForBasicExercises(
         self._cycling_calculator = CyclingCalorieBurningCalculator(
             exercise_hours=exercise_hours, body_weight=body_weight
         )
+
+    def calculate_all(self, calories: int | float) -> dict[str, str]:
+        """
+        Returns a dictionary with the burn times of
+        the provided calories for basic exercises.
+        """
+        return {
+            "walking": self.calculate_walking(calories),
+            "running": self.calculate_running(calories),
+            "cycling": self.calculate_cycling(calories),
+        }
 
     def calculate_walking(self, calories: int | float) -> str:
         return self._walking_calculator.calculate_humanized(calories)

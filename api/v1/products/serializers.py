@@ -3,11 +3,13 @@ from rest_framework import serializers
 from api.v1.categories.models import Category
 from api.v1.categories.serializers import CategorySerializer
 from api.v1.nutrition.models import Nutrition
-from api.v1.nutrition.serializers import NutritionSerializer
-from api.v1.nutrition.services.infrastructure.humanized_calorie_burning_calculators import (
-    CalorieBurningCalculatorForBasicExercises,
+from api.v1.nutrition.serializers import (
+    NutritionSerializer,
 )
 from api.v1.products.models import Product
+from api.v1.products.services.infrastructure.calorie_burning_time import (
+    get_calories_burning_time_for_basic_exercises,
+)
 
 
 class ProductReadSerializer(serializers.Serializer):
@@ -69,25 +71,13 @@ class ProductWithCaloriesBurningTimeSerializer(ProductSerializer):
     def get_calories_burning_time(self, instance: Product) -> dict[str, str]:
         calories = instance.nutrition.calories
         body_weight = self.context.get("body_weight")
-        if isinstance(body_weight, str):
-            body_weight = float(body_weight)
-
-        basic_exercises_calories_burning_calculator = (
-            CalorieBurningCalculatorForBasicExercises(
-                exercise_hours=1, body_weight=body_weight
-            )
+        body_weight = (
+            float(body_weight) if isinstance(body_weight, str) else body_weight
         )
-        return {
-            "walking": basic_exercises_calories_burning_calculator.calculate_walking(
-                calories
-            ),
-            "running": basic_exercises_calories_burning_calculator.calculate_running(
-                calories
-            ),
-            "cycling": basic_exercises_calories_burning_calculator.calculate_cycling(
-                calories
-            ),
-        }
+
+        return get_calories_burning_time_for_basic_exercises(
+            calories, body_weight=body_weight
+        )
 
 
 class DetailedProductSerializer(
