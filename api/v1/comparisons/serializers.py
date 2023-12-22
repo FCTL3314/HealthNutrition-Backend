@@ -11,9 +11,9 @@ User = get_user_model()
 
 class ComparisonGroupReadSerializer(serializers.Serializer):
     selected_product = serializers.PrimaryKeyRelatedField(
-        required=False, queryset=Product.objects.all()
+        write_only=True, required=False, queryset=Product.objects.all()
     )
-    with_products_count = serializers.BooleanField()
+    with_products_count = serializers.BooleanField(write_only=True)
 
 
 class ComparisonGroupSerializer(serializers.ModelSerializer):

@@ -38,7 +38,7 @@ from api.v1.products.paginators import (
     ProductPageLimitOffsetPagination,
 )
 from api.v1.products.serializers import (
-    DetailProductSerializer,
+    ProductWithNutritionSerializer,
 )
 
 
@@ -112,7 +112,7 @@ class ComparisonCreateView(CreateAPIView):
 
 
 class ComparisonListView(ListAPIView):
-    serializer_class = DetailProductSerializer
+    serializer_class = ProductWithNutritionSerializer
     permission_classes = (IsAuthenticated,)
     pagination_class = ProductPageLimitOffsetPagination
 

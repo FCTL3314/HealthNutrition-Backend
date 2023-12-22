@@ -1,17 +1,26 @@
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Sum, FloatField
 
-from api.v1.products.constants import NutritionHealthfulnessImportance
+from api.v1.products.constants import NutritionHealthfulnessCoefficient
 
 
 class ProductQuerySet(models.QuerySet):
     def with_healthfulness(self):
         return self.annotate(
             healthfulness=(
-                (F("nutrition__protein") * NutritionHealthfulnessImportance.PROTEIN)
-                + (F("nutrition__fat") * NutritionHealthfulnessImportance.FAT)
-                + F("nutrition__calories")
-                - (F("nutrition__carbs") * NutritionHealthfulnessImportance.CARBS)
+                Sum(
+                    (
+                        F("nutrition__protein")
+                        * NutritionHealthfulnessCoefficient.PROTEIN
+                    )
+                    + (F("nutrition__fat") * NutritionHealthfulnessCoefficient.FAT)
+                    + (
+                        F("nutrition__calories")
+                        * NutritionHealthfulnessCoefficient.CALORIES
+                    )
+                    + (F("nutrition__carbs") * NutritionHealthfulnessCoefficient.CARBS),
+                    output_field=FloatField(),
+                )
             )
         )
 
