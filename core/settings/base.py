@@ -250,3 +250,11 @@ DJOSER = {
     },
     "PASSWORD_RESET_CONFIRM_URL": f"{FRONTEND_URL}/{FRONTEND_PASSWORD_RESET_CONFIRM_URL}",
 }
+
+# Django Summernote
+
+SUMMERNOTE_CONFIG = {
+    "summernote": {
+        "fontSizes": ("20", "24", "32"),
+    },
+}
