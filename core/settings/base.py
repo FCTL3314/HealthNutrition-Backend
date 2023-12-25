@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "api",
     "api.v1",
     "api.v1.users",
+    "api.v1.user_profiles",
     "api.v1.auth",
     "api.v1.categories",
     "api.v1.nutrition",
@@ -251,8 +252,8 @@ DJOSER = {
         "user_list": ("rest_framework.permissions.AllowAny",),
     },
     "SERIALIZERS": {
-        "user": "api.v1.users.serializers.UserSerializer",
-        "current_user": "api.v1.users.serializers.CurrentUserSerializer",
+        "user": "api.v1.users.serializers.UserWithProfileSerializer",
+        "current_user": "api.v1.users.serializers.CurrentUserWithProfileSerializer",
         "user_create": "api.v1.users.serializers.UserCreateSerializer",
     },
     "EMAIL": {

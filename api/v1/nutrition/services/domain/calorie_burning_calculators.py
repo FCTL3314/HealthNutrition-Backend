@@ -1,5 +1,7 @@
 from typing import Protocol
 
+from api.v1.user_profiles.constants import DEFAULT_USER_BODY_WEIGHT_KG
+
 
 class ExerciseCalorieBurningCalculatorProto(Protocol):
     """
@@ -16,7 +18,7 @@ class ExerciseCalorieBurningCalculatorProto(Protocol):
 
 
 class ExerciseCalorieBurningCalculator(ExerciseCalorieBurningCalculatorProto):
-    DEFAULT_PERSON_WEIGHT_KG = 70
+    DEFAULT_BODY_WEIGHT_KG = DEFAULT_USER_BODY_WEIGHT_KG
 
     def __init__(
         self,
@@ -27,7 +29,7 @@ class ExerciseCalorieBurningCalculator(ExerciseCalorieBurningCalculatorProto):
         self._met = metabolic_equivalent
         self._exercise_hours = exercise_hours
         self._body_weight = (
-            self.DEFAULT_PERSON_WEIGHT_KG if body_weight is None else body_weight
+            self.DEFAULT_BODY_WEIGHT_KG if body_weight is None else body_weight
         )
 
     def calculate(self, calories: int | float) -> int | float:

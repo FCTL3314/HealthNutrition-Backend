@@ -8,7 +8,9 @@ from django.utils.timezone import now
 
 from api.common.models.mixins import SlugModelMixin
 from api.utils.codes import generate_digits_code
-from api.v1.users.constants import EV_CODE_LENGTH
+from api.v1.users.constants import (
+    EV_CODE_LENGTH,
+)
 from api.v1.users.managers import EmailVerificationManager
 from api.v1.users.services.infrastructure.get_email_verification_expiration import (
     get_email_verification_expiration,
@@ -18,9 +20,10 @@ USER_SLUG_RELATED_FIELD = "username"
 
 
 class User(SlugModelMixin, AbstractUser):
+    profile = models.OneToOneField(
+        to="user_profiles.UserProfile", related_name="user", on_delete=models.PROTECT
+    )
     email = models.EmailField(unique=True)
-    image = models.ImageField(upload_to="users", null=True, blank=True)
-    about = models.TextField(max_length=516, null=True, blank=True)
     comparison_groups = models.ManyToManyField(
         "comparisons.ComparisonGroup",
         through="comparisons.Comparison",
