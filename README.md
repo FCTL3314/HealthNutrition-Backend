@@ -1,6 +1,6 @@
 <div align="center">
   <img width="148" height="148" src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/8025cf3d-612d-4a30-bd69-e8bfcc5d5b2b"/>
-  <h1>Health Nutrition</h1>
+  <h1>Health Nutrition - Backend</h1>
   <p>Django / DRF based app for comparing the nutritional value of products.</p>
   
   [![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
