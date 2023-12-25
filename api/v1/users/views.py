@@ -4,7 +4,6 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.common.djoser import extended_settings
@@ -29,7 +28,6 @@ from api.v1.users.services.infrastructure.user_email_verification import (
     EVSenderService,
     UserEmailVerifierService,
 )
-from api.v1.users.services.infrastructure.user_update import UserUpdateService
 
 User = get_user_model()
 
@@ -46,14 +44,6 @@ class UserViewSet(DjoserUserViewSet):
     def get_queryset(self) -> QuerySet[User]:
         queryset = super().get_queryset()
         return queryset.order_by(*USERS_ORDERING)
-
-    def update(self, request: Request, *args, **kwargs) -> Response | APIResponse:
-        return UserUpdateService(
-            self.get_object(),
-            self.get_serializer_class(),
-            request.data,
-            kwargs.get("partial", False),
-        ).execute()
 
 
 @user_send_email_verification_view_docs()

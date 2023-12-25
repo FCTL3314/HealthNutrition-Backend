@@ -18,6 +18,14 @@ def user() -> User:
 
 
 @pytest.fixture()
+def admin_user(user: User) -> User:
+    user.is_staff = True
+    user.is_superuser = True
+    user.save(update_fields=("is_staff", "is_superuser"))
+    return user
+
+
+@pytest.fixture()
 def verified_user() -> User:
     return mixer.blend("users.User", is_verified=True)
 

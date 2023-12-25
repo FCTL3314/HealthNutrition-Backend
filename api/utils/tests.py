@@ -36,7 +36,12 @@ def is_objects_fields_match(
     """
 
     def get_field(obj, key: str) -> Any:
-        return obj[key] if isinstance(obj, dict) else getattr(obj, key)
+        try:
+            return obj[key] if isinstance(obj, dict) else getattr(obj, key)
+        except KeyError:
+            raise ValueError(
+                f"One of the provided objects is missing the '{key}' field."
+            )
 
     for field in fields:
         first_object_field = get_field(first_object, field)

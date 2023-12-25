@@ -1,5 +1,5 @@
 from api.utils.files import bytes_to_mb
-from api.v1.users.constants import MAX_USER_IMAGE_SIZE_MB
+from api.v1.user_profiles.constants import MAX_USER_IMAGE_SIZE_MB
 
 
 def is_user_image_size_valid(bytes_size: int) -> bool:

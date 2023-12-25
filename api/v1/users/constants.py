@@ -2,8 +2,6 @@ from datetime import timedelta
 
 from core.settings.base import env
 
-MAX_USER_IMAGE_SIZE_MB = 10
-
 USERS_PAGINATE_BY = 12
 
 USERS_ORDERING = ("username",)

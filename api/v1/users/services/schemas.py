@@ -5,10 +5,8 @@ from pydantic import BaseModel
 
 class User(BaseModel):
     id: int
-    image: str | None
     first_name: str
     last_name: str
-    about: str | None
     username: str
     slug: str
     email: str

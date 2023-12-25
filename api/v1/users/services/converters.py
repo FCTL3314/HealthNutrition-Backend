@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from api.base.converters import IDjangoORMToDTOConverter
+from api.v1.user_profiles.services.converters import UserProfileConverter
 from api.v1.users.models import EmailVerification
 from api.v1.users.services.schemas import EmailVerification as EmailVerificationSchema
 from api.v1.users.services.schemas import User as UserSchema
@@ -12,10 +13,9 @@ class UserConverter(IDjangoORMToDTOConverter[UserSchema]):
     def to_dto(self, user: User) -> UserSchema:
         return UserSchema(
             id=user.id,
-            image=user.image.url if user.image else None,
+            profile=UserProfileConverter().to_dto(user.profile),
             first_name=user.first_name,
             last_name=user.last_name,
-            about=user.about,
             username=user.username,
             slug=user.slug,
             email=user.email,

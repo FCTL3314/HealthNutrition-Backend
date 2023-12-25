@@ -2,18 +2,18 @@ from http import HTTPStatus
 from typing import Any
 
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from django.db.models import Model
 from rest_framework.serializers import Serializer
 
 from api.base.services import IService
 from api.responses import APIResponse
 from api.utils.errors import Error
 from api.utils.models import invalidate_prefetch_cache
-from api.v1.users.constants import MAX_USER_IMAGE_SIZE_MB
-from api.v1.users.services.domain.file_upload import is_user_image_size_valid
+from api.v1.user_profiles.models import UserProfile
+from api.v1.user_profiles.services.domain.image_upload import is_user_image_size_valid
+from api.v1.user_profiles.constants import MAX_USER_IMAGE_SIZE_MB
 
 
-class UserUpdateErrors:
+class UserProfileUpdateErrors:
     IMAGE_SIZE_TOO_LARGE = Error(
         (
             f"The size of the loaded image must be less than "
@@ -23,7 +23,7 @@ class UserUpdateErrors:
     )
 
 
-class UserUpdateService(IService):
+class UserProfileUpdateService(IService):
     """
     Responsible for updating the user object; validates
     conditions:
@@ -32,7 +32,7 @@ class UserUpdateService(IService):
 
     def __init__(
         self,
-        instance: Model,
+        instance: UserProfile,
         serializer_class: type[Serializer],
         data: dict[str, Any],
         partial: bool,
@@ -56,7 +56,7 @@ class UserUpdateService(IService):
     @staticmethod
     def invalid_image_size_response() -> APIResponse:
         return APIResponse(
-            detail=UserUpdateErrors.IMAGE_SIZE_TOO_LARGE.message,
-            code=UserUpdateErrors.IMAGE_SIZE_TOO_LARGE.code,
+            detail=UserProfileUpdateErrors.IMAGE_SIZE_TOO_LARGE.message,
+            code=UserProfileUpdateErrors.IMAGE_SIZE_TOO_LARGE.code,
             status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
         )
