@@ -51,9 +51,8 @@ build-backend = "poetry.core.masonry.api"
 DJANGO_SETTINGS_MODULE = "core.settings.test"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 filterwarnings = [
-    "ignore::DeprecationWarning:celery.utils.imports:145",
-    "ignore::DeprecationWarning:rest_framework_simplejwt:1",
-    "ignore:django.core.files.storage.get_storage_class",
+    "ignore",
+    "default:::mypackage.*",
 ]
 
 [tool.ruff]

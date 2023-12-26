@@ -15,6 +15,9 @@ User = get_user_model()
 class ChangeEmailErrors:
     INVALID_PASSWORD = Error("The password entered is incorrect.", "invalid_password")
     SAME_EMAIL = Error("The new email is the same as the old one.", "same_email")
+    EMAIL_ALREADY_IN_USE = Error(
+        "The email is already in use by another user.", "email_already_in_use"
+    )
 
 
 class UserChangeEmailService(IService):
@@ -35,11 +38,34 @@ class UserChangeEmailService(IService):
     def execute(self) -> APIResponse:
         if not self._user.check_password(self.__password):
             return self._password_is_incorrect_response()
-        if self._user.email == self.__new_email:
+        if self._is_new_email_same_as_old():
             return self._same_email_response()
+        if self._is_email_in_use():
+            return self._email_already_in_use_response()
+
         self._user.update_email(self.__new_email)
         self._user.make_unverified()
+
         return self._email_successfully_changed_response()
+
+    def _is_new_email_same_as_old(self):
+        """
+        Checks whether the new email is the same as
+        the old one.
+        """
+        return self._user.email == self.__new_email
+
+    def _is_email_in_use(self):
+        """
+        Checks whether the new email is used by other user.
+        """
+        return User.objects.filter(email=self.__new_email).exists()
+
+    def _email_successfully_changed_response(self) -> APIResponse:
+        return APIResponse(
+            CurrentUserSerializer(self._user).data,
+            status=HTTPStatus.OK,
+        )
 
     @staticmethod
     def _password_is_incorrect_response() -> APIResponse:
@@ -57,8 +83,10 @@ class UserChangeEmailService(IService):
             status=HTTPStatus.BAD_REQUEST,
         )
 
-    def _email_successfully_changed_response(self) -> APIResponse:
+    @staticmethod
+    def _email_already_in_use_response() -> APIResponse:
         return APIResponse(
-            CurrentUserSerializer(self._user).data,
-            status=HTTPStatus.OK,
+            detail=ChangeEmailErrors.EMAIL_ALREADY_IN_USE.message,
+            code=ChangeEmailErrors.EMAIL_ALREADY_IN_USE.code,
+            status=HTTPStatus.BAD_REQUEST,
         )

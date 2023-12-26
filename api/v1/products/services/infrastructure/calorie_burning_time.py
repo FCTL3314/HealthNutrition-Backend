@@ -6,7 +6,6 @@ from api.v1.nutrition.services.infrastructure.humanized_calorie_burning_calculat
 
 def get_calories_burning_time_for_basic_exercises(
     calories: int,
-    exercise_hours: int | float = 1,
     body_weight: int | float | None = None,
 ) -> dict[str, str]:
     """
@@ -14,7 +13,7 @@ def get_calories_burning_time_for_basic_exercises(
     times of the provided calories for basic exercises.
     """
     calories_burning_calculator = CalorieBurningCalculatorForBasicExercises(
-        exercise_hours=exercise_hours, body_weight=body_weight
+        body_weight=body_weight
     )
 
     serializer = CaloriesBurningTimeSerializer(

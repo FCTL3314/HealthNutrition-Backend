@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from api.v1.comments.models import Comment
-from api.v1.users.serializers import UserSerializer
+from api.v1.users.serializers import UserWithProfileSerializer
 
 
 class BaseCommentSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class BaseCommentSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(BaseCommentSerializer):
-    author = UserSerializer(read_only=True)
+    author = UserWithProfileSerializer(read_only=True)
 
     class Meta(BaseCommentSerializer.Meta):
         fields = BaseCommentSerializer.Meta.fields + (

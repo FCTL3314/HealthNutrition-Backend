@@ -78,17 +78,15 @@ class CalorieBurningCalculatorForBasicExercises(
     time value.
     """
 
-    def __init__(
-        self, exercise_hours: int | float = 1, body_weight: int | float | None = None
-    ):
+    def __init__(self, body_weight: int | float | None = None):
         self._walking_calculator = WalkingCalorieBurningCalculator(
-            exercise_hours=exercise_hours, body_weight=body_weight
+            body_weight=body_weight
         )
         self._running_calculator = RunningCalorieBurningCalculator(
-            exercise_hours=exercise_hours, body_weight=body_weight
+            body_weight=body_weight
         )
         self._cycling_calculator = CyclingCalorieBurningCalculator(
-            exercise_hours=exercise_hours, body_weight=body_weight
+            body_weight=body_weight
         )
 
     def calculate_all(self, calories: int | float) -> dict[str, str]:

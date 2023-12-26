@@ -6,8 +6,6 @@ app_name = "users"
 
 urlpatterns = [
     path(
-        "profile/update/<int:pk>/",
-        UserProfileUpdateView.as_view(),
-        name="user-profile-update",
+        "profile/update/", UserProfileUpdateView.as_view(), name="user-profile-update"
     ),
 ]
