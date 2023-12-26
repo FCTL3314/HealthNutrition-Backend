@@ -2,7 +2,7 @@
   <img width="148" height="148" src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/8025cf3d-612d-4a30-bd69-e8bfcc5d5b2b"/>
   <h1>Health Nutrition - Backend</h1>
   <p>Django / DRF based app for comparing the nutritional value of products.</p>
-  
+
   [![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
   [![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
   [![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
@@ -144,6 +144,24 @@ This API empowers developers to integrate **nutritional comparison functionality
 5. #### Run docker services for development: `docker-compose -f docker/local/docker-compose.yml up`
 6. #### Apply migrations: `python manage.py makemigrations` and `python manage.py migrate`
 7. #### Run the development server: `python manage.py runserver`
+
+</details>
+
+<details><summary><h1>🐳 Deployment on a server</h1></summary>
+
+### Project Deployment:
+
+1. #### Clone or download the repository and go to its directory.
+2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist** file.
+3. #### Open docker/production/nginx/conf.d/**nginx.conf** file and change `server_name example.com www.example.com;` to your domains.
+4. #### Grant executable rights to the **entrypoint.sh** script: `chmod +x ./entrypoint.sh`
+5. #### Start the services: `docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d`
+
+### Obtaining an ssl certificate:
+
+1. #### Access nginx container: `docker exec -it <nginx-container-id> bin/sh`
+2. #### Get ssl certificate: `certbot --nginx`
+3. #### Done ! Now you can exit from nginx container: `exit`
 
 </details>
 
