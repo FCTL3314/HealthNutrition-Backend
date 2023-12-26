@@ -19,10 +19,11 @@ services:
   celery:
     build:
       context: ../../
-      dockerfile: docker/local/Dockerfile
+      dockerfile: docker/Dockerfile
+      target: dev
     volumes:
-      - ../../:/opt/StoreTracker/
-    entrypoint: docker/local/celery_entrypoint.sh
+      - ../../:/opt/HealthNutrition-Backend/
+    entrypoint: docker/celery_entrypoint.sh
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.local
       RABBITMQ_HOST: rabbitmq

@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+
+  celery:
+    build:
+      target: prod
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+
+  django-gunicorn:
+    build:
+      context: ../../
+      dockerfile: docker/Dockerfile
+      target: prod
+    entrypoint: docker/production/entrypoint.sh
+    volumes:
+      - ../../static/:/opt/HealthNutrition-Backend/static/
+      - ../../media/:/opt/HealthNutrition-Backend/media/
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+    env_file:
+      - ../../.env
+    expose:
+      - 8000
+    depends_on:
+      - redis
+      - celery
+
+  nginx:
+    build:
+      context: ../../
+      dockerfile: docker/production/nginx/Dockerfile
+    volumes:
+      - ../../static/:/opt/HealthNutrition-Backend/static/
+      - ../../media/:/opt/HealthNutrition-Backend/media/
+      - ../../docker/production/nginx/conf.d/:/etc/nginx/conf.d/
+      - ../../docker/production/nginx/certbot/conf/:/etc/letsencrypt/
+      - ../../docker/production/nginx/certbot/www/:/var/www/certbot/
+    env_file:
+      - ../../.env
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - django-gunicorn
