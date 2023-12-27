@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   health_check:
-    name: Health Check
+    name: Health Checkk
     uses: ./.github/workflows/health_check.yaml
 
   deploy:
