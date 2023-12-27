@@ -149,13 +149,26 @@ This API empowers developers to integrate **nutritional comparison functionality
 
 <details><summary><h1>🐳 Deployment on a server</h1></summary>
 
-### Project Deployment:
+### Initial Deployment:
 
 1. #### Clone or download the repository and go to its directory.
 2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist** file.
 3. #### Open docker/production/nginx/conf.d/**nginx.conf** file and change `server_name example.com www.example.com;` to your domains.
 4. #### Grant executable rights to the **entrypoint.sh** and ***celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
 5. #### Start the services: `docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d`
+
+### Configure CI/CD:
+
+1. Generate ssh keys in your local computer: `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
+2. Copy the content of your private and public keys to clipboard:
+    * Linux: Copy the result of commands:
+      * `cat ~/.ssh/id_rsa`
+      * `cat ~/.ssh/id_rsa.pub`
+    * Windows: Copy the contents of the files:
+      * `current_user_folder/.ssh/id_rsa`
+      * `current_user_folder/.ssh/id_rsa.pub`
+3. Create GitHub repository secret `SSH_PRIVATE_KEY` and paste your private key there.
+4. Access your remote host, `nano ~/.ssh/authorized_keys` and paste your public key to the next line.
 
 ### Obtaining an ssl certificate:
 
