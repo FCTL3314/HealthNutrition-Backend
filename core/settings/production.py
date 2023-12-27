@@ -55,18 +55,18 @@ LOGGING = {
         },
     },
     "handlers": {
-        "django_file": {
+        "file_django": {
             **COMMON_FILE_HANDLER_KWARGS,
             "formatter": "verbose",
             "filename": (BASE_DIR / "logs/django.log"),
         },
-        "mailing_file": {
+        "file_mailing": {
             **COMMON_FILE_HANDLER_KWARGS,
             "formatter": "simple",
             "filename": (BASE_DIR / "logs/mailing.log"),
             "level": "INFO",
         },
-        "accounts_file": {
+        "file_accounts": {
             **COMMON_FILE_HANDLER_KWARGS,
             "formatter": "simple",
             "filename": (BASE_DIR / "logs/accounts.log"),
@@ -75,15 +75,15 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["django_file"],
+            "handlers": ["file_django"],
             "level": "WARNING",
         },
         "mailings": {
-            "handlers": ["mailing_file"],
+            "handlers": ["file_mailing"],
             "level": "DEBUG",
         },
         "accounts": {
-            "handlers": ["accounts_file"],
+            "handlers": ["file_accounts"],
             "level": "DEBUG",
         },
     },
