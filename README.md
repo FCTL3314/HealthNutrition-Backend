@@ -154,7 +154,7 @@ This API empowers developers to integrate **nutritional comparison functionality
 1. #### Clone or download the repository and go to its directory.
 2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist** file.
 3. #### Open docker/production/nginx/conf.d/**nginx.conf** file and change `server_name example.com www.example.com;` to your domains.
-4. #### Grant executable rights to the **entrypoint.sh** script: `chmod +x ./entrypoint.sh`
+4. #### Grant executable rights to the **entrypoint.sh** and ***celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
 5. #### Start the services: `docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d`
 
 ### Obtaining an ssl certificate:
