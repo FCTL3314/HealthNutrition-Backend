@@ -76,7 +76,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["file_django"],
-            "level": "WARNING",
+            "level": "INFO",
         },
         "mailings": {
             "handlers": ["file_mailing"],
