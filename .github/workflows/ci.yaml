@@ -6,11 +6,11 @@ on:
   pull_request:
     branches: [ "master" ]
 
-jobs:
-  health_check:
-    name: Health Check
-    uses: ./.github/workflows/health_check.yaml
+concurrency:
+  group: master
+  cancel-in-progress: true
 
+jobs:
   deploy:
     name: Deploy
     needs: health_check
