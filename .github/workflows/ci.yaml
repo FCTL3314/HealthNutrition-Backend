@@ -11,13 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  health_check:
-    name: Health Check
-    uses: .github/workflows/health_check.yaml
-
   deploy:
     name: Deploy
-    needs: health_check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
