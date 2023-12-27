@@ -43,35 +43,35 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "[{asctime} | {levelname}] - {filename} on line {lineno}:\n{message}\n\n",
+        "detailed": {
+            "format": "[{asctime}] - {levelname} - {filename} on line {lineno}:\n{message}\n\n",
             "datefmt": "%Y/%b/%d %H:%M:%S",
             "style": "{",
         },
-        "simple": {
-            "format": "[{asctime} | {levelname}]:\n{message}\n\n",
+        "brief": {
+            "format": "[{asctime}] - {levelname}:\n{message}",
             "datefmt": "%Y/%b/%d %H:%M:%S",
             "style": "{",
         },
     },
     "handlers": {
-        "file_django": {
-            **COMMON_FILE_HANDLER_KWARGS,
-            "formatter": "verbose",
-            "filename": (BASE_DIR / "logs/django.log"),
-        },
-        "file_mailing": {
-            **COMMON_FILE_HANDLER_KWARGS,
-            "formatter": "simple",
-            "filename": (BASE_DIR / "logs/mailing.log"),
-            "level": "INFO",
-        },
-        "file_accounts": {
-            **COMMON_FILE_HANDLER_KWARGS,
-            "formatter": "simple",
-            "filename": (BASE_DIR / "logs/accounts.log"),
-            "level": "INFO",
-        },
+        "file_django": dict(
+            COMMON_FILE_HANDLER_KWARGS,
+            formatter="detailed",
+            filename=(BASE_DIR / "logs/django.log"),
+        ),
+        "file_mailing": dict(
+            COMMON_FILE_HANDLER_KWARGS,
+            formatter="brief",
+            filename=(BASE_DIR / "logs/mailing.log"),
+            level="INFO",
+        ),
+        "file_users": dict(
+            COMMON_FILE_HANDLER_KWARGS,
+            formatter="brief",
+            filename=(BASE_DIR / "logs/users.log"),
+            level="INFO",
+        ),
     },
     "loggers": {
         "django": {
@@ -80,11 +80,11 @@ LOGGING = {
         },
         "mailings": {
             "handlers": ["file_mailing"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
-        "accounts": {
-            "handlers": ["file_accounts"],
-            "level": "DEBUG",
+        "users": {
+            "handlers": ["file_users"],
+            "level": "INFO",
         },
     },
 }
