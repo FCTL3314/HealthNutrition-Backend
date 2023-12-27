@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+concurrency:
+  group: master
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy
