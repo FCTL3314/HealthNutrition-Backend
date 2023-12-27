@@ -2,9 +2,9 @@ name: Django Application Health Check Workflow
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "master" ]
 
 env:
   DJANGO_SETTINGS_MODULE: "core.settings.test"
