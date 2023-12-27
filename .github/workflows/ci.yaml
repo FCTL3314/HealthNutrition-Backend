@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Update and restart the application
+      - name: Update and restart the application ${{ secrets.SERVER_USERNAME }} ${{ secrets.SERVER_HOST }} ${{ secrets.SERVER_PORT }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
