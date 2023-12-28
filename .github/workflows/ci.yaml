@@ -3,8 +3,6 @@ name: Django CI/CD Workflow
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 concurrency:
   group: master
@@ -26,6 +24,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /opt/HealthNutrition-Backend
-            git pull origin master
+            git merge origin master -X theirs
             docker system prune -af
             docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d --build
