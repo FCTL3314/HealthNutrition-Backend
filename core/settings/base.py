@@ -2,6 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import environ
+import sentry_sdk
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -269,3 +270,11 @@ SUMMERNOTE_CONFIG = {
         "fontSizes": ("20", "24", "32"),
     },
 }
+
+# Sentry
+
+sentry_sdk.init(
+    dsn=env.str("SENTRY_DSN"),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
