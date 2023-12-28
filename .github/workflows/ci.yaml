@@ -24,6 +24,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /opt/HealthNutrition-Backend
+            git fetch
             git merge origin master -X theirs
             docker system prune -af
             docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d --build
