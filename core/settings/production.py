@@ -1,3 +1,5 @@
+import sentry_sdk
+
 from core.settings.base import *
 
 # Security
@@ -28,3 +30,11 @@ EMAIL_PORT = env.str("EMAIL_PORT")
 DEFAULT_FROM_EMAIL = env.str("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL")
+
+# Sentry
+
+sentry_sdk.init(
+    dsn=env.str("SENTRY_DSN"),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
