@@ -160,8 +160,7 @@ nutritional goals**.
 ### Initial Deployment:
 
 1. #### Clone or download the repository and go to its directory.
-2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist
-   ** file.
+2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist** file.
 3. #### Create a **nginx.conf** file in the docker/production/nginx/conf.d/ directory and fill it with the code below:
 
    ```nginx configuration
