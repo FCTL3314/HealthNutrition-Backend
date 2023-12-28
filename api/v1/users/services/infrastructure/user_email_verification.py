@@ -71,7 +71,8 @@ class EVSenderService(IService):
         """
         match availability_status:
             case EVAvailabilityStatus.CAN_BE_SENT:
-                return self._email_sent_response(self._send())
+                email_verification = self._send()
+                return self._email_sent_response(email_verification)
             case EVAvailabilityStatus.SENDING_LIMIT_REACHED:
                 return self._sending_limit_reached_response()
             case EVAvailabilityStatus.ALREADY_VERIFIED:
