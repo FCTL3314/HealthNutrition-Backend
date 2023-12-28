@@ -3,12 +3,12 @@
   <h1>Health Nutrition - Backend</h1>
   <p>Django / DRF based app for comparing the nutritional value of products.</p>
 
-  [![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
-  [![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
-  [![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
-  [![Poetry](https://img.shields.io/badge/Poetry-1.5.1-0992E1?style=flat-square)](https://python-poetry.org/)
-  [![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
-  [![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
+[![Python](https://img.shields.io/badge/Python-3.11.2-3777A7?style=flat-square)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-4.2.1-103E2E?style=flat-square)](https://www.djangoproject.com/)
+[![Rest-framework](https://img.shields.io/badge/Rest--framework-3.14.0-7F2D2D?style=flat-square)](https://www.django-rest-framework.org/)
+[![Poetry](https://img.shields.io/badge/Poetry-1.5.1-0992E1?style=flat-square)](https://python-poetry.org/)
+[![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
+[![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
   <img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 80%;"/>
 </div>
@@ -49,9 +49,14 @@
 
 <details open><summary><h1>📃 Description</h1></summary>
 
-This Django application provides a **comprehensive API** for **comparing nutritional values of food products**, aiding users in **making informed dietary decisions**.
+This Django application provides a **comprehensive API** for **comparing nutritional values of food products**, aiding
+users in **making informed dietary decisions**.
 
-This API empowers developers to integrate **nutritional comparison functionality** into various applications, enabling users to **search for food items**, **explore nutritional categories**, **view detailed product information**, and ultimately **make health-conscious dietary choices**. It simplifies the process of **comparing nutritional values across different food items**, enhancing the user's experience with meal planning and supporting them in **achieving their nutritional goals**.
+This API empowers developers to integrate **nutritional comparison functionality** into various applications, enabling
+users to **search for food items**, **explore nutritional categories**, **view detailed product information**, and
+ultimately **make health-conscious dietary choices**. It simplifies the process of **comparing nutritional values across
+different food items**, enhancing the user's experience with meal planning and supporting them in **achieving their
+nutritional goals**.
 
 > #### The project was created for educational purposes, simulating fictitious products without real value.
 > #### Frontend part: https://github.com/FCTL3314/StoreTracker-Frontend
@@ -126,10 +131,13 @@ This API empowers developers to integrate **nutritional comparison functionality
 <details><summary><h1>❕ Peculiarities</h1></summary>
 
 ### Architecture:
-  * Project services are divided into 2 levels:
-    * **Domain** -  Services that are in no way dependent on the current infrastructure, that is, the framework.
+
+* Project services are divided into 2 levels:
+    * **Domain** - Services that are in no way dependent on the current infrastructure, that is, the framework.
     * **Infrastructure** - Services that can call domain services and interact with the project infrastructure.
+
 ### Abbreviations:
+
 * **EV - EmailVerification**
 
 </details>
@@ -140,7 +148,7 @@ This API empowers developers to integrate **nutritional comparison functionality
 2. #### Activate the Poetry virtual environment: `poetry shell`
 3. #### Install dependencies: `poetry install`
 4. #### Create an .env file or rename .env.dist in .env and populate it only with development variables:
-    ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/c31d86db-7bec-4693-8e97-d649c6e7184f)
+   ![Env-Variables-Example](https://github.com/FCTL3314/StoreTracker-Backend/assets/97694131/c31d86db-7bec-4693-8e97-d649c6e7184f)
 5. #### Run docker services for development: `docker-compose -f docker/local/docker-compose.yml up`
 6. #### Apply migrations: `python manage.py makemigrations` and `python manage.py migrate`
 7. #### Run the development server: `python manage.py runserver`
@@ -152,29 +160,66 @@ This API empowers developers to integrate **nutritional comparison functionality
 ### Initial Deployment:
 
 1. #### Clone or download the repository and go to its directory.
-2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist** file.
-3. #### Open docker/production/nginx/conf.d/**nginx.conf** file and change `server_name example.com www.example.com;` to your domains.
-4. #### Grant executable rights to the **entrypoint.sh** and ***celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
+2. #### Create an **.env** file or rename **.env.dist** in **.env** and populate it with all variables from **.env.dist
+   ** file.
+3. #### Create a **nginx.conf** file in the docker/production/nginx/conf.d/ directory and fill it with the code below:
+
+   ```nginx configuration
+   upstream core {
+       server django-gunicorn:8000;
+   }
+
+   server {
+       listen 80;
+       server_name example.com www.example.com;
+       server_tokens off;
+
+       location = /favicon.ico { access_log off; log_not_found off; }
+
+       location /static/ {
+           alias /opt/HealthNutrition-Backend/static/;
+       }
+
+       location /media/ {
+           alias /opt/HealthNutrition-Backend/media/;
+       }
+
+       location /.well-known/acme-challenge/ {
+           root /var/www/certbot/;
+       }
+
+       location / {
+           proxy_pass http://core;
+               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header Host $host;
+               proxy_redirect off;
+       }
+   }
+   ```
+   > Change example.com and www.example.com to your domains.
+
+4. #### Grant executable rights to the **entrypoint.sh** and **
+   *celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
 5. #### Start the services: `docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d`
-
-### Configure CI/CD:
-
-1. Generate ssh keys in your local computer: `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
-2. Copy the content of your private and public keys to clipboard:
-    * Linux: Copy the result of commands:
-      * `cat ~/.ssh/id_rsa`
-      * `cat ~/.ssh/id_rsa.pub`
-    * Windows: Copy the contents of the files:
-      * `current_user_folder/.ssh/id_rsa`
-      * `current_user_folder/.ssh/id_rsa.pub`
-3. Create GitHub repository secret `SSH_PRIVATE_KEY` and paste your private key there.
-4. Access your remote host, `nano ~/.ssh/authorized_keys` and paste your public key to the next line.
 
 ### Obtaining an ssl certificate:
 
 1. #### Access nginx container: `docker exec -it <nginx-container-id> bin/sh`
 2. #### Get ssl certificate: `certbot --nginx`
 3. #### Done ! Now you can exit from nginx container: `exit`
+
+### Configure CI/CD:
+
+1. Generate ssh keys in your local computer: `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
+2. Copy the content of your private and public keys to clipboard:
+    * Linux: Copy the result of commands:
+        * `cat ~/.ssh/id_rsa`
+        * `cat ~/.ssh/id_rsa.pub`
+    * Windows: Copy the contents of the files:
+        * `current_user_folder/.ssh/id_rsa`
+        * `current_user_folder/.ssh/id_rsa.pub`
+3. Create GitHub repository secret `SSH_PRIVATE_KEY` and paste your private key there.
+4. Access your remote host, `nano ~/.ssh/authorized_keys` and paste your public key to the next line.
 
 </details>
 
