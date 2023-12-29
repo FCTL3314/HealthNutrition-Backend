@@ -14,7 +14,8 @@ User = get_user_model()
 
 @pytest.fixture()
 def user() -> User:
-    return mixer.blend("users.User")
+    profile = mixer.blend("user_profiles.UserProfile")
+    return mixer.blend("users.User", profile=profile)
 
 
 @pytest.fixture()
