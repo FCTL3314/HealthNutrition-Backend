@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-PRICE_ROUNDING = 2
-PRODUCTS_PAGINATE_BY = 3
+PRODUCTS_PAGINATE_BY = 12
 PRODUCTS_ORDERING = ("name",)
 PRODUCT_VIEW_CACHE_TIME = 60 * 60
 
