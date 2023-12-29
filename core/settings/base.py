@@ -178,11 +178,6 @@ FRONTEND_PASSWORD_RESET_CONFIRM_URL = env.str(
     default="users/auth/password-reset/confirm/{uid}/{token}/",
 )
 
-# SSL Proxy
-
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
 # Users
 
 AUTH_USER_MODEL = "users.User"
@@ -242,7 +237,7 @@ SPECTACULAR_SETTINGS = {
 # Simple JWT
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=120),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
