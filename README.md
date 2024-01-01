@@ -58,6 +58,7 @@ ultimately **make health-conscious dietary choices**. It simplifies the process 
 different food items**, enhancing the user's experience with meal planning and supporting them in **achieving their
 nutritional goals**.
 
+> [!NOTE]
 > #### The project was created for educational purposes, simulating fictitious products without real value.
 > #### Frontend part: https://github.com/FCTL3314/StoreTracker-Frontend
 
@@ -195,10 +196,10 @@ nutritional goals**.
        }
    }
    ```
+   > [!IMPORTANT]
    > Change example.com and www.example.com to your domains.
 
-4. #### Grant executable rights to the **entrypoint.sh** and **
-   *celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
+4. #### Grant executable rights to the **entrypoint.sh** and *celery_entrypoint.sh* script: `chmod +x docker/production/entrypoint.sh && chmod +x docker/celery_entrypoint.sh`
 5. #### Start the services: `docker-compose -f docker/local/docker-compose.yaml -f docker/production/docker-compose.yaml up -d`
 
 ### Obtaining an ssl certificate:
@@ -215,10 +216,15 @@ nutritional goals**.
         * `cat ~/.ssh/id_rsa`
         * `cat ~/.ssh/id_rsa.pub`
     * Windows: Copy the contents of the files:
-        * `current_user_folder/.ssh/id_rsa`
-        * `current_user_folder/.ssh/id_rsa.pub`
-3. Create GitHub repository secret `SSH_PRIVATE_KEY` and paste your private key there.
-4. Access your remote host, `nano ~/.ssh/authorized_keys` and paste your public key to the next line.
+        * `C:/users/user/.ssh/id_rsa`
+        * `C:/users/user/.ssh/id_rsa.pub`
+3. Create GitHub repository secrets:
+   * SSH_HOST: Your remote server host / IP.
+   * SSH_LOGIN: Your remote server login / username.
+   * SSH_PORT: Your remote server port.
+   * SSH_PRIVATE_KEY: Copied SSH private key.
+4. Access your remote host and add your public key there:
+   * Execute `nano ~/.ssh/authorized_keys` and paste your copied public key to the next line.
 
 </details>
 
