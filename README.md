@@ -10,7 +10,7 @@
 [![Pytest](https://img.shields.io/badge/Pytest-Passed-2dad3f?style=flat-square)](https://docs.pytest.org/en/7.4.x/)
 [![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
-  <img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 80%;"/>
+  <img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/037fcab3-db5e-4cda-b30f-1da16fe816d5" style="width: 80%;"/>
 </div>
 
 # 📖 Table of contents
@@ -37,6 +37,12 @@
   <li>
     <b>
       <a href="#-local-installation">Local installation</a>
+    </b>
+  </li>
+
+  <li>
+    <b>
+      <a href="#-deployment-on-a-server">Deployment on a server</a>
     </b>
   </li>
 
@@ -69,33 +75,33 @@ nutritional goals**.
 
 ### Product categories
 
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/748ea2d3-2cc8-41a3-af5a-855787450024" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/62c3826e-e53d-4066-a305-474149bf81af" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/b5d102b1-fc6c-4d5d-86fe-831947e25e58" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/037fcab3-db5e-4cda-b30f-1da16fe816d5" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/a7c3f437-158d-46bc-8488-f680f58651fe" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/08190097-4c9f-46c0-8d76-22923dae019a" style="width: 49%;"/>
 
 ### Products
 
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/4e5531ef-c7e6-4f05-b06b-da02661c1379" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/937136b1-1537-434b-ac84-8a705816c750" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/9d5c5bbc-449b-4fee-ac40-a9cb0d326b7c" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/42dfd931-68b2-4240-8b0a-b56c59067838" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/795d6dac-cce1-4d13-ac06-ab180cb94fad" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/17632084-4fdd-430d-bf7b-9d0608daf6cd" style="width: 49%;"/>
 
 ### Product detail
-
-![firefox_EuQFeLE3Tz](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/07fe7e82-7b29-4277-bf86-5a017f85f8b8)
+![firefox_9HVqv9g46p](https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/3dcdead2-64eb-4b22-bb8e-c846958ca437)
+![firefox_hrfbO4yzoT](https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/81282636-c244-4d6d-97fd-22eecc1e6285)
 
 ### Comparison groups
 
-![firefox_TzlDDf9Q1R](https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/67d52cbd-1266-4779-943b-4adcc029b3a5)
+![firefox_TgwCqy76Wf](https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/a1a2741f-f6b9-4589-bf52-a236a1532b97)
 
 ### Compared products
 
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/02175a3a-6dfe-4691-87be-f79d5d70e656" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/66e0b741-c51e-426c-92c0-95658df62db4" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/1806c4fb-d6bb-4662-be33-0221752012a8" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/184af630-7893-4a6a-8821-5a1891367af0" style="width: 49%;"/>
 
 ### Profile
 
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/a85d43e6-29e0-4523-81d3-d591704f7fbc" style="width: 49%;"/>
-<img src="https://github.com/FCTL3314/HealthNutrition-Frontend/assets/97694131/d9a72a6f-ae5b-486f-a701-8403c8f7dba5" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/1009923a-d796-4bb0-9de2-f04986a194c2" style="width: 49%;"/>
+<img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/0db3a019-1d8a-4243-a421-b00834322fc8" style="width: 49%;"/>
 
 ### Settings
 
