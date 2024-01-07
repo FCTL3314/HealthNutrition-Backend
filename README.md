@@ -79,6 +79,11 @@ nutritional goals**.
 <img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/a7c3f437-158d-46bc-8488-f680f58651fe" style="width: 49%;"/>
 <img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/08190097-4c9f-46c0-8d76-22923dae019a" style="width: 49%;"/>
 
+### Aminations
+
+![compared-products-deleting](https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/5bcd3aac-50cc-4437-ab04-06a9ee23aabc)
+![comparison-group-deleting](https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/705abcf4-c9e6-44fd-ad0c-7e950140231c)
+
 ### Products
 
 <img src="https://github.com/FCTL3314/HealthNutrition-Backend/assets/97694131/42dfd931-68b2-4240-8b0a-b56c59067838" style="width: 49%;"/>
