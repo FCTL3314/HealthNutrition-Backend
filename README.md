@@ -127,7 +127,7 @@ nutritional goals**.
 * **Domain Driven Design**
 * **CI/CD**
 * **Comments reply / Tree structure (Django MPTT)**
-* **Custom objects ordering**
+* **Custom objects ordering (Like Drag & Drop sort)**
 * **Celery / Postponed Tasks**
 * **Email Verification**
 * **JWT Authentication / Authorization**
